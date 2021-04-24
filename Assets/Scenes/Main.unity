@@ -370,11 +370,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 362073315}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b81aad18456e75d408c082080e1773d8, type: 3}
+  m_Script: {fileID: 11500000, guid: 043749128024b714a9d6d6ac64273d29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  leftBoundary: 0
-  rightBoundary: 0
+  leftBoundary: -5
+  rightBoundary: 5
   topBoundary: 2
   bottomBoundary: -50
 --- !u!19719996 &362073320
