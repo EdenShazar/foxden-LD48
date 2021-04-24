@@ -403,7 +403,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1194810252}
   - component: {fileID: 1194810253}
-  - component: {fileID: 1194810254}
   - component: {fileID: 1194810255}
   - component: {fileID: 1194810256}
   m_Layer: 0
@@ -442,22 +441,6 @@ MonoBehaviour:
   none: {fileID: 11400000, guid: b827334c85aeccd4f8fba8ed6496bda4, type: 2}
   dirt: {fileID: 11400000, guid: 90f868b3e2e972346a771c7791117a19, type: 2}
   stone: {fileID: 11400000, guid: 96ce1801ed7b02d459de7fe69fa5199c, type: 2}
---- !u!114 &1194810254
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1194810251}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b81aad18456e75d408c082080e1773d8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  leftBoundary: -5
-  rightBoundary: 5
-  topBoundary: 2
-  bottomBoundary: -50
 --- !u!114 &1194810255
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -484,6 +467,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 043749128024b714a9d6d6ac64273d29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  leftBoundary: -5
+  rightBoundary: 5
+  topBoundary: 2
+  bottomBoundary: -50
 --- !u!1 &1430989585
 GameObject:
   m_ObjectHideFlags: 0
