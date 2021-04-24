@@ -49,19 +49,6 @@ public class BaseDwarf : MonoBehaviour {
     }
 
     private void Update() {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-            animator.Walk();
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-            animator.Dig();
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-            animator.Mine();
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-            animator.Fall();
-        if (Input.GetKeyDown(KeyCode.Alpha5))
-            animator.Climb();
-        if (Input.GetKeyDown(KeyCode.Alpha6))
-            animator.StopSign();
-
         currentCell = GameController.Tilemap.layoutGrid.WorldToCell(transform.position);
 
         UpdateSurroundings(currentCell);
