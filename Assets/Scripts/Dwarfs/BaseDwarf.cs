@@ -139,7 +139,7 @@ public class BaseDwarf : MonoBehaviour {
                     TileBase tileToDig = tileMap.GetTile(tileCoordinates);
 
                     //Just setting to null at the moment, should be replaced with a proper function that resolves what happens when a tile is dug out - TODO 
-                    tileMap.SetTile(tileCoordinates, null);
+                    GameController.TilemapController.RemoveTile(tileCoordinates.x, tileCoordinates.y);
 
                     timeElapsedBeforeDig = 0;
                 }

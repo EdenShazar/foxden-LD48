@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -11,6 +12,8 @@ public class TilemapController : MonoBehaviour
     Tilemap tilemap;
 
     TileType[,] tileTypes;
+
+    public event Action<int, int, TileType> TileDestroyed;
 
     public void Initialize()
     {
@@ -35,6 +38,18 @@ public class TilemapController : MonoBehaviour
     {
         InitializeTile(x, y, type);
         UpdateTile(x, y);
+    }
+
+    public void RemoveTile(int x, int y)
+    {
+        if (x < leftBoundary || x > rightBoundary || y < bottomBoundary || y > topBoundary)
+            return;
+
+        tilemap.SetTile(new Vector3Int(x, y, 0), null);
+
+        TileDestroyed?.Invoke(x, y, tileTypes[x - leftBoundary, y - bottomBoundary]);
+
+        tileTypes[x - leftBoundary, y - bottomBoundary] = TileType.NONE;
     }
 
     public void UpdateAllTiles()
@@ -96,11 +111,11 @@ public class TilemapController : MonoBehaviour
 
     public void GenerateMap()
     {
-        //Left and right boundary
+        // Left and right boundary
         GenerateBox(leftBoundary, topBoundary, leftBoundary, bottomBoundary, TileType.STONE);
         GenerateBox(rightBoundary, topBoundary, rightBoundary, bottomBoundary, TileType.STONE);
 
-        //Fill the center
+        // Fill the center
         GenerateBox(leftBoundary + 1, topBoundary - 2, rightBoundary - 1, bottomBoundary, TileType.DIRT);
     }
 

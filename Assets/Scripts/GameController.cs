@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -13,6 +12,7 @@ public class GameController : MonoBehaviour {
     private TileManager tileManager;
     private TilemapController tilemapController;
     private Dictionary<TileBase, TileData> tileToTileData;
+    private Camera camera;
 
     // Static getters for easy access to commonly used objects
     public static Tilemap Tilemap { get => instance.tilemap; }
@@ -23,6 +23,7 @@ public class GameController : MonoBehaviour {
 
     tileManager = gameObject.GetComponent<TileManager>();
     tilemapController = gameObject.GetComponent<TilemapController>();
+    camera = Camera.main;
   }
 
   private void Start() {
