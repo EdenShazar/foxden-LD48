@@ -15,16 +15,27 @@ public class TilemapController : MonoBehaviour
 
     public event Action<int, int, TileType> TileDestroyed;
 
+    public int LeftBoundaryCell { get => leftBoundary; }
+    public int RightBoundaryCell { get => rightBoundary; }
+    public int TopBoundaryCell { get => topBoundary; }
+    public int BottomBoundaryCell { get => bottomBoundary; }
+    public int WidthCell { get => rightBoundary - leftBoundary + 1; }
+    public int HeightCell { get => topBoundary - bottomBoundary + 1; }
+
+    public float LeftBoundaryWorld { get => tilemap.transform.position.x + tilemap.layoutGrid.cellSize.x * leftBoundary; }
+    public float RightBoundaryWorld { get => tilemap.transform.position.x + tilemap.layoutGrid.cellSize.x * rightBoundary; }
+    public float TopBoundaryWorld { get => tilemap.transform.position.y + tilemap.layoutGrid.cellSize.y * topBoundary; }
+    public float BottomBoundaryWorld { get => tilemap.transform.position.y + tilemap.layoutGrid.cellSize.y * bottomBoundary; }
+    public float WidthWorld { get => tilemap.layoutGrid.cellSize.x * WidthCell; }
+    public float HeightWorld { get => tilemap.layoutGrid.cellSize.y * HeightCell; }
+
     public void Initialize()
     {
         tilemap = GameController.Tilemap;
 
-        int horizontalTileCount = rightBoundary - leftBoundary + 1;
-        int verticalTileCount = topBoundary - bottomBoundary + 1;
-
-        tileTypes = new TileType[horizontalTileCount, verticalTileCount];
-        for (int x = 0; x < horizontalTileCount; x++)
-            for (int y = 0; y < verticalTileCount; y++)
+        tileTypes = new TileType[WidthCell, HeightCell];
+        for (int x = 0; x < WidthCell; x++)
+            for (int y = 0; y < HeightCell; y++)
                 tileTypes[x, y] = TileType.NONE;
     }
 
