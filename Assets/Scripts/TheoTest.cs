@@ -5,7 +5,7 @@ using UnityEngine;
 public class TheoTest : MonoBehaviour {
   void Update() {
     if(Input.GetMouseButtonDown(0)) {
-      Debug.Log("Hullo");
+      Debug.Log("Hullo again");
     }
   }
 }
