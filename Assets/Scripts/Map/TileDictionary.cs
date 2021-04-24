@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public enum TileType {
+  NONE,
   DIRT,
   STONE
 }
@@ -20,8 +21,12 @@ public static class TileDictionary {
     return tiles[type];
   }
 
-  public static TileBase GenerateTile(TileType type) {
+  public static TileBase GenerateDefaultTile(TileType type) {
+    return GenerateTile(type, TileNeighbors.Neighbors.NONE);
+  }
+
+  public static TileBase GenerateTile(TileType type, TileNeighbors.Neighbors neighbors) {
     // Temporarily generate only one type of tile; will later dynamically set the correct one
-    return tiles[type].GenerateTile(TileNeighbors.Neighbors.X | TileNeighbors.Neighbors.W);
+    return tiles[type].GenerateTile(neighbors);
   }
 }

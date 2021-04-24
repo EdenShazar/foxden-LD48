@@ -1,23 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 public class MapGenerator : MonoBehaviour {
 
-  [SerializeField] private int leftBoundary;
-  [SerializeField] private int rightBoundary;
-  [SerializeField] private Tilemap dirtTilemap;
-  [SerializeField] private Tilemap stomeTilemap;
-  private Tilemap tilemap;
+  [SerializeField] private int leftBoundary = -5;
+  [SerializeField] private int rightBoundary = 5;
+  [SerializeField] private int topBoundary = 2;
+  [SerializeField] private int bottomBoundary = -50;
 
-  public void setTilemap(Tilemap incTilemap) {
-    tilemap = incTilemap;
-  }
+  public int LeftBoundary { get => leftBoundary; }
+  public int RightBoundary { get => rightBoundary; }
+  public int TopBoundary { get => topBoundary; }
+  public int BottomBoundary { get => bottomBoundary; }
 
   public void GenerateMap() {
-    int topBoundary = 2;
-    int bottomBoundary = -50;
     //Left and right boundary
     GenerateBox(leftBoundary, topBoundary, leftBoundary, bottomBoundary, TileType.STONE);
     GenerateBox(rightBoundary, topBoundary, rightBoundary, bottomBoundary, TileType.STONE);
@@ -29,7 +24,7 @@ public class MapGenerator : MonoBehaviour {
   public void GenerateBox(int topLeftX, int topLeftY, int botRightX, int botRightY, TileType type) {
     for(int y = topLeftY; y >= botRightY; y--) {
       for(int x = topLeftX; x <= botRightX; x++) {
-        tilemap.SetTile(new Vector3Int(x, y, 0), TileDictionary.GenerateTile(type));
+        GameController.TilemapController.InitializeTile(x, y, type);
       }
     }
   }
