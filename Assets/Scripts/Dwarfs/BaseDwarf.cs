@@ -1,5 +1,14 @@
 using UnityEngine;
 
+public struct DwarfSurroundings {
+  public Vector3Int cellOnLeft;
+  public Vector3Int cellOnRight;
+  public Vector3Int cellBelow;
+  public bool hasTileOnLeft;
+  public bool hasTileOnRight;
+}
+
+
 public class BaseDwarf : MonoBehaviour {
 
     enum Direction { LEFT = -1, RIGHT = 1 }
@@ -8,18 +17,18 @@ public class BaseDwarf : MonoBehaviour {
     private float speed;
     private Direction moveDirection = Direction.RIGHT;
     private float timeElapsedBeforeClimb;
-    private float timeElapsedBeforeDig;
     private float timeElapsedBeforeSpriteFlip;
-    public float currentSpeed;
-    private bool digging;
-    private bool ableToDig;
     private SpriteRenderer dwarfSprite;
 
+    public float currentSpeed;
     public float timeToClimb;
-    public float timeToDig;
     public float timeToFlip;
 
     private Vector3Int currentCell;
+    private DwarfSurroundings surroundings;
+
+    delegate bool JobAction(DwarfSurroundings surroundings);
+    private JobAction doJobAction = null;
 
     private void Awake() {
         Physics2D.queriesStartInColliders = false;
@@ -27,69 +36,44 @@ public class BaseDwarf : MonoBehaviour {
 
     private void Start() {
         timeElapsedBeforeClimb = 0;
-        timeElapsedBeforeDig = 0;
         timeElapsedBeforeSpriteFlip = 0;
         currentSpeed = speed;
         dwarfSprite = GetComponent<SpriteRenderer>();
+      surroundings = new DwarfSurroundings();
     }
 
     private void Update() {
         currentCell = GameController.Tilemap.layoutGrid.WorldToCell(transform.position);
 
-        Vector3Int cellOnLeft = new Vector3Int(currentCell.x - 1, currentCell.y, 0);
-        Vector3Int cellOnRight = new Vector3Int(currentCell.x + 1, currentCell.y, 0);
-        bool hasTileOnLeft = GameController.Tilemap.HasTile(cellOnLeft);
-        bool hasTileOnRight = GameController.Tilemap.HasTile(cellOnRight);
+        UpdateSurroundings(currentCell);
 
-        //is the dwarf in a hole
-        if ((hasTileOnLeft && hasTileOnRight) && !digging) {
+        if(doJobAction != null) {
+          doJobAction(surroundings);
+        } else {
+          //is the dwarf in a hole
+          if (surroundings.hasTileOnLeft && surroundings.hasTileOnRight) {
             currentSpeed = 0;
 
             ClimbUpOrChangeDirection(true);
 
-        }
-        else if (hasTileOnLeft != hasTileOnRight) {
+          }
+          else if (surroundings.hasTileOnLeft != surroundings.hasTileOnRight) {
             ClimbUpOrChangeDirection(false);
+          }
+
+          gameObject.transform.Translate(Vector3.right * (int)moveDirection * currentSpeed * Time.deltaTime);
         }
 
         //Temp solution just for testing "assigning" dig
-        if (Input.GetMouseButtonDown(0)) { 
-            if (ableToDig) {
-                ableToDig = false;
-                currentSpeed = speed;
-            }
-            else {
-                ableToDig = true;
-                transform.position = GameController.Tilemap.layoutGrid.CellToWorld(currentCell) + new Vector3(0.5f, 0.5f, 0);
-            }
+        if (Input.GetMouseButtonDown(0)) {
+          DwarfJob debugJob = ScriptableObject.CreateInstance<DigDownJob>();
+          if (doJobAction == null) {
+            doJobAction = debugJob.JobAction;
+            debugJob.InitializeJobAction(this, currentCell);
+          } else {
+            doJobAction = null;
+          }
         }
-
-        if (ableToDig) {
-            digging = true;
-            currentSpeed = 0;
-        }
-        else {
-            digging = false;
-        }
-
-        if (digging) {
-            Vector3Int cellBelow = new Vector3Int(currentCell.x, currentCell.y - 1, 0);
-            bool hasTileBelow = GameController.Tilemap.HasTile(cellBelow);
-
-            if (hasTileBelow) {
-
-                timeElapsedBeforeDig += Time.deltaTime;
-
-                if(timeElapsedBeforeDig >= timeToDig) {
-                    GameController.TilemapController.RemoveTile(cellBelow);
-
-                    timeElapsedBeforeDig = 0;
-                }
-            }
-        }
-
-        
-        gameObject.transform.Translate(Vector3.right * (int)moveDirection * currentSpeed * Time.deltaTime);
     }
 
   private void ClimbUpOrChangeDirection(bool surroundedByTiles) {
@@ -103,7 +87,7 @@ public class BaseDwarf : MonoBehaviour {
             canClimb = !GameController.Tilemap.HasTile(cellAboveAndToLeft);
         }
 
-        if (canClimb && !digging) {
+        if (canClimb) {
             //if there is an empty space, stop and get ready to climb
             if (timeElapsedBeforeClimb < timeToClimb) {
                 timeElapsedBeforeClimb += Time.deltaTime;
@@ -130,8 +114,6 @@ public class BaseDwarf : MonoBehaviour {
                 timeElapsedBeforeSpriteFlip = 0;
             }
         }
-        //else if (!surroundedByTiles)
-        //    FlipDirection();
     }
 
     void FlipDirection()
@@ -139,6 +121,14 @@ public class BaseDwarf : MonoBehaviour {
         moveDirection = (Direction)((int)moveDirection * -1);
         dwarfSprite.flipX = moveDirection == Direction.LEFT;
     }
+
+    private void UpdateSurroundings(Vector3Int currentCell) {
+      surroundings.cellOnLeft = new Vector3Int(currentCell.x - 1, currentCell.y, 0);
+      surroundings.cellOnRight = new Vector3Int(currentCell.x + 1, currentCell.y, 0);
+      surroundings.cellBelow = new Vector3Int(currentCell.x, currentCell.y - 1, 0);
+      surroundings.hasTileOnLeft = GameController.Tilemap.HasTile(surroundings.cellOnLeft);
+      surroundings.hasTileOnRight = GameController.Tilemap.HasTile(surroundings.cellOnRight);
+  }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
