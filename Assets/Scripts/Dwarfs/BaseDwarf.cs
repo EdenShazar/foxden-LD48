@@ -1,13 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 public class BaseDwarf : MonoBehaviour {
 
+    enum Direction { LEFT = -1, RIGHT = 1 }
+
     [SerializeField]
     private float speed;
-    private Vector3 moveDirection = Vector3.right;
+    private Direction moveDirection = Direction.RIGHT;
     private float timeElapsedBeforeClimb;
     private float timeElapsedBeforeDig;
     private float timeElapsedBeforeSpriteFlip;
@@ -35,8 +34,6 @@ public class BaseDwarf : MonoBehaviour {
     }
 
     private void Update() {
-        gameObject.transform.Translate(moveDirection * currentSpeed * Time.deltaTime);
-
         currentCell = GameController.Tilemap.layoutGrid.WorldToCell(transform.position);
 
         Vector3Int cellOnLeft = new Vector3Int(currentCell.x - 1, currentCell.y, 0);
@@ -48,25 +45,7 @@ public class BaseDwarf : MonoBehaviour {
         if ((hasTileOnLeft && hasTileOnRight) && !digging) {
             currentSpeed = 0;
 
-            //Almost like the ClimbUpOrChangeDirection function isn't fully being completed before the code underneath is
             ClimbUpOrChangeDirection(true);
-
-            timeElapsedBeforeSpriteFlip += Time.deltaTime;
-
-            if (timeElapsedBeforeSpriteFlip >= timeToFlip) {
-                if (dwarfSprite.flipX) {
-                    Debug.Log("FLIP");
-                    dwarfSprite.flipX = false;
-                    moveDirection = Vector3.left;
-                }
-                else {
-                    Debug.Log("FLIP AGAIN");
-                    dwarfSprite.flipX = true;
-                    moveDirection = Vector3.right;
-                }
-                
-                timeElapsedBeforeSpriteFlip = 0;
-            }
 
         }
         else if (hasTileOnLeft != hasTileOnRight) {
@@ -74,7 +53,7 @@ public class BaseDwarf : MonoBehaviour {
         }
 
         //Temp solution just for testing "assigning" dig
-        if (Input.GetButtonDown("Fire1")) { 
+        if (Input.GetMouseButtonDown(0)) { 
             if (ableToDig) {
                 ableToDig = false;
                 currentSpeed = speed;
@@ -108,58 +87,79 @@ public class BaseDwarf : MonoBehaviour {
                 }
             }
         }
+
+        
+        gameObject.transform.Translate(Vector3.right * (int)moveDirection * currentSpeed * Time.deltaTime);
     }
 
   private void ClimbUpOrChangeDirection(bool surroundedByTiles) {
         bool canClimb = false;
-
-        if (moveDirection == Vector3.right) {
+        if (moveDirection == Direction.RIGHT) {
             Vector3Int cellAboveAndToRight = new Vector3Int(currentCell.x + 1, currentCell.y + 1, 0);
             canClimb = !GameController.Tilemap.HasTile(cellAboveAndToRight);
         }
-        else if (moveDirection == Vector3.left) {
+        else if (moveDirection == Direction.LEFT) {
             Vector3Int cellAboveAndToLeft= new Vector3Int(currentCell.x - 1, currentCell.y + 1, 0);
             canClimb = !GameController.Tilemap.HasTile(cellAboveAndToLeft);
         }
 
-        //Is there an empty tile above one beside dwarf
         if (canClimb && !digging) {
-
             //if there is an empty space, stop and get ready to climb
             if (timeElapsedBeforeClimb < timeToClimb) {
                 timeElapsedBeforeClimb += Time.deltaTime;
                 //currentSpeed = 0;
 
                 if (timeElapsedBeforeClimb >= timeToClimb) {
-                    if (moveDirection == Vector3.right)
+                    if (moveDirection == Direction.RIGHT)
                         transform.position = GameController.Tilemap.layoutGrid.CellToWorld(currentCell) + new Vector3(1.5f, 1.5f, 0);
-                    else if (moveDirection == Vector3.left)
+                    else if (moveDirection == Direction.LEFT)
                         transform.position = GameController.Tilemap.layoutGrid.CellToWorld(currentCell) + new Vector3(-0.5f, 1.5f, 0);
                     
-                    timeElapsedBeforeClimb = 0;
+                    timeElapsedBeforeClimb = 0f;
                     currentSpeed = speed;
                 }
             }
         }
-        else if (!surroundedByTiles)
-        {
-            dwarfSprite.flipX = !dwarfSprite.flipX;
-            moveDirection *= -1f;
+        else {
+            timeElapsedBeforeSpriteFlip += Time.deltaTime;
+
+            if (timeElapsedBeforeSpriteFlip >= timeToFlip)
+            {
+                FlipDirection();
+
+                timeElapsedBeforeSpriteFlip = 0;
+            }
         }
+        //else if (!surroundedByTiles)
+        //    FlipDirection();
     }
 
-  private void OnTriggerStay2D(Collider2D collision) {
-    HandleCollision(collision);
-  }
-
-  private void OnTriggerEnter2D(Collider2D collision) {
-    HandleCollision(collision);
-  }
-
-  private void HandleCollision(Collider2D collision) {
-    if(Mathf.Abs(collision.ClosestPoint(transform.position).y - transform.position.y) < 0.01) {
-      //Horizontal collision
-      moveDirection *= -1.0f;
+    void FlipDirection()
+    {
+        moveDirection = (Direction)((int)moveDirection * -1);
+        dwarfSprite.flipX = moveDirection == Direction.LEFT;
     }
-  }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        HandleCollision(collision);
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        HandleCollision(collision);
+    }
+
+    private void HandleCollision(Collision2D collision)
+    {
+        ContactPoint2D[] contacts = new ContactPoint2D[collision.contactCount];
+        collision.GetContacts(contacts);
+
+        foreach (ContactPoint2D contact in contacts)
+            if(contact.normal.y == 0f && contact.normal.x == -(float)moveDirection)
+            {
+                FlipDirection();
+                break;
+            }
+    }
 }
