@@ -24,12 +24,16 @@ public class GameController : MonoBehaviour {
     tileManager = gameObject.GetComponent<TileManager>();
     tilemapController = gameObject.GetComponent<TilemapController>();
     camera = Camera.main;
-  }
 
-  private void Start() {
     tileManager.InitializeTileDictionary();
     tilemapController.Initialize();
     tilemapController.GenerateMap();
+
+    Application.targetFrameRate = 60;
+  }
+
+  private void Start() {
+    
     Instantiate(dwarf);
 
     tilemapController.UpdateAllTiles();
