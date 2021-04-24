@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Experimental.Rendering.Universal;
 
 public struct DwarfSurroundings {
   public Vector3Int cellOnLeft;
@@ -19,6 +20,8 @@ public class BaseDwarf : MonoBehaviour {
     private float timeElapsedBeforeClimb;
     private float timeElapsedBeforeSpriteFlip;
     private SpriteRenderer dwarfSprite;
+    private DwarfAnimator animator;
+    new private Transform light;
 
     public float currentSpeed;
     public float timeToClimb;
@@ -32,6 +35,9 @@ public class BaseDwarf : MonoBehaviour {
 
     private void Awake() {
         Physics2D.queriesStartInColliders = false;
+
+        animator = GetComponent<DwarfAnimator>();
+        light = GetComponentInChildren<Light2D>().transform;
     }
 
     private void Start() {
@@ -43,6 +49,19 @@ public class BaseDwarf : MonoBehaviour {
     }
 
     private void Update() {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+            animator.Walk();
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+            animator.Dig();
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+            animator.Mine();
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+            animator.Fall();
+        if (Input.GetKeyDown(KeyCode.Alpha5))
+            animator.Climb();
+        if (Input.GetKeyDown(KeyCode.Alpha6))
+            animator.StopSign();
+
         currentCell = GameController.Tilemap.layoutGrid.WorldToCell(transform.position);
 
         UpdateSurroundings(currentCell);
@@ -120,6 +139,8 @@ public class BaseDwarf : MonoBehaviour {
     {
         moveDirection = (Direction)((int)moveDirection * -1);
         dwarfSprite.flipX = moveDirection == Direction.LEFT;
+        light.Translate(-light.localPosition.x * 2f, 0f, 0f);
+        light.Rotate(0f, 0f, -light.rotation.eulerAngles.z * 2f);
     }
 
     private void UpdateSurroundings(Vector3Int currentCell) {
