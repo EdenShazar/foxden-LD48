@@ -5,10 +5,10 @@ using UnityEngine.Tilemaps;
 
 public class MapGenerator : MonoBehaviour {
 
-  [SerializeField]
-  private int leftBoundary;
-  [SerializeField]
-  private int rightBoundary;
+  [SerializeField] private int leftBoundary;
+  [SerializeField] private int rightBoundary;
+  [SerializeField] private Tilemap dirtTilemap;
+  [SerializeField] private Tilemap stomeTilemap;
   private Tilemap tilemap;
 
   public void setTilemap(Tilemap incTilemap) {

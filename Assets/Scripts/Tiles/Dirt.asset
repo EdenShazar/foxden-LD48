@@ -13,5 +13,42 @@ MonoBehaviour:
   m_Name: Dirt
   m_EditorClassIdentifier: 
   tiles:
-  - {fileID: 11400000, guid: 20a475a132b75b1428a5eb63008d934a, type: 2}
+  - {fileID: 11400000, guid: d4be8232d9fd35046bb46497f310ab36, type: 2}
+  - {fileID: 11400000, guid: ab5809b9f1567624796b596e10aa828d, type: 2}
+  - {fileID: 11400000, guid: 90f359300a3cbf4468afefb8cc6939f8, type: 2}
+  - {fileID: 11400000, guid: 9dd88368c2604aa4185232f456f233da, type: 2}
+  - {fileID: 11400000, guid: 32903cfb0f201a6439656420db855ca2, type: 2}
+  - {fileID: 11400000, guid: 5641e52afb1dc9241bc3c381969c6cc9, type: 2}
+  - {fileID: 11400000, guid: ae5bdfdf9351bc54599c4aa2ee2d5f04, type: 2}
+  - {fileID: 11400000, guid: d0a55e24699cd404aa51bc87f2309700, type: 2}
+  - {fileID: 11400000, guid: 37549f5ab11973645a1a3e9b0d736314, type: 2}
+  - {fileID: 11400000, guid: acf4561ab84d5694fb4c45185bbf6b9a, type: 2}
+  - {fileID: 11400000, guid: 79962d9d9bf98fd4789f9aeddc7fdacf, type: 2}
+  - {fileID: 11400000, guid: c8772df34b352ca43bd6f819a031a97e, type: 2}
+  - {fileID: 11400000, guid: a66a480a3e91acf4896130f28c17f243, type: 2}
+  - {fileID: 11400000, guid: 417282720b202ff428144276cbb487d2, type: 2}
+  - {fileID: 11400000, guid: b2fb768c03c5e4e4d9cc39876014c738, type: 2}
+  - {fileID: 11400000, guid: 817498b1a8c1c5f4fbe10fbbe5a7542f, type: 2}
+  - {fileID: 11400000, guid: 03abd25de412e7d47a0edf9708c17d5b, type: 2}
+  - {fileID: 11400000, guid: 69ab49511bdef2e49b9e0a8a0b15861b, type: 2}
+  - {fileID: 11400000, guid: ed966afea7d68224e9412c5b3ee5ccc4, type: 2}
+  - {fileID: 11400000, guid: e5118ce3862922943b77d0a3dfcbb38e, type: 2}
+  - {fileID: 11400000, guid: a62d01c5a96f38143a03c0fbace5e5ee, type: 2}
+  - {fileID: 11400000, guid: c4c70d52f42989047a62f9bbdf952e89, type: 2}
+  - {fileID: 11400000, guid: f64630925a9b0f64493c6f0b614ca139, type: 2}
+  - {fileID: 11400000, guid: ed51723d41ada7146b5050f194337923, type: 2}
+  - {fileID: 11400000, guid: 1ac600f8273a1674f9f9416d8ffa9323, type: 2}
+  - {fileID: 11400000, guid: 23f870c3de5726a468f5b43d87dd9283, type: 2}
+  - {fileID: 11400000, guid: 0107c1899a5d25a43b35920d4f469736, type: 2}
+  - {fileID: 11400000, guid: ed71aae9ce99c284290783025df6f0ba, type: 2}
+  - {fileID: 11400000, guid: b61a3ac098cee734e995563076352700, type: 2}
+  - {fileID: 11400000, guid: 6507e2a8d5b92aa46ab0f5093e6023c3, type: 2}
+  - {fileID: 11400000, guid: 0747d5b0d36c49a4b9add858ccae7e30, type: 2}
+  - {fileID: 11400000, guid: 38d87eb7397c7e043bea7a7085bba247, type: 2}
+  - {fileID: 11400000, guid: 1303bd8fecab529408e99c22714d303e, type: 2}
+  - {fileID: 11400000, guid: 7da5287d44f065040b199d51dfeed6df, type: 2}
+  - {fileID: 11400000, guid: 36808a63ae32ef04f88ccf790150b2a2, type: 2}
+  - {fileID: 11400000, guid: 14c4bd8066b6ecf40a02f4f20c278df5, type: 2}
+  - {fileID: 11400000, guid: 54193fdb1124c474a96424c964e8e74e, type: 2}
+  - {fileID: 11400000, guid: 937ba7eaa143c7c46b249a5b52ec6990, type: 2}
   canDig: 1

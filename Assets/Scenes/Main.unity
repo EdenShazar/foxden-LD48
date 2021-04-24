@@ -375,6 +375,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftBoundary: 0
   rightBoundary: 0
+  dirtTilemap: {fileID: 0}
+  stomeTilemap: {fileID: 0}
 --- !u!19719996 &362073320
 TilemapCollider2D:
   m_ObjectHideFlags: 0
@@ -452,6 +454,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftBoundary: -5
   rightBoundary: 5
+  dirtTilemap: {fileID: 0}
+  stomeTilemap: {fileID: 0}
 --- !u!114 &1194810255
 MonoBehaviour:
   m_ObjectHideFlags: 0

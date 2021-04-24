@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,9 +11,13 @@ public class TileData : ScriptableObject {
 
   public bool canDig;
 
-  //TODO Get a random tile from the list
-  //This also will function as a random sprite for the data
+  /// <summary>Generate a random tile.</summary>
   public TileBase GenerateTile() {
-    return tiles[0];
+    return tiles[UnityEngine.Random.Range(0, tiles.Length - 1)];
+  }
+
+  /// <summary>Generate a tile according to its specified <paramref name="neighbors"/>.</summary>
+  public TileBase GenerateTile(TileNeighbors.Neighbors neighbors) {
+    return tiles[TileNeighbors.GetTileIndex(neighbors)];
   }
 }

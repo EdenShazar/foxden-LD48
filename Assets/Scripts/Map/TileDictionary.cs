@@ -21,6 +21,7 @@ public static class TileDictionary {
   }
 
   public static TileBase GenerateTile(TileType type) {
-    return tiles[type].GenerateTile();
+    // Temporarily generate only one type of tile; will later dynamically set the correct one
+    return tiles[type].GenerateTile(TileNeighbors.Neighbors.X | TileNeighbors.Neighbors.W);
   }
 }
