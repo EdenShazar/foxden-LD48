@@ -12,7 +12,7 @@ public class GameController : MonoBehaviour {
     private TileManager tileManager;
     private TilemapController tilemapController;
     private Dictionary<TileBase, TileData> tileToTileData;
-    private Camera camera;
+    new private Camera camera;
 
     // Static getters for easy access to commonly used objects
     public static Tilemap Tilemap { get => instance.tilemap; }
@@ -30,7 +30,7 @@ public class GameController : MonoBehaviour {
     tileManager.InitializeTileDictionary();
     tilemapController.Initialize();
     tilemapController.GenerateMap();
-    Instantiate(dwarf, Vector3.up, Quaternion.identity);
+    Instantiate(dwarf);
 
     tilemapController.UpdateAllTiles();
   }

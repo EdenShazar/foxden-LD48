@@ -52,6 +52,11 @@ public class TilemapController : MonoBehaviour
         tileTypes[x - leftBoundary, y - bottomBoundary] = TileType.NONE;
     }
 
+    public void RemoveTile(Vector3Int tile)
+    {
+        RemoveTile(tile.x, tile.y);
+    }
+
     public void UpdateAllTiles()
     {
         for (int x = leftBoundary; x <= rightBoundary; x++)

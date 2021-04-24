@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 266849699188637687}
   - component: {fileID: 4645139560469442244}
   - component: {fileID: 3724227844307198175}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Dwarf
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -28,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 266849699188637192}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -99,6 +99,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 1
+  currentSpeed: 0
   timeToClimb: 2
   timeToDig: 2
   timeToFlip: 1
