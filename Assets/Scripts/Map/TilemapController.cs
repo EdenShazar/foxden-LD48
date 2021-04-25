@@ -167,10 +167,27 @@ public class TilemapController : MonoBehaviour
 
         // Left and right boundary
         GenerateBox(leftBoundary, topBoundary, leftBoundary, bottomBoundary, TileType.STONE);
-        GenerateBox(rightBoundary, topBoundary, rightBoundary, bottomBoundary, TileType.STONE);
+        GenerateBox(rightBoundary, topBoundary - 2, rightBoundary, bottomBoundary, TileType.STONE);
 
         // Fill the center
-        GenerateBox(leftBoundary + 1, topBoundary - 2, rightBoundary - 1, bottomBoundary, TileType.DIRT, TileType.BOOZE);
+        GenerateBox(leftBoundary + 1, topBoundary - 5, rightBoundary - 1, bottomBoundary, TileType.DIRT, TileType.BOOZE);
+
+        // Under wagon
+        GenerateBox(rightBoundary - 8, topBoundary - 5, rightBoundary, topBoundary - 5, TileType.STONE);
+        GenerateBox(rightBoundary - 7, topBoundary - 6, rightBoundary, topBoundary - 6, TileType.STONE);
+        GenerateBox(rightBoundary - 5, topBoundary - 7, rightBoundary, topBoundary - 7, TileType.STONE);
+        GenerateBox(rightBoundary - 2, topBoundary - 8, rightBoundary, topBoundary - 8, TileType.STONE);
+        GenerateBox(rightBoundary - 1, topBoundary - 9, rightBoundary, topBoundary - 9, TileType.STONE);
+
+        // Left pile
+        GenerateBox(leftBoundary + 1, topBoundary - 1, leftBoundary + 1, topBoundary - 7, TileType.STONE);
+        GenerateBox(leftBoundary + 2, topBoundary - 3, leftBoundary + 2, topBoundary - 6, TileType.STONE);
+        GenerateBox(leftBoundary + 3, topBoundary - 5, leftBoundary + 3, topBoundary - 5, TileType.STONE);
+
+        // Right pile
+        GenerateBox(rightBoundary - 1, topBoundary - 1, rightBoundary - 1, topBoundary - 4, TileType.STONE);
+        GenerateBox(rightBoundary - 2, topBoundary - 3, rightBoundary - 2, topBoundary - 4, TileType.STONE);
+        GenerateBox(rightBoundary - 3, topBoundary - 4, rightBoundary - 3, topBoundary - 4, TileType.STONE);
     }
 
     public void GenerateBox(int topLeftX, int topLeftY, int botRightX, int botRightY, TileType type)

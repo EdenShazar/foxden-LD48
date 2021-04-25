@@ -107,7 +107,7 @@ MonoBehaviour:
   distanceForHorizontalCollision: 0.1
   currentSpeed: 0
   timeToClimb: 1
-  timeToFlip: 1
+  timeToFlipDirection: 1
 --- !u!50 &3724227844307198175
 Rigidbody2D:
   serializedVersion: 4

@@ -69,18 +69,17 @@ public class GameController : MonoBehaviour {
     public void SetCursor(CursorMode cursorMode)
     {
         currentCursorMode = cursorMode;
-
-        Vector2 hotSpot = new Vector2(6f, 4f);
+        
         switch (cursorMode)
         {
             case CursorMode.REGULAR:
-                Cursor.SetCursor(regularCursor, hotSpot, UnityEngine.CursorMode.Auto);
+                Cursor.SetCursor(regularCursor, new Vector2(6f, 4f), UnityEngine.CursorMode.Auto);
                 break;
             case CursorMode.CLICK:
-                Cursor.SetCursor(clickCursor, hotSpot, UnityEngine.CursorMode.Auto);
+                Cursor.SetCursor(clickCursor, new Vector2(6f, 4f), UnityEngine.CursorMode.Auto);
                 break;
             case CursorMode.STOP:
-                Cursor.SetCursor(stopCursor, hotSpot, UnityEngine.CursorMode.Auto);
+                Cursor.SetCursor(stopCursor, new Vector2(10f, 10f), UnityEngine.CursorMode.Auto);
                 break;
         }
     }

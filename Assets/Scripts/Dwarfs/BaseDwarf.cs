@@ -9,6 +9,7 @@ public struct DwarfSurroundings {
   public Vector3Int cellBelow;
   public Vector3Int cellBelowInFront;
   public bool hasTileInFront;
+  public bool hasTileAboveInFront;
   public bool hasTileBelow;
   public bool hasTileBelowInFront;
 }
@@ -21,8 +22,7 @@ public class BaseDwarf : MonoBehaviour {
 
     [SerializeField]
     private float speed;
-    private float timeElapsedBeforeClimb;
-    private float timeElapsedBeforeSpriteFlip;
+    private float timeElapsedBeforeDirectionFlip = 0f;
     private bool isClimbingLedge;
     private SpriteRenderer dwarfSprite;
     private JobType currentJob = JobType.NONE;
@@ -38,8 +38,8 @@ public class BaseDwarf : MonoBehaviour {
     public float distanceForHorizontalCollision;
     public float currentSpeed;
     public float timeToClimb;
-    public float timeToFlip;
-
+    public float timeToFlipDirection;
+    
   public Vector3Int CurrentCell { get; private set; }
   private DwarfSurroundings surroundings;
 
@@ -55,8 +55,6 @@ public class BaseDwarf : MonoBehaviour {
   }
 
   private void Start() {
-    timeElapsedBeforeClimb = 0;
-    timeElapsedBeforeSpriteFlip = 0;
     currentSpeed = speed;
     dwarfSprite = GetComponent<SpriteRenderer>();
     Rigidbody = GetComponent<Rigidbody2D>();
@@ -66,26 +64,30 @@ public class BaseDwarf : MonoBehaviour {
     dwarfSprite.sortingLayerID = Constants.nonworkingDwarvesLayer;
   }
 
-  private void Update() {
-    CurrentCell = GameController.Tilemap.layoutGrid.WorldToCell(transform.position);
-    float dist = Mathf.Abs(GameController.Tilemap.GetCellCenterWorld(CurrentCell).x - transform.position.x);
-    UpdateSurroundings(CurrentCell);
-    UpdateIsFalling();
+    private void Update()
+    {
+        CurrentCell = GameController.Tilemap.layoutGrid.WorldToCell(transform.position);
+        
+        UpdateSurroundings();
+        UpdateIsFalling();
 
-    bool doDefaultMovement = true;
-    if (currentJob != JobType.NONE) {
-      doDefaultMovement = doJobAction(surroundings);
-    }
-    if (doDefaultMovement) {
-      if (!NullVector3Int.IsVector3IntNull(surroundings.cellInFront)
-          && GameController.TilemapController.GetTypeOfTile(surroundings.cellInFront) != TileType.NONE) {
-        ClimbUpOrChangeDirection();
-      }
-      gameObject.transform.Translate(Vector3.right * (int)MoveDirection * currentSpeed * Time.deltaTime);
-    }
+        if (!IsFalling)
+        {
+            bool doDefaultMovement = true;
+            if (currentJob != JobType.NONE)
+                doDefaultMovement = doJobAction(surroundings);
 
-    if (GameController.workingDwarvesHoveredOver.Contains(this))
-        GameController.workingDwarvesHoveredOver.Remove(this);
+            if (doDefaultMovement)
+            {
+                if (surroundings.hasTileInFront)
+                    ClimbUpOrChangeDirection();
+
+                gameObject.transform.Translate(Vector3.right * (int)MoveDirection * currentSpeed * Time.deltaTime);
+            }
+        }
+
+        if (GameController.workingDwarvesHoveredOver.Contains(this))
+            GameController.workingDwarvesHoveredOver.Remove(this);
     }
 
     public void OnMouseDown() {
@@ -144,30 +146,27 @@ public class BaseDwarf : MonoBehaviour {
         transform.position = GameController.Tilemap.layoutGrid.CellToWorld(CurrentCell + cellMovement) + Vector3.right * 0.5f;
     }
 
-    private void ClimbUpOrChangeDirection() {
-    bool canClimb;
-    Vector3Int cellAboveFront = surroundings.cellAboveInFront;
-    Vector3Int cellInFront = surroundings.cellInFront;
+    private void ClimbUpOrChangeDirection()
+    {
+        bool canClimb = surroundings.hasTileInFront && !surroundings.hasTileAboveInFront
+            && GameController.TilemapController.GetTypeOfTile(surroundings.cellInFront) != TileType.DWARF;
 
-    canClimb = !NullVector3Int.IsVector3IntNull(cellAboveFront) && !GameController.Tilemap.HasTile(cellAboveFront);
+        if (canClimb)
+        {
+            StartCoroutine(ClimbLege());
+            return;
+        }
 
-    if(GameController.TilemapController.GetTypeOfTile(cellInFront) == TileType.DWARF) {
-        canClimb = false;
-    }
-
-    if (canClimb) {
-      StartCoroutine(ClimbLege());
-    } else {
-      timeElapsedBeforeSpriteFlip += Time.deltaTime;
+        timeElapsedBeforeDirectionFlip += Time.deltaTime;
         currentSpeed = 0;
 
-      if (timeElapsedBeforeSpriteFlip >= timeToFlip) {
-        FlipDirection();
-        ResetSpeed();
-        timeElapsedBeforeSpriteFlip = 0;
-      }
+        if (timeElapsedBeforeDirectionFlip >= timeToFlipDirection)
+        {
+            FlipDirection();
+            ResetSpeed();
+            timeElapsedBeforeDirectionFlip = 0f;
+        }
     }
-  }
 
     IEnumerator ClimbLege()
     {
@@ -178,6 +177,12 @@ public class BaseDwarf : MonoBehaviour {
         isClimbingLedge = true;
 
         yield return new WaitForSeconds(timeToClimb);
+
+        // If can no longer climb by end of waiting time, abort
+        bool canClimb = surroundings.hasTileInFront && !surroundings.hasTileAboveInFront
+            && GameController.TilemapController.GetTypeOfTile(surroundings.cellInFront) != TileType.DWARF;
+        if (!canClimb)
+            yield break;
 
         Rigidbody.gravityScale = 0f;
 
@@ -205,37 +210,25 @@ public class BaseDwarf : MonoBehaviour {
         currentSpeed = speed;
     }
 
-  private void UpdateSurroundings(Vector3Int currentCell) {
-    bool horizontalCollision;
-    if(MoveDirection == Direction.RIGHT) {
-       horizontalCollision = GameController.Tilemap.GetCellCenterWorld(currentCell).x 
-         - transform.position.x < -distanceForHorizontalCollision;
-    }else {
-       horizontalCollision = GameController.Tilemap.GetCellCenterWorld(currentCell).x 
-         - transform.position.x > distanceForHorizontalCollision;
-    }
-    if(horizontalCollision) {
-      if (MoveDirection == Direction.LEFT) {
-        surroundings.cellInFront = new Vector3Int(currentCell.x - 1, currentCell.y, 0);
-        surroundings.cellAboveInFront = new Vector3Int(currentCell.x - 1, currentCell.y + 1, 0);
-      } else {
-        surroundings.cellInFront = new Vector3Int(currentCell.x + 1, currentCell.y, 0);
-        surroundings.cellAboveInFront = new Vector3Int(currentCell.x + 1, currentCell.y + 1, 0);
-      }
-    } else {
-      surroundings.cellInFront = NullVector3Int.GetNullVector3Int();
-      surroundings.cellBelow = NullVector3Int.GetNullVector3Int();
-    }
-    surroundings.hasTileInFront = GameController.Tilemap.HasTile(surroundings.cellInFront);
-    surroundings.cellBelow = new Vector3Int(currentCell.x, currentCell.y - 1, 0);
-    surroundings.hasTileBelow = GameController.Tilemap.HasTile(surroundings.cellBelow);
+    private void UpdateSurroundings()
+    {
+        int moveDirectionInt = (int)MoveDirection;
 
-    surroundings.cellBelowInFront = new Vector3Int(currentCell.x + (int)MoveDirection, currentCell.y - 1, 0);
-    surroundings.hasTileBelowInFront = GameController.Tilemap.HasTile(surroundings.cellBelowInFront);
+        surroundings.cellInFront = new Vector3Int(CurrentCell.x + moveDirectionInt, CurrentCell.y, 0);
+        surroundings.hasTileInFront = GameController.Tilemap.HasTile(surroundings.cellInFront);
+
+        surroundings.cellAboveInFront = new Vector3Int(CurrentCell.x + moveDirectionInt, CurrentCell.y + 1, 0);
+        surroundings.hasTileAboveInFront = GameController.Tilemap.HasTile(surroundings.cellAboveInFront);
+
+        surroundings.cellBelow = new Vector3Int(CurrentCell.x, CurrentCell.y - 1, 0);
+        surroundings.hasTileBelow = GameController.Tilemap.HasTile(surroundings.cellBelow);
+
+        surroundings.cellBelowInFront = new Vector3Int(CurrentCell.x + (int)MoveDirection, CurrentCell.y - 1, 0);
+        surroundings.hasTileBelowInFront = GameController.Tilemap.HasTile(surroundings.cellBelowInFront);
     }
 
     private void UpdateIsFalling()
     {
-        IsFalling = Rigidbody.velocity.y <= -0.01f && surroundings.hasTileBelow;
+        IsFalling = Rigidbody.velocity.y <= -0.01 && !surroundings.hasTileBelow;
     }
 }
