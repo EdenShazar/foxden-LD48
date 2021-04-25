@@ -11,10 +11,13 @@ public class TileManager : MonoBehaviour {
   private TileData dirt;
   [SerializeField]
   private TileData stone;
+  [SerializeField]
+  private TileData gold;
 
     public void InitializeTileDictionary() {
     TileDictionary.SetTile(TileType.NONE, none);
     TileDictionary.SetTile(TileType.DIRT, dirt);
     TileDictionary.SetTile(TileType.STONE, stone);
+    TileDictionary.SetTile(TileType.GOLD, gold);
   }
 }

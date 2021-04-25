@@ -5,7 +5,8 @@ using UnityEngine.Tilemaps;
 public enum TileType {
   NONE,
   DIRT,
-  STONE
+  STONE,
+  GOLD
 }
 
 public static class TileDictionary {

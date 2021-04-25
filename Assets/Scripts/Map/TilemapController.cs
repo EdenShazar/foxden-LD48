@@ -144,7 +144,7 @@ public class TilemapController : MonoBehaviour
         GenerateBox(rightBoundary, topBoundary, rightBoundary, bottomBoundary, TileType.STONE);
 
         // Fill the center
-        GenerateBox(leftBoundary + 1, topBoundary - 2, rightBoundary - 1, bottomBoundary, TileType.DIRT);
+        GenerateBox(leftBoundary + 1, topBoundary - 2, rightBoundary - 1, bottomBoundary, TileType.DIRT, TileType.GOLD);
     }
 
     public void GenerateBox(int topLeftX, int topLeftY, int botRightX, int botRightY, TileType type)
@@ -152,5 +152,12 @@ public class TilemapController : MonoBehaviour
         for (int y = topLeftY; y >= botRightY; y--)
             for (int x = topLeftX; x <= botRightX; x++)
                 GameController.TilemapController.InitializeTile(x, y, type);
+    }
+
+    public void GenerateBox(int topLeftX, int topLeftY, int botRightX, int botRightY, params TileType[] types)
+    {
+        for (int y = topLeftY; y >= botRightY; y--)
+            for (int x = topLeftX; x <= botRightX; x++)
+                GameController.TilemapController.InitializeTile(x, y, types[UnityEngine.Random.Range(0, types.Length)]);
     }
 }
