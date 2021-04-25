@@ -57,6 +57,7 @@ public class TilemapController : MonoBehaviour
             return;
 
         tilemap.SetTile(new Vector3Int(x, y, 0), null);
+        UpdateAdjacentTiles(x, y);
 
         TileDestroyed?.Invoke(x, y, tileTypes[x - leftBoundary, y - bottomBoundary]);
 
@@ -73,6 +74,17 @@ public class TilemapController : MonoBehaviour
         for (int x = leftBoundary; x <= rightBoundary; x++)
             for (int y = bottomBoundary; y <= topBoundary; y++)
                 UpdateTile(x, y);
+    }
+
+    public void UpdateAdjacentTiles(int x, int y)
+    {
+        for (int i = -1; i <= 1; i++)
+            for (int j = -1; j <= 1; j++)
+            {
+                if (i == 0 && j == 0)
+                    continue;
+                UpdateTile(x + i, y + j);
+            }
     }
 
     public void UpdateTile(int x, int y)
@@ -132,7 +144,7 @@ public class TilemapController : MonoBehaviour
         GenerateBox(rightBoundary, topBoundary, rightBoundary, bottomBoundary, TileType.STONE);
 
         // Fill the center
-        GenerateBox(leftBoundary + 1, topBoundary - 2, rightBoundary - 1, bottomBoundary, TileType.DIRT);
+        GenerateBox(leftBoundary + 1, topBoundary - 2, rightBoundary - 1, bottomBoundary, TileType.DIRT, TileType.GOLD);
     }
 
     public void GenerateBox(int topLeftX, int topLeftY, int botRightX, int botRightY, TileType type)
@@ -140,5 +152,12 @@ public class TilemapController : MonoBehaviour
         for (int y = topLeftY; y >= botRightY; y--)
             for (int x = topLeftX; x <= botRightX; x++)
                 GameController.TilemapController.InitializeTile(x, y, type);
+    }
+
+    public void GenerateBox(int topLeftX, int topLeftY, int botRightX, int botRightY, params TileType[] types)
+    {
+        for (int y = topLeftY; y >= botRightY; y--)
+            for (int x = topLeftX; x <= botRightX; x++)
+                GameController.TilemapController.InitializeTile(x, y, types[UnityEngine.Random.Range(0, types.Length)]);
     }
 }

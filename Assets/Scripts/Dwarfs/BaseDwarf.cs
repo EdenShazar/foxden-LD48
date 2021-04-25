@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Experimental.Rendering.Universal;
 
 public struct DwarfSurroundings {
   public Vector3Int cellOnLeft;
@@ -20,6 +21,8 @@ public class BaseDwarf : MonoBehaviour {
     private float timeElapsedBeforeSpriteFlip;
     private SpriteRenderer dwarfSprite;
     private JobType currentJob = JobType.NONE;
+    private DwarfAnimator animator;
+    new private Transform light;
 
     public float currentSpeed;
     public float timeToClimb;
@@ -33,6 +36,9 @@ public class BaseDwarf : MonoBehaviour {
 
     private void Awake() {
         Physics2D.queriesStartInColliders = false;
+
+        animator = GetComponent<DwarfAnimator>();
+        light = GetComponentInChildren<Light2D>().transform;
     }
 
     private void Start() {
@@ -120,6 +126,8 @@ public class BaseDwarf : MonoBehaviour {
     {
         moveDirection = (Direction)((int)moveDirection * -1);
         dwarfSprite.flipX = moveDirection == Direction.LEFT;
+        light.localPosition = new Vector3(-light.localPosition.x, light.localPosition.y, 0f);
+        light.localRotation = Quaternion.Euler(0f, 0f, -light.rotation.eulerAngles.z);
     }
 
     private void UpdateSurroundings(Vector3Int currentCell) {
