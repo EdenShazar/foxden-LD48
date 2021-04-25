@@ -23,6 +23,7 @@ public class DigDownJob : DwarfJob {
     timeUntilNextDig = timeToDig;
     dwarf = incDwarf;
     dwarf.transform.position = GameController.Tilemap.layoutGrid.CellToWorld(currentCell) + new Vector3(0.5f, 0.5f, 0.0f);
+    dwarf.animator.Dig();
     return type;
   }
 

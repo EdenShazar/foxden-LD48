@@ -3,23 +3,51 @@ using UnityEngine;
 public class DwarfAnimator : MonoBehaviour
 {
     Animator animator;
+    BaseDwarf dwarf;
 
-    int walk = Animator.StringToHash("walk");
-    int dig = Animator.StringToHash("dig");
-    int mine = Animator.StringToHash("mine");
-    int fall = Animator.StringToHash("fall");
-    int climb = Animator.StringToHash("climb ledge");
-    int stopSign = Animator.StringToHash("stop sign");
+    readonly int walk = Animator.StringToHash("walk");
+    readonly int dig = Animator.StringToHash("dig");
+    readonly int mine = Animator.StringToHash("mine");
+    readonly int fall = Animator.StringToHash("fall");
+    readonly int climb = Animator.StringToHash("climb ledge");
+    readonly int stopSign = Animator.StringToHash("stop sign");
 
-    void Start()
+    int previousAnimationHash;
+
+    bool previousIsFalling = false;
+
+    public void Initialize(BaseDwarf dwarf)
     {
+        this.dwarf = dwarf;
         animator = GetComponent<Animator>();
+        Play(walk);
     }
 
-    public void Walk() => animator.Play(walk);
-    public void Dig() => animator.Play(dig);
-    public void Mine() => animator.Play(mine);
-    public void Fall() => animator.Play(fall);
-    public void Climb() => animator.Play(climb);
-    public void StopSign() => animator.Play(stopSign);
+    void Update()
+    {
+        if (dwarf.IsFalling && !previousIsFalling)
+            animator.Play(fall);
+        else if (!dwarf.IsFalling && previousIsFalling)
+            PlayPreviousAnimation();
+
+        previousIsFalling = dwarf.IsFalling;
+    }
+
+    public void Walk() => Play(walk);
+    public void Dig() => Play(dig);
+    public void Mine() => Play(mine);
+    public void Fall() => Play(fall);
+    public void Climb() => Play(climb);
+    public void StopSign() => Play(stopSign);
+
+    void Play(int animationHash)
+    {
+        animator.Play(animationHash);
+        previousAnimationHash = animationHash;
+    }
+
+    void PlayPreviousAnimation()
+    {
+        animator.Play(previousAnimationHash);
+    }
 }

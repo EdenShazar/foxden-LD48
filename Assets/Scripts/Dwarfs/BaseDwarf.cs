@@ -6,6 +6,7 @@ public struct DwarfSurroundings {
   public Vector3Int cellAboveInFront;
   public Vector3Int cellBelow;
   public bool hasTileInFront;
+  public bool hasTileBelow;
 }
 
 
@@ -20,8 +21,12 @@ public class BaseDwarf : MonoBehaviour {
   private float timeElapsedBeforeSpriteFlip;
   private SpriteRenderer dwarfSprite;
   private JobType currentJob = JobType.NONE;
-  private DwarfAnimator animator;
   new private Transform light;
+  new private Rigidbody2D rigidbody;
+  
+  [HideInInspector] public DwarfAnimator animator;
+
+  public bool IsFalling { get; private set; }
 
   public float distanceForHorizontalCollision;
   public float currentSpeed;
@@ -46,13 +51,16 @@ public class BaseDwarf : MonoBehaviour {
     timeElapsedBeforeSpriteFlip = 0;
     currentSpeed = speed;
     dwarfSprite = GetComponent<SpriteRenderer>();
+    rigidbody = GetComponent<Rigidbody2D>();
     surroundings = new DwarfSurroundings();
+    animator.Initialize(this);
   }
 
   private void Update() {
     currentCell = GameController.Tilemap.layoutGrid.WorldToCell(transform.position);
     float dist = Mathf.Abs(GameController.Tilemap.GetCellCenterWorld(currentCell).x - transform.position.x);
     UpdateSurroundings(currentCell);
+    UpdateIsFalling();
 
     bool doDefaultMovement = true;
     if (currentJob != JobType.NONE) {
@@ -79,6 +87,7 @@ public class BaseDwarf : MonoBehaviour {
 
   public void StopJob() {
     currentJob = JobType.NONE;
+    animator.Walk();
   }
 
   private void ClimbUpOrChangeDirection() {
@@ -141,5 +150,11 @@ public class BaseDwarf : MonoBehaviour {
     }
     surroundings.hasTileInFront = GameController.Tilemap.HasTile(surroundings.cellInFront);
     surroundings.cellBelow = new Vector3Int(currentCell.x, currentCell.y - 1, 0);
-  }
+    surroundings.hasTileBelow = GameController.Tilemap.HasTile(surroundings.cellBelow);
+    }
+
+    private void UpdateIsFalling()
+    {
+        IsFalling = rigidbody.velocity.y <= -0.01f && surroundings.hasTileBelow;
+    }
 }
