@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering.Universal;
 
@@ -16,11 +17,13 @@ public enum Direction { LEFT = -1, RIGHT = 1 }
 
 public class BaseDwarf : MonoBehaviour {
 
+    const float climbLedgeRopeAnimationTime = 1f;
 
     [SerializeField]
     private float speed;
     private float timeElapsedBeforeClimb;
     private float timeElapsedBeforeSpriteFlip;
+    private bool isClimbingLedge;
     private SpriteRenderer dwarfSprite;
     private JobType currentJob = JobType.NONE;
     new private Transform light;
@@ -135,28 +138,42 @@ public class BaseDwarf : MonoBehaviour {
     }
 
     if (canClimb) {
-      //if there is an empty space, stop and get ready to climb
-      if (timeElapsedBeforeClimb < timeToClimb) {
-        timeElapsedBeforeClimb += Time.deltaTime;
-        currentSpeed = 0;
-
-        if (timeElapsedBeforeClimb >= timeToClimb) {
-          transform.position = GameController.Tilemap.layoutGrid.CellToWorld(cellAboveFront);
-          timeElapsedBeforeClimb = 0f;
-          currentSpeed = speed;
-        }
-      }
+      StartCoroutine(ClimbLege());
     } else {
       timeElapsedBeforeSpriteFlip += Time.deltaTime;
         currentSpeed = 0;
 
       if (timeElapsedBeforeSpriteFlip >= timeToFlip) {
         FlipDirection();
-        currentSpeed = speed;
+        ResetSpeed();
         timeElapsedBeforeSpriteFlip = 0;
       }
     }
   }
+
+    IEnumerator ClimbLege()
+    {
+        // Ensure coroutine isn't running more than once
+        if (isClimbingLedge)
+            yield break;
+
+        isClimbingLedge = true;
+
+        yield return new WaitForSeconds(timeToClimb);
+
+        Rigidbody.gravityScale = 0f;
+
+        SnapToCurrentCell();
+        animator.ClimbLedge();
+
+        yield return new WaitForSeconds(climbLedgeRopeAnimationTime);
+
+        isClimbingLedge = false;
+        Rigidbody.gravityScale = 1f;
+        SnapToRelativeCell(Vector3Int.up + Vector3Int.right * (int)MoveDirection);
+        animator.Walk();
+        ResetSpeed();
+    }
 
   public void FlipDirection() {
     MoveDirection = (Direction)((int)MoveDirection * -1);
