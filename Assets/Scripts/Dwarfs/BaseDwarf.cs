@@ -63,6 +63,7 @@ public class BaseDwarf : MonoBehaviour {
     JobIcon = GetComponentInChildren<JobIconChanger>();
     surroundings = new DwarfSurroundings();
     animator.Initialize(this);
+    dwarfSprite.sortingLayerID = Constants.nonworkingDwarvesLayer;
   }
 
   private void Update() {
@@ -101,6 +102,7 @@ public class BaseDwarf : MonoBehaviour {
             currentJob = jobToAssign.InitializeJobAction(this, CurrentCell);
             doJobAction = jobToAssign.JobAction;
             canStopJob = jobToAssign.CanStopJob;
+            dwarfSprite.sortingLayerID = Constants.workingDwarvesLayer;
         }
     }
 
@@ -128,6 +130,7 @@ public class BaseDwarf : MonoBehaviour {
     currentJob = JobType.NONE;
     animator.Walk();
     JobIcon.RemoveIcon();
+    dwarfSprite.sortingLayerID = Constants.nonworkingDwarvesLayer;
     currentSpeed = speed;
   }
 
