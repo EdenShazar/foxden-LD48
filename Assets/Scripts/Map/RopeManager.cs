@@ -125,7 +125,7 @@ public class RopeManager : MonoBehaviour
         while (true)
         {
             // Hit ground
-            if (GameController.Tilemap.HasTile(cell) || GameController.TilemapController.IsCellOutOfBounds(cell))
+            if (GameController.TilemapController.HasTile(cell) || GameController.TilemapController.IsCellOutOfBounds(cell))
             {
                 nextRopeCell = cell + Vector3Int.up;
                 return false;

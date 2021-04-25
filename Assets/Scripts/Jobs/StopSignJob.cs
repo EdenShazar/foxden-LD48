@@ -12,15 +12,21 @@ public class StopSignJob : DwarfJob
     }
 
     public override JobType InitializeJobAction(BaseDwarf incDwarf, Vector3Int currentCell) {
-        GameController.TilemapController.InitializeTile(currentCell.x, currentCell.y, TileType.DWARF);
         dwarf = incDwarf;
         dwarf.SnapToCurrentCell();
+        
+        GameController.TilemapController.OccupyCellWithDwarf(dwarf.CurrentCell);
 
         //add animation for dwarf
         dwarf.animator.StopSign();
         dwarf.JobIcon.SetStopSignIcon();
 
         return type;
+    }
+
+    public override void FinalizeJobAction()
+    {
+        GameController.TilemapController.UnoccupyCellWithDwarf(dwarf.CurrentCell);
     }
 
     public override JobType GetJobType() {

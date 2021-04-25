@@ -9,7 +9,7 @@ public class DigDownJob : DwarfJob {
   private JobType type = JobType.DIG_DOWN;
 
   public override bool JobAction(DwarfSurroundings surroundings) {
-    if(GameController.Tilemap.HasTile(surroundings.cellBelow)) {
+    if(GameController.TilemapController.HasTile(surroundings.cellBelow)) {
       timeUntilNextDig -= Time.deltaTime;
 
       dwarf.audioPlayer.PlaySound("pickHit", dwarf.CurrentCell);

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -14,6 +15,7 @@ public class TilemapController : MonoBehaviour
     Tilemap tilemap;
 
     TileType[,] tileTypes;
+    Dictionary<Vector3Int, int> cellsOccupiedWithDwarvesCount = new Dictionary<Vector3Int, int>();
 
     public event Action<int, int, TileType> TileDestroyed;
 
@@ -51,6 +53,43 @@ public class TilemapController : MonoBehaviour
     {
         InitializeTile(x, y, type);
         UpdateTile(x, y);
+    }
+
+    public void OccupyCellWithDwarf(Vector3Int cell)
+    {
+        if (!cellsOccupiedWithDwarvesCount.ContainsKey(cell))
+        {
+            cellsOccupiedWithDwarvesCount[cell] = 0;
+            return;
+        }
+
+        cellsOccupiedWithDwarvesCount[cell]++;
+    }
+
+    public void UnoccupyCellWithDwarf(Vector3Int cell)
+    {
+        if (!cellsOccupiedWithDwarvesCount.ContainsKey(cell))
+            return;
+
+        cellsOccupiedWithDwarvesCount[cell]--;
+
+        if (cellsOccupiedWithDwarvesCount[cell] <= 0)
+            cellsOccupiedWithDwarvesCount.Remove(cell);
+    }
+
+    public bool IsCellOccupiedWithDwarf(Vector3Int cell)
+    {
+        return cellsOccupiedWithDwarvesCount.ContainsKey(cell);
+    }
+
+    public bool HasTile(Vector3Int cell)
+    {
+        return tilemap.HasTile(cell);
+    }
+
+    public bool HasTileOrDwarf(Vector3Int cell)
+    {
+        return tilemap.HasTile(cell) || IsCellOccupiedWithDwarf(cell);
     }
 
     public TileType GetTypeOfTile(int x, int y) {
