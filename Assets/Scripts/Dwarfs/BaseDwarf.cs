@@ -20,6 +20,7 @@ public class BaseDwarf : MonoBehaviour {
     private float timeElapsedBeforeClimb;
     private float timeElapsedBeforeSpriteFlip;
     private SpriteRenderer dwarfSprite;
+    private JobType currentJob = JobType.NONE;
     private DwarfAnimator animator;
     new private Transform light;
 
@@ -53,7 +54,7 @@ public class BaseDwarf : MonoBehaviour {
 
         UpdateSurroundings(currentCell);
 
-        if(doJobAction != null) {
+        if(currentJob != JobType.NONE) {
           doJobAction(surroundings);
         } else {
           //is the dwarf in a hole
@@ -69,18 +70,17 @@ public class BaseDwarf : MonoBehaviour {
 
           gameObject.transform.Translate(Vector3.right * (int)moveDirection * currentSpeed * Time.deltaTime);
         }
-
-        //Temp solution just for testing "assigning" dig
-        if (Input.GetMouseButtonDown(0)) {
-          DwarfJob debugJob = ScriptableObject.CreateInstance<DigDownJob>();
-          if (doJobAction == null) {
-            doJobAction = debugJob.JobAction;
-            debugJob.InitializeJobAction(this, currentCell);
-          } else {
-            doJobAction = null;
-          }
-        }
     }
+
+  public void OnMouseDown() {
+    DwarfJob jobToAssign = JobSelector.GetSelectedJob();
+    if(currentJob != jobToAssign.GetJobType()) {
+      currentJob = jobToAssign.InitializeJobAction(this, currentCell);
+      doJobAction = jobToAssign.JobAction;
+    } else {
+      currentJob = JobType.NONE;
+    }
+  }
 
   private void ClimbUpOrChangeDirection(bool surroundedByTiles) {
         bool canClimb = false;
