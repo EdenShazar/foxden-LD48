@@ -108,6 +108,17 @@ public class BaseDwarf : MonoBehaviour {
 
         if (GameController.workingDwarvesHoveredOver.Contains(this))
             GameController.workingDwarvesHoveredOver.Remove(this);
+
+        if (currentJob == null)
+        {
+            dwarfSprite.sortingLayerID = Constants.nonworkingDwarvesLayer;
+            transform.position = new Vector3(transform.position.x, transform.position.y, currentDrunkAmount * 0.01f);
+        }
+        else
+        {
+            dwarfSprite.sortingLayerID = Constants.workingDwarvesLayer;
+            transform.position = new Vector3(transform.position.x, transform.position.y, -5f + currentDrunkAmount * 0.01f);
+        }
     }
 
     void OnTriggerEnter2D(Collider2D collider)
@@ -164,7 +175,6 @@ public class BaseDwarf : MonoBehaviour {
       currentJob = null;
       animator.Walk();
       JobIcon.RemoveIcon();
-      dwarfSprite.sortingLayerID = Constants.nonworkingDwarvesLayer;
       currentSpeed = speed;
     }
 
