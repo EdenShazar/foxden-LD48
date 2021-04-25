@@ -25,6 +25,7 @@ public class GameController : MonoBehaviour {
     public static Tilemap Tilemap { get => instance.tilemap; }
     public static TilemapController TilemapController { get => instance.tilemapController; }
     public static RopeManager RopeManager { get => instance.ropeManager; }
+    public static AudioManager AudioManager { get => instance.audioManager; } 
 
     public static List<BaseDwarf> workingDwarvesHoveredOver { get; private set; } = new List<BaseDwarf>();
 
