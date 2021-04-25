@@ -4,6 +4,8 @@ public class CameraController : MonoBehaviour
 {
     [SerializeField, Range(0f, 0.5f)] float scrollRegionWidth = 0.15f;
     [SerializeField, Min(0.01f)] float scrollSensitivity = 1f;
+    [SerializeField] float topBound = 9f;
+    [SerializeField] float bottomBound = -90f;
 
     new Camera camera;
 
@@ -34,8 +36,9 @@ public class CameraController : MonoBehaviour
         // Parabolic curve feels better than linear
         scrollFactor *= scrollFactor;
 
-        camera.transform.Translate(0f, scrollDirection * scrollSensitivity * scrollFactor * Time.deltaTime, 0f);
+        camera.transform.Translate(Vector3.up * scrollDirection * scrollSensitivity * scrollFactor * Time.deltaTime);
 
-        // TODO: Clamp camera scrolling
+        float clampedCameraY = Mathf.Clamp(camera.transform.position.y, bottomBound, topBound);
+        camera.transform.Translate(Vector3.up * (clampedCameraY - camera.transform.position.y));
     }
 }

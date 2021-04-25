@@ -77,15 +77,21 @@ public class BaseDwarf : MonoBehaviour {
     }
   }
 
-  public void OnMouseDown() {
-    DwarfJob jobToAssign = JobSelector.GetSelectedJob();
-    if (currentJob != jobToAssign.GetJobType()) {
-      currentJob = jobToAssign.InitializeJobAction(this, CurrentCell);
-      doJobAction = jobToAssign.JobAction;
-    } else {
-      StopJob();
+    public void OnMouseDown() {
+        DwarfJob jobToAssign = JobSelector.GetSelectedJob();
+
+        if (currentJob != JobType.NONE) {
+            // Can't override current job; ordered to stop previous job first
+            StopJob();
+        } else if (currentJob == jobToAssign.GetJobType()) {
+            // Can't reassign the same job again
+            return;
+        } else {
+            // Assign new job
+            currentJob = jobToAssign.InitializeJobAction(this, CurrentCell);
+            doJobAction = jobToAssign.JobAction;
+        }
     }
-  }
 
   public void StopJob() {
     if (currentJob == JobType.STOP) {
@@ -103,7 +109,7 @@ public class BaseDwarf : MonoBehaviour {
     }
 
   private void ClimbUpOrChangeDirection() {
-    bool canClimb = false;
+    bool canClimb;
     Vector3Int cellAboveFront = surroundings.cellAboveInFront;
     Vector3Int cellInFront = surroundings.cellInFront;
 
