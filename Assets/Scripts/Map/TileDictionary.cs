@@ -6,7 +6,8 @@ public enum TileType {
   NONE,
   DIRT,
   STONE,
-  GOLD
+  GOLD,
+  DWARF
 }
 
 public static class TileDictionary {

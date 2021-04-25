@@ -88,6 +88,11 @@ public class BaseDwarf : MonoBehaviour {
   }
 
   public void StopJob() {
+    if (currentJob == JobType.STOP) {
+        if (GameController.TilemapController.GetTypeOfTile(CurrentCell) == TileType.DWARF)
+            GameController.TilemapController.RemoveTile(CurrentCell);
+    }
+
     currentJob = JobType.NONE;
     animator.Walk();
   }
@@ -100,8 +105,13 @@ public class BaseDwarf : MonoBehaviour {
   private void ClimbUpOrChangeDirection() {
     bool canClimb = false;
     Vector3Int cellAboveFront = surroundings.cellAboveInFront;
+    Vector3Int cellInFront = surroundings.cellInFront;
 
     canClimb = !NullVector3Int.IsVector3IntNull(cellAboveFront) && !GameController.Tilemap.HasTile(cellAboveFront);
+
+    if(GameController.TilemapController.GetTypeOfTile(cellInFront) == TileType.DWARF) {
+        canClimb = false;
+    }
 
     if (canClimb) {
       //if there is an empty space, stop and get ready to climb

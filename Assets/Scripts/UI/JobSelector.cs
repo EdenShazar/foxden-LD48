@@ -64,7 +64,7 @@ public class JobSelector : MonoBehaviour {
     jobs = new List<DwarfJob>() {
       ScriptableObject.CreateInstance<DigDownJob>(),
       ScriptableObject.CreateInstance<DigSideJob>(),
-      ScriptableObject.CreateInstance<DigDownJob>(),
+      ScriptableObject.CreateInstance<StopSignJob>(),
       ScriptableObject.CreateInstance<RopeJob>(),
       ScriptableObject.CreateInstance<DigDownJob>()
     };
