@@ -42,6 +42,7 @@ public class RopeJob : DwarfJob
     {
         timeUntilNextRope = timeToLayRope;
         dwarf = incDwarf;
+        dwarf.JobIcon.SetRopeIcon();
         return type;
     }
 

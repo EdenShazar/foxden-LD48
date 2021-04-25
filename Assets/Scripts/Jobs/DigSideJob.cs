@@ -27,6 +27,7 @@ public class DigSideJob : DwarfJob {
   public override JobType InitializeJobAction(BaseDwarf incDwarf, Vector3Int currentCell) {
     timeUntilNextDig = timeToDig;
     dwarf = incDwarf;
+    dwarf.JobIcon.SetMiningIcon();
     return type;
   }
 

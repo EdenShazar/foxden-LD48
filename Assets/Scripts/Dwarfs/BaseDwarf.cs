@@ -28,6 +28,7 @@ public class BaseDwarf : MonoBehaviour {
     [HideInInspector] public DwarfAnimator animator;
 
     [HideInInspector] public Rigidbody2D Rigidbody { get; private set; }
+    [HideInInspector] public JobIconChanger JobIcon { get; private set; }
     [HideInInspector] public Direction MoveDirection { get; private set; } = Direction.RIGHT;
     [HideInInspector] public bool IsFalling { get; private set; }
 
@@ -56,6 +57,7 @@ public class BaseDwarf : MonoBehaviour {
     currentSpeed = speed;
     dwarfSprite = GetComponent<SpriteRenderer>();
     Rigidbody = GetComponent<Rigidbody2D>();
+    JobIcon = GetComponentInChildren<JobIconChanger>();
     surroundings = new DwarfSurroundings();
     animator.Initialize(this);
   }
@@ -107,6 +109,7 @@ public class BaseDwarf : MonoBehaviour {
 
     currentJob = JobType.NONE;
     animator.Walk();
+    JobIcon.RemoveIcon();
     currentSpeed = speed;
   }
 

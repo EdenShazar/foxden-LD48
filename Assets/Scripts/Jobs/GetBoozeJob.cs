@@ -37,6 +37,7 @@ public class GetBoozeJob : DwarfJob
     public override JobType InitializeJobAction(BaseDwarf incDwarf, Vector3Int currentCell)
     {
         dwarf = incDwarf;
+        dwarf.JobIcon.SetGetBoozeIcon();
         return type;
     }
 

@@ -18,6 +18,7 @@ public class StopSignJob : DwarfJob
 
         //add animation for dwarf
         dwarf.animator.StopSign();
+        dwarf.JobIcon.SetStopSignIcon();
 
         return type;
     }
