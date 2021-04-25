@@ -1,16 +1,17 @@
 using System.Collections;
 using UnityEngine;
 
-public class GetBoozeJob : DwarfJob
-{
-    const float pullUpRopeAnimationTime = 1f;
-    const float climbSpeed = 1f;
+public class GetBoozeJob : DwarfJob {
+  const float pullUpRopeAnimationTime = 1f;
+  const float climbSpeed = 1f;
 
-    BaseDwarf dwarf;
-    JobType type = JobType.GET_BOOZE;
+  BaseDwarf dwarf;
+  JobType type = JobType.GET_BOOZE;
 
-    bool isClimbing = false;
-    bool isPullingUpRope = false;
+  bool isClimbing = false;
+  bool isPullingUpRope = false;
+
+  public override float sobrietyScale {get {return 0.1f;} }
 
     public override bool JobAction(DwarfSurroundings surroundings)
     {
@@ -34,11 +35,10 @@ public class GetBoozeJob : DwarfJob
         return !isPullingUpRope;
     }
 
-    public override JobType InitializeJobAction(BaseDwarf incDwarf, Vector3Int currentCell)
+    public override void InitializeJobAction(BaseDwarf incDwarf, Vector3Int currentCell)
     {
         dwarf = incDwarf;
         dwarf.JobIcon.SetGetBoozeIcon();
-        return type;
     }
 
     public override JobType GetJobType()

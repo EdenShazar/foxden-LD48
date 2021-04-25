@@ -9,7 +9,9 @@ public class RopeJob : DwarfJob
 
     bool hasPlacedAnchor = false;
 
-    public override bool JobAction(DwarfSurroundings surroundings)
+  public override float sobrietyScale { get { return 0.0f; } }
+
+  public override bool JobAction(DwarfSurroundings surroundings)
     {
         if (!surroundings.hasTileInFront && !surroundings.hasTileBelowInFront && surroundings.hasTileBelow)
         {
@@ -40,12 +42,11 @@ public class RopeJob : DwarfJob
         return true;
     }
 
-    public override JobType InitializeJobAction(BaseDwarf incDwarf, Vector3Int currentCell)
+    public override void InitializeJobAction(BaseDwarf incDwarf, Vector3Int currentCell)
     {
         timeUntilNextRope = timeToLayRope;
         dwarf = incDwarf;
         dwarf.JobIcon.SetRopeIcon();
-        return type;
     }
 
     public override JobType GetJobType()

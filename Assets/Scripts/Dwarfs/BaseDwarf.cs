@@ -23,9 +23,12 @@ public class BaseDwarf : MonoBehaviour {
     [SerializeField]
     private float speed;
     private float timeElapsedBeforeDirectionFlip = 0f;
+    //0 is sober, Goes down by 1 a second base
+    private float maxDrunkAmount = 100.0f;
+    private float currentDrunkAmount = 100.0f;
     private bool isClimbingLedge;
     private SpriteRenderer dwarfSprite;
-    private JobType currentJob = JobType.NONE;
+    private DwarfJob currentJob = null;
     new private Transform light;
 
     [HideInInspector] public DwarfAnimator animator;
@@ -69,14 +72,23 @@ public class BaseDwarf : MonoBehaviour {
     private void Update()
     {
         CurrentCell = GameController.Tilemap.layoutGrid.WorldToCell(transform.position);
-        
+
+        if (currentJob != null) {
+          currentDrunkAmount -= Time.deltaTime * currentJob.sobrietyScale;
+        } else {
+          currentDrunkAmount -= Time.deltaTime;
+        }
+        Debug.Log(currentDrunkAmount);
+        if(currentDrunkAmount < 0.0f) {
+          RemoveDwarf();
+        }
         UpdateSurroundings();
         UpdateIsFalling();
 
         if (!IsFalling)
         {
             bool doDefaultMovement = true;
-            if (currentJob != JobType.NONE)
+            if (currentJob != null)
                 doDefaultMovement = doJobAction(surroundings);
 
             if (doDefaultMovement)
@@ -95,15 +107,16 @@ public class BaseDwarf : MonoBehaviour {
     public void OnMouseDown() {
         DwarfJob jobToAssign = JobSelector.GetSelectedJob();
 
-        if (currentJob != JobType.NONE) {
+        if (currentJob != null) {
             // Can't override current job; ordered to stop previous job first
             StopJob();
-        } else if (currentJob == jobToAssign.GetJobType()) {
+        } else if (currentJob.GetJobType() == jobToAssign.GetJobType()) {
             // Can't reassign the same job again
             return;
         } else {
             // Assign new job
-            currentJob = jobToAssign.InitializeJobAction(this, CurrentCell);
+            currentJob = jobToAssign;
+            currentJob.InitializeJobAction(this, CurrentCell);
             doJobAction = jobToAssign.JobAction;
             canStopJob = jobToAssign.CanStopJob;
             dwarfSprite.sortingLayerID = Constants.workingDwarvesLayer;
@@ -112,7 +125,7 @@ public class BaseDwarf : MonoBehaviour {
 
     public void OnMouseOver()
     {
-        if (currentJob == JobType.NONE)
+        if (currentJob == null)
         {
             if (GameController.workingDwarvesHoveredOver.Contains(this))
                 GameController.workingDwarvesHoveredOver.Remove(this);
@@ -123,15 +136,23 @@ public class BaseDwarf : MonoBehaviour {
     }
 
     public void StopJob() {
-    if (!canStopJob())
+      if (!canStopJob())
         return;
 
-    currentJob = JobType.NONE;
-    animator.Walk();
-    JobIcon.RemoveIcon();
-    dwarfSprite.sortingLayerID = Constants.nonworkingDwarvesLayer;
-    currentSpeed = speed;
-  }
+      currentJob = null;
+      animator.Walk();
+      JobIcon.RemoveIcon();
+      dwarfSprite.sortingLayerID = Constants.nonworkingDwarvesLayer;
+      currentSpeed = speed;
+    }
+
+    public void ResetDrunk() {
+      currentDrunkAmount = maxDrunkAmount;
+    }
+
+    public void RemoveDwarf() {
+      Destroy(gameObject);
+    }
 
     public void SnapToCurrentCell()
     {

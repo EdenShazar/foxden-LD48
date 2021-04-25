@@ -8,6 +8,8 @@ public class DigDownJob : DwarfJob {
   private BaseDwarf dwarf;
   private JobType type = JobType.DIG_DOWN;
 
+  public override float sobrietyScale { get{ return 1.0f; } }
+
   public override bool JobAction(DwarfSurroundings surroundings) {
     if(GameController.TilemapController.HasTile(surroundings.cellBelow)) {
       timeUntilNextDig -= Time.deltaTime;
@@ -22,13 +24,12 @@ public class DigDownJob : DwarfJob {
     return false;
   }
 
-  public override JobType InitializeJobAction(BaseDwarf incDwarf, Vector3Int currentCell) {
+  public override void InitializeJobAction(BaseDwarf incDwarf, Vector3Int currentCell) {
     timeUntilNextDig = timeToDig;
     dwarf = incDwarf;
     dwarf.SnapToCurrentCell();
     dwarf.animator.Dig();
     dwarf.JobIcon.SetDiggingIcon();
-    return type;
   }
 
   public override JobType GetJobType() {
