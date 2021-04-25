@@ -165,6 +165,11 @@ public class BaseDwarf : MonoBehaviour {
     light.localRotation = Quaternion.Euler(0f, 0f, -light.rotation.eulerAngles.z);
   }
 
+    public void ResetSpeed()
+    {
+        currentSpeed = speed;
+    }
+
   private void UpdateSurroundings(Vector3Int currentCell) {
     bool horizontalCollision;
     if(MoveDirection == Direction.RIGHT) {
