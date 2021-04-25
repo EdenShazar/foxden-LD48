@@ -11,6 +11,6 @@ public enum JobType {
 
 public abstract class DwarfJob : ScriptableObject  {
   public abstract bool JobAction(DwarfSurroundings surroundings);
-  public abstract JobType InitializeJobAction(BaseDwarf dwarf, Vector3Int currentCell);
+  public abstract JobType InitializeJobAction(BaseDwarf incDwarf, Vector3Int currentCell);
   public abstract JobType GetJobType();
 }

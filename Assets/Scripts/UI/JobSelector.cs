@@ -63,7 +63,7 @@ public class JobSelector : MonoBehaviour {
   private void InitializeJobs() {
     jobs = new List<DwarfJob>() {
       ScriptableObject.CreateInstance<DigDownJob>(),
-      ScriptableObject.CreateInstance<DigDownJob>(),
+      ScriptableObject.CreateInstance<DigSideJob>(),
       ScriptableObject.CreateInstance<DigDownJob>(),
       ScriptableObject.CreateInstance<DigDownJob>(),
       ScriptableObject.CreateInstance<DigDownJob>()

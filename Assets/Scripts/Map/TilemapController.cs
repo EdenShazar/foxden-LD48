@@ -51,6 +51,18 @@ public class TilemapController : MonoBehaviour
         UpdateTile(x, y);
     }
 
+    public TileType GetTypeOfTile(int x, int y) {
+      if(x < leftBoundary || x > rightBoundary || y < bottomBoundary || y > topBoundary) {
+        Debug.LogError($"Looked up {x},{y} which is outside the map");
+        return TileType.NONE;
+      }
+      return tileTypes[x - leftBoundary, y - bottomBoundary];
+    }
+
+    public TileType GetTypeOfTile(Vector3Int location) {
+      return GetTypeOfTile(location.x, location.y);
+    }
+
     public void RemoveTile(int x, int y)
     {
         if (x < leftBoundary || x > rightBoundary || y < bottomBoundary || y > topBoundary)
