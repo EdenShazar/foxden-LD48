@@ -17,6 +17,15 @@ public class GetBoozeJob : DwarfJob {
     {
         bool revertToDefaultAction;
 
+        if (dwarf.isAtWagon)
+        {
+            dwarf.ResetDrunk();
+            dwarf.FlipDirection();
+            dwarf.isAtWagon = false;
+            dwarf.StopJob();
+            return false;
+        }
+
         // Start climbing when possible
         if (!isClimbing && !isPullingUpRope)
         {

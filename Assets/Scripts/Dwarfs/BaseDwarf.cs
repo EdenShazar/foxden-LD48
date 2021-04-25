@@ -41,6 +41,8 @@ public class BaseDwarf : MonoBehaviour {
     [HideInInspector] public Direction MoveDirection { get; private set; } = Direction.RIGHT;
     [HideInInspector] public bool IsFalling { get; private set; }
 
+    [HideInInspector] public bool isAtWagon;
+
     public float distanceForHorizontalCollision;
     public float currentSpeed;
     public float timeToClimb;
@@ -95,7 +97,8 @@ public class BaseDwarf : MonoBehaviour {
 
             if (doDefaultMovement)
             {
-                if (surroundings.hasTileInFront && surroundings.cellDistanceToTileInFront <= Constants.horizontalInteractionDistance)
+                if (surroundings.hasTileInFront && surroundings.cellDistanceToTileInFront <= Constants.horizontalInteractionDistance
+                    || isAtWagon)
                     ClimbUpOrChangeDirection();
 
                 gameObject.transform.Translate(Vector3.right * (int)MoveDirection * currentSpeed * Time.deltaTime);
@@ -104,6 +107,22 @@ public class BaseDwarf : MonoBehaviour {
 
         if (GameController.workingDwarvesHoveredOver.Contains(this))
             GameController.workingDwarvesHoveredOver.Remove(this);
+    }
+
+    void OnTriggerEnter2D(Collider2D collider)
+    {
+        if (collider.gameObject.layer != Constants.wagonLayer)
+            return;
+
+        isAtWagon = true;
+    }
+
+    void OnTriggerExit2D(Collider2D collider)
+    {
+        if (collider.gameObject.layer != Constants.wagonLayer)
+            return;
+
+        isAtWagon = false;
     }
 
     public void OnMouseDown() {
@@ -185,6 +204,7 @@ public class BaseDwarf : MonoBehaviour {
             FlipDirection();
             ResetSpeed();
             timeElapsedBeforeDirectionFlip = 0f;
+            isAtWagon = false;
         }
     }
 
