@@ -39,6 +39,12 @@ public class GameController : MonoBehaviour {
     tilemapController.UpdateAllTiles();
   }
 
+  private void Update() {
+    if(Input.GetKeyDown(KeyCode.Space)) {
+      Instantiate(dwarf);
+    }
+  }
+
   void EnsureSingleton()
   {
       if (instance == null)

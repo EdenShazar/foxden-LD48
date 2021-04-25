@@ -2,162 +2,144 @@ using UnityEngine;
 using UnityEngine.Experimental.Rendering.Universal;
 
 public struct DwarfSurroundings {
-  public Vector3Int cellOnLeft;
-  public Vector3Int cellOnRight;
+  public Vector3Int cellInFront;
+  public Vector3Int cellAboveInFront;
   public Vector3Int cellBelow;
-  public bool hasTileOnLeft;
-  public bool hasTileOnRight;
+  public bool hasTileInFront;
 }
 
 
 public class BaseDwarf : MonoBehaviour {
 
-    enum Direction { LEFT = -1, RIGHT = 1 }
+  enum Direction { LEFT = -1, RIGHT = 1 }
 
-    [SerializeField]
-    private float speed;
-    private Direction moveDirection = Direction.RIGHT;
-    private float timeElapsedBeforeClimb;
-    private float timeElapsedBeforeSpriteFlip;
-    private SpriteRenderer dwarfSprite;
-    private JobType currentJob = JobType.NONE;
-    private DwarfAnimator animator;
-    new private Transform light;
+  [SerializeField]
+  private float speed;
+  private Direction moveDirection = Direction.RIGHT;
+  private float timeElapsedBeforeClimb;
+  private float timeElapsedBeforeSpriteFlip;
+  private SpriteRenderer dwarfSprite;
+  private JobType currentJob = JobType.NONE;
+  private DwarfAnimator animator;
+  new private Transform light;
 
-    public float currentSpeed;
-    public float timeToClimb;
-    public float timeToFlip;
+  public float distanceForHorizontalCollision;
+  public float currentSpeed;
+  public float timeToClimb;
+  public float timeToFlip;
 
-    private Vector3Int currentCell;
-    private DwarfSurroundings surroundings;
+  private Vector3Int currentCell;
+  private DwarfSurroundings surroundings;
 
-    delegate bool JobAction(DwarfSurroundings surroundings);
-    private JobAction doJobAction = null;
+  delegate bool JobAction(DwarfSurroundings surroundings);
+  private JobAction doJobAction = null;
 
-    private void Awake() {
-        Physics2D.queriesStartInColliders = false;
+  private void Awake() {
+    Physics2D.queriesStartInColliders = false;
 
-        animator = GetComponent<DwarfAnimator>();
-        light = GetComponentInChildren<Light2D>().transform;
+    animator = GetComponent<DwarfAnimator>();
+    light = GetComponentInChildren<Light2D>().transform;
+  }
+
+  private void Start() {
+    timeElapsedBeforeClimb = 0;
+    timeElapsedBeforeSpriteFlip = 0;
+    currentSpeed = speed;
+    dwarfSprite = GetComponent<SpriteRenderer>();
+    surroundings = new DwarfSurroundings();
+  }
+
+  private void Update() {
+    currentCell = GameController.Tilemap.layoutGrid.WorldToCell(transform.position);
+    float dist = Mathf.Abs(GameController.Tilemap.GetCellCenterWorld(currentCell).x - transform.position.x);
+    UpdateSurroundings(currentCell);
+
+    bool doDefaultMovement = true;
+    if (currentJob != JobType.NONE) {
+      doDefaultMovement = doJobAction(surroundings);
     }
-
-    private void Start() {
-        timeElapsedBeforeClimb = 0;
-        timeElapsedBeforeSpriteFlip = 0;
-        currentSpeed = speed;
-        dwarfSprite = GetComponent<SpriteRenderer>();
-      surroundings = new DwarfSurroundings();
+    if (doDefaultMovement) {
+      if (!NullVector3Int.IsVector3IntNull(surroundings.cellInFront)
+          && GameController.TilemapController.GetTypeOfTile(surroundings.cellInFront) != TileType.NONE) {
+        ClimbUpOrChangeDirection();
+      }
+      gameObject.transform.Translate(Vector3.right * (int)moveDirection * currentSpeed * Time.deltaTime);
     }
-
-    private void Update() {
-        currentCell = GameController.Tilemap.layoutGrid.WorldToCell(transform.position);
-
-        UpdateSurroundings(currentCell);
-
-        if(currentJob != JobType.NONE) {
-          doJobAction(surroundings);
-        } else {
-          //is the dwarf in a hole
-          if (surroundings.hasTileOnLeft && surroundings.hasTileOnRight) {
-            currentSpeed = 0;
-
-            ClimbUpOrChangeDirection(true);
-
-          }
-          else if (surroundings.hasTileOnLeft != surroundings.hasTileOnRight) {
-            ClimbUpOrChangeDirection(false);
-          }
-
-          gameObject.transform.Translate(Vector3.right * (int)moveDirection * currentSpeed * Time.deltaTime);
-        }
-    }
+  }
 
   public void OnMouseDown() {
     DwarfJob jobToAssign = JobSelector.GetSelectedJob();
-    if(currentJob != jobToAssign.GetJobType()) {
+    if (currentJob != jobToAssign.GetJobType()) {
       currentJob = jobToAssign.InitializeJobAction(this, currentCell);
       doJobAction = jobToAssign.JobAction;
     } else {
-      currentJob = JobType.NONE;
+      StopJob();
     }
   }
 
-  private void ClimbUpOrChangeDirection(bool surroundedByTiles) {
-        bool canClimb = false;
-        if (moveDirection == Direction.RIGHT) {
-            Vector3Int cellAboveAndToRight = new Vector3Int(currentCell.x + 1, currentCell.y + 1, 0);
-            canClimb = !GameController.Tilemap.HasTile(cellAboveAndToRight);
-        }
-        else if (moveDirection == Direction.LEFT) {
-            Vector3Int cellAboveAndToLeft= new Vector3Int(currentCell.x - 1, currentCell.y + 1, 0);
-            canClimb = !GameController.Tilemap.HasTile(cellAboveAndToLeft);
-        }
-
-        if (canClimb) {
-            //if there is an empty space, stop and get ready to climb
-            if (timeElapsedBeforeClimb < timeToClimb) {
-                timeElapsedBeforeClimb += Time.deltaTime;
-                //currentSpeed = 0;
-
-                if (timeElapsedBeforeClimb >= timeToClimb) {
-                    if (moveDirection == Direction.RIGHT)
-                        transform.position = GameController.Tilemap.layoutGrid.CellToWorld(currentCell) + new Vector3(1.5f, 1.5f, 0);
-                    else if (moveDirection == Direction.LEFT)
-                        transform.position = GameController.Tilemap.layoutGrid.CellToWorld(currentCell) + new Vector3(-0.5f, 1.5f, 0);
-                    
-                    timeElapsedBeforeClimb = 0f;
-                    currentSpeed = speed;
-                }
-            }
-        }
-        else {
-            timeElapsedBeforeSpriteFlip += Time.deltaTime;
-
-            if (timeElapsedBeforeSpriteFlip >= timeToFlip)
-            {
-                FlipDirection();
-
-                timeElapsedBeforeSpriteFlip = 0;
-            }
-        }
-    }
-
-    void FlipDirection()
-    {
-        moveDirection = (Direction)((int)moveDirection * -1);
-        dwarfSprite.flipX = moveDirection == Direction.LEFT;
-        light.localPosition = new Vector3(-light.localPosition.x, light.localPosition.y, 0f);
-        light.localRotation = Quaternion.Euler(0f, 0f, -light.rotation.eulerAngles.z);
-    }
-
-    private void UpdateSurroundings(Vector3Int currentCell) {
-      surroundings.cellOnLeft = new Vector3Int(currentCell.x - 1, currentCell.y, 0);
-      surroundings.cellOnRight = new Vector3Int(currentCell.x + 1, currentCell.y, 0);
-      surroundings.cellBelow = new Vector3Int(currentCell.x, currentCell.y - 1, 0);
-      surroundings.hasTileOnLeft = GameController.Tilemap.HasTile(surroundings.cellOnLeft);
-      surroundings.hasTileOnRight = GameController.Tilemap.HasTile(surroundings.cellOnRight);
+  public void StopJob() {
+    currentJob = JobType.NONE;
   }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        HandleCollision(collision);
-    }
+  private void ClimbUpOrChangeDirection() {
+    bool canClimb = false;
+    Vector3Int cellAboveFront = surroundings.cellAboveInFront;
 
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        HandleCollision(collision);
-    }
+    canClimb = !NullVector3Int.IsVector3IntNull(cellAboveFront) && !GameController.Tilemap.HasTile(cellAboveFront);
 
-    private void HandleCollision(Collision2D collision)
-    {
-        ContactPoint2D[] contacts = new ContactPoint2D[collision.contactCount];
-        collision.GetContacts(contacts);
+    if (canClimb) {
+      //if there is an empty space, stop and get ready to climb
+      if (timeElapsedBeforeClimb < timeToClimb) {
+        timeElapsedBeforeClimb += Time.deltaTime;
+        currentSpeed = 0;
 
-        foreach (ContactPoint2D contact in contacts)
-            if(contact.normal.y == 0f && contact.normal.x == -(float)moveDirection)
-            {
-                FlipDirection();
-                break;
-            }
+        if (timeElapsedBeforeClimb >= timeToClimb) {
+          transform.position = GameController.Tilemap.layoutGrid.CellToWorld(cellAboveFront);
+          timeElapsedBeforeClimb = 0f;
+          currentSpeed = speed;
+        }
+      }
+    } else {
+      timeElapsedBeforeSpriteFlip += Time.deltaTime;
+        currentSpeed = 0;
+
+      if (timeElapsedBeforeSpriteFlip >= timeToFlip) {
+        FlipDirection();
+        currentSpeed = speed;
+        timeElapsedBeforeSpriteFlip = 0;
+      }
     }
+  }
+
+  void FlipDirection() {
+    moveDirection = (Direction)((int)moveDirection * -1);
+    dwarfSprite.flipX = moveDirection == Direction.LEFT;
+    light.localPosition = new Vector3(-light.localPosition.x, light.localPosition.y, 0f);
+    light.localRotation = Quaternion.Euler(0f, 0f, -light.rotation.eulerAngles.z);
+  }
+
+  private void UpdateSurroundings(Vector3Int currentCell) {
+    bool horizontalCollision;
+    if(moveDirection == Direction.RIGHT) {
+       horizontalCollision = GameController.Tilemap.GetCellCenterWorld(currentCell).x 
+         - transform.position.x < -distanceForHorizontalCollision;
+    }else {
+       horizontalCollision = GameController.Tilemap.GetCellCenterWorld(currentCell).x 
+         - transform.position.x > distanceForHorizontalCollision;
+    }
+    if(horizontalCollision) {
+      if (moveDirection == Direction.LEFT) {
+        surroundings.cellInFront = new Vector3Int(currentCell.x - 1, currentCell.y, 0);
+        surroundings.cellAboveInFront = new Vector3Int(currentCell.x - 1, currentCell.y + 1, 0);
+      } else {
+        surroundings.cellInFront = new Vector3Int(currentCell.x + 1, currentCell.y, 0);
+        surroundings.cellAboveInFront = new Vector3Int(currentCell.x + 1, currentCell.y + 1, 0);
+      }
+    } else {
+      surroundings.cellInFront = NullVector3Int.GetNullVector3Int();
+      surroundings.cellBelow = NullVector3Int.GetNullVector3Int();
+    }
+    surroundings.hasTileInFront = GameController.Tilemap.HasTile(surroundings.cellInFront);
+    surroundings.cellBelow = new Vector3Int(currentCell.x, currentCell.y - 1, 0);
+  }
 }
