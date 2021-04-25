@@ -110,6 +110,7 @@ public class BaseDwarf : MonoBehaviour {
             // Can't override current job; ordered to stop previous job first
             StopJob();
         } else if (currentJob.GetJobType() == jobToAssign.GetJobType()) {
+        } else if (currentJob != null && currentJob.GetJobType() == jobToAssign.GetJobType()) {
             // Can't reassign the same job again
             return;
         } else {
