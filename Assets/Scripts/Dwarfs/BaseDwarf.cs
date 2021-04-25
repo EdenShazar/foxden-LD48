@@ -26,6 +26,7 @@ public class BaseDwarf : MonoBehaviour {
     new private Rigidbody2D rigidbody;
 
     [HideInInspector] public DwarfAnimator animator;
+    [HideInInspector] public AudioPlayer audioPlayer;
 
     [HideInInspector] public Direction MoveDirection { get; private set; } = Direction.RIGHT;
     [HideInInspector] public bool IsFalling { get; private set; }
@@ -46,6 +47,7 @@ public class BaseDwarf : MonoBehaviour {
 
     animator = GetComponent<DwarfAnimator>();
     light = GetComponentInChildren<Light2D>().transform;
+    audioPlayer = GetComponent<AudioPlayer>();
   }
 
   private void Start() {

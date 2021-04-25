@@ -29,6 +29,8 @@ public class RopeJob : DwarfJob
                 if (!GameController.RopeManager.TryLayRopeTile(dwarf.CurrentCell, dwarf.MoveDirection))
                     dwarf.StopJob();
 
+                dwarf.audioPlayer.PlaySound("drink", dwarf.CurrentCell);
+
                 timeUntilNextRope = timeToLayRope;
             }
 
