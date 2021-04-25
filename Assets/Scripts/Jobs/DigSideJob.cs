@@ -8,6 +8,8 @@ public class DigSideJob : DwarfJob {
   private BaseDwarf dwarf;
   private JobType type = JobType.DIG_ACROSS;
 
+  public override float sobrietyScale { get { return 1.0f; } }
+
   public override bool JobAction(DwarfSurroundings surroundings) {
     if(surroundings.hasTileInFront) {
       if(GameController.TilemapController.GetTypeOfTile(surroundings.cellInFront) == TileType.STONE) {
@@ -27,11 +29,10 @@ public class DigSideJob : DwarfJob {
     return true;
   }
 
-  public override JobType InitializeJobAction(BaseDwarf incDwarf, Vector3Int currentCell) {
+  public override void InitializeJobAction(BaseDwarf incDwarf, Vector3Int currentCell) {
     timeUntilNextDig = timeToDig;
     dwarf = incDwarf;
     dwarf.JobIcon.SetMiningIcon();
-    return type;
   }
 
   public override JobType GetJobType() {
