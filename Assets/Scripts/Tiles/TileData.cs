@@ -10,6 +10,7 @@ public class TileData : ScriptableObject {
   public TileBase[] tiles;
 
   public bool canDig;
+  public int scoreWhenDug;
 
   /// <summary>Generate a random tile.</summary>
   public TileBase GenerateTile() {

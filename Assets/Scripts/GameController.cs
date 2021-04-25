@@ -18,6 +18,7 @@ public class GameController : MonoBehaviour {
     private AudioManager audioManager;
     private Dictionary<TileBase, TileData> tileToTileData;
     new private Camera camera;
+    private int score;
     private CursorMode currentCursorMode = CursorMode.REGULAR;
 
     // Static getters for easy access to commonly used objects
@@ -47,6 +48,7 @@ public class GameController : MonoBehaviour {
   }
 
   private void Start() {
+    score = 0;
     
     Instantiate(dwarf);
 
@@ -86,6 +88,11 @@ public class GameController : MonoBehaviour {
                 break;
         }
     }
+
+  public static void AddToScore(int amountToAdd) {
+    instance.score += amountToAdd;
+    ScoreDisplay.UpdateScore(instance.score);
+  }
 
   void EnsureSingleton()
   {
