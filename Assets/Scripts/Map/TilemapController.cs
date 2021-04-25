@@ -246,10 +246,24 @@ public class TilemapController : MonoBehaviour
                 GameController.TilemapController.InitializeTile(x, y, type);
     }
 
-    public void GenerateBox(int topLeftX, int topLeftY, int botRightX, int botRightY, params TileType[] types)
+    public void GenerateBox(int topLeftX, int topLeftY, int botRightX, int botRightY, TileType common, TileType rare)
     {
         for (int y = topLeftY; y >= botRightY; y--)
             for (int x = topLeftX; x <= botRightX; x++)
-                GameController.TilemapController.InitializeTile(x, y, types[UnityEngine.Random.Range(0, types.Length)]);
+                GameController.TilemapController.InitializeTile(x, y, GetTileType(y, common, rare));
+    }
+
+    //Tbh not a lot of thought went into these numbers
+    public TileType GetTileType(int depth, TileType common, TileType rare) {
+      float rareChance = depth / 10 * 10;
+      if(rareChance < 5) {
+        rareChance = 5;
+      }
+      float roll = UnityEngine.Random.Range(0.0f, 100.0f);
+      if(roll > rareChance) {
+        return common;
+      } else {
+        return rare;
+    }
     }
 }
