@@ -126,8 +126,8 @@ public class BaseDwarf : MonoBehaviour {
     {
         moveDirection = (Direction)((int)moveDirection * -1);
         dwarfSprite.flipX = moveDirection == Direction.LEFT;
-        light.Translate(-light.localPosition.x * 2f, 0f, 0f);
-        light.Rotate(0f, 0f, -light.rotation.eulerAngles.z * 2f);
+        light.localPosition = new Vector3(-light.localPosition.x, light.localPosition.y, 0f);
+        light.localRotation = Quaternion.Euler(0f, 0f, -light.rotation.eulerAngles.z);
     }
 
     private void UpdateSurroundings(Vector3Int currentCell) {
