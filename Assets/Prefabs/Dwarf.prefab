@@ -15,7 +15,6 @@ GameObject:
   - component: {fileID: 4258076919418967044}
   - component: {fileID: 6509471020742114963}
   - component: {fileID: 3585568444704324198}
-  - component: {fileID: 8348421108570300590}
   m_Layer: 6
   m_Name: Dwarf
   m_TagString: Untagged
@@ -166,7 +165,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 266849699188637192}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
@@ -185,22 +184,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.69, y: 1}
   m_EdgeRadius: 0
---- !u!58 &8348421108570300590
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 266849699188637192}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.48}
-  serializedVersion: 2
-  m_Radius: 0.48
 --- !u!1 &8758098310284450856
 GameObject:
   m_ObjectHideFlags: 0
