@@ -14,7 +14,7 @@ public class StopSignJob : DwarfJob
     public override JobType InitializeJobAction(BaseDwarf incDwarf, Vector3Int currentCell) {
         GameController.TilemapController.InitializeTile(currentCell.x, currentCell.y, TileType.DWARF);
         dwarf = incDwarf;
-        dwarf.transform.position = GameController.Tilemap.layoutGrid.CellToWorld(currentCell) + new Vector3(0.5f, 0.5f, 0.0f);
+        dwarf.SnapToCurrentCell();
 
         //add animation for dwarf
         dwarf.animator.StopSign();
