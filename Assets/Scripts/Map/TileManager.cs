@@ -12,7 +12,7 @@ public class TileManager : MonoBehaviour {
     [SerializeField]
     private TileData stone;
     [SerializeField]
-    private TileData gold;
+    private TileData booze;
     [SerializeField]
     private TileData dwarf;
 
@@ -20,7 +20,7 @@ public class TileManager : MonoBehaviour {
         TileDictionary.SetTile(TileType.NONE, none);
         TileDictionary.SetTile(TileType.DIRT, dirt);
         TileDictionary.SetTile(TileType.STONE, stone);
-        TileDictionary.SetTile(TileType.GOLD, gold);
+        TileDictionary.SetTile(TileType.BOOZE, booze);
         TileDictionary.SetTile(TileType.DWARF, dwarf);
     }
 }

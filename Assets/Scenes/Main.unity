@@ -8569,7 +8569,7 @@ MonoBehaviour:
   none: {fileID: 11400000, guid: b827334c85aeccd4f8fba8ed6496bda4, type: 2}
   dirt: {fileID: 11400000, guid: 90f868b3e2e972346a771c7791117a19, type: 2}
   stone: {fileID: 11400000, guid: 96ce1801ed7b02d459de7fe69fa5199c, type: 2}
-  gold: {fileID: 11400000, guid: 1791161700c00344eb99457c61e2a9a4, type: 2}
+  booze: {fileID: 11400000, guid: beb12f637c1e4de41b26c07eece2ff32, type: 2}
   dwarf: {fileID: 11400000, guid: f775c4bd41bd4c146bf7db4a9163a035, type: 2}
 --- !u!114 &1194810255
 MonoBehaviour:

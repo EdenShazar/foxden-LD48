@@ -170,7 +170,7 @@ public class TilemapController : MonoBehaviour
         GenerateBox(rightBoundary, topBoundary, rightBoundary, bottomBoundary, TileType.STONE);
 
         // Fill the center
-        GenerateBox(leftBoundary + 1, topBoundary - 2, rightBoundary - 1, bottomBoundary, TileType.DIRT, TileType.GOLD);
+        GenerateBox(leftBoundary + 1, topBoundary - 2, rightBoundary - 1, bottomBoundary, TileType.DIRT, TileType.BOOZE);
     }
 
     public void GenerateBox(int topLeftX, int topLeftY, int botRightX, int botRightY, TileType type)
