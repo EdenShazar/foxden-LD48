@@ -8715,6 +8715,7 @@ GameObject:
   - component: {fileID: 1194810253}
   - component: {fileID: 1194810255}
   - component: {fileID: 1194810256}
+  - component: {fileID: 1194810254}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -8753,6 +8754,21 @@ MonoBehaviour:
   stone: {fileID: 11400000, guid: 96ce1801ed7b02d459de7fe69fa5199c, type: 2}
   booze: {fileID: 11400000, guid: beb12f637c1e4de41b26c07eece2ff32, type: 2}
   dwarf: {fileID: 11400000, guid: f775c4bd41bd4c146bf7db4a9163a035, type: 2}
+--- !u!114 &1194810254
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1194810251}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 147f2e743794879459271973e2cf78dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pickHit: {fileID: 8300000, guid: 1fad48bddbfd39242978a176ce5adaac, type: 3}
+  mainTheme: {fileID: 8300000, guid: b5fe8e1a8f7763d46b1c437a0389a45b, type: 3}
+  drink: {fileID: 8300000, guid: 15605ba080a047b4c9b2eb5e33ccd268, type: 3}
 --- !u!114 &1194810255
 MonoBehaviour:
   m_ObjectHideFlags: 0

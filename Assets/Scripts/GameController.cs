@@ -15,6 +15,7 @@ public class GameController : MonoBehaviour {
     private TileManager tileManager;
     private TilemapController tilemapController;
     private RopeManager ropeManager;
+    private AudioManager audioManager;
     private Dictionary<TileBase, TileData> tileToTileData;
     new private Camera camera;
     private CursorMode currentCursorMode = CursorMode.REGULAR;
@@ -24,15 +25,17 @@ public class GameController : MonoBehaviour {
     public static Tilemap Tilemap { get => instance.tilemap; }
     public static TilemapController TilemapController { get => instance.tilemapController; }
     public static RopeManager RopeManager { get => instance.ropeManager; }
+    public static AudioManager AudioManager { get => instance.audioManager; } 
 
     public static List<BaseDwarf> workingDwarvesHoveredOver { get; private set; } = new List<BaseDwarf>();
 
-  private void Awake() {
+    private void Awake() {
     EnsureSingleton();
 
     tileManager = GetComponent<TileManager>();
     tilemapController = GetComponent<TilemapController>();
     ropeManager = FindObjectOfType<RopeManager>();
+    audioManager = FindObjectOfType<AudioManager>();
     camera = Camera.main;
 
     tileManager.InitializeTileDictionary();

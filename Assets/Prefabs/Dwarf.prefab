@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 4258076919418967044}
   - component: {fileID: 6509471020742114963}
   - component: {fileID: 3585568444704324198}
+  - component: {fileID: 1288477635523641868}
   m_Layer: 6
   m_Name: Dwarf
   m_TagString: Untagged
@@ -104,6 +105,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 1
   animator: {fileID: 0}
+  audioPlayer: {fileID: 0}
   distanceForHorizontalCollision: 0.1
   currentSpeed: 0
   timeToClimb: 1
@@ -186,6 +188,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.69, y: 0.8711705}
   m_EdgeRadius: 0
+--- !u!114 &1288477635523641868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 266849699188637192}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3394101487913b04c9501e24712971a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &682097732584079230
 GameObject:
   m_ObjectHideFlags: 0

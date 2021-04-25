@@ -29,6 +29,7 @@ public class BaseDwarf : MonoBehaviour {
     new private Transform light;
 
     [HideInInspector] public DwarfAnimator animator;
+    [HideInInspector] public AudioPlayer audioPlayer;
 
     [HideInInspector] public Rigidbody2D Rigidbody { get; private set; }
     [HideInInspector] public JobIconChanger JobIcon { get; private set; }
@@ -52,6 +53,7 @@ public class BaseDwarf : MonoBehaviour {
 
     animator = GetComponent<DwarfAnimator>();
     light = GetComponentInChildren<Light2D>().transform;
+    audioPlayer = GetComponent<AudioPlayer>();
   }
 
   private void Start() {
