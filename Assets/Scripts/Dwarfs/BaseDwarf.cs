@@ -139,11 +139,6 @@ public class BaseDwarf : MonoBehaviour {
       if (!canStopJob())
         return;
 
-      if (currentJob.GetJobType() == JobType.STOP) {
-        if (GameController.TilemapController.GetTypeOfTile(CurrentCell) == TileType.DWARF)
-            GameController.TilemapController.RemoveTile(CurrentCell);
-      }
-
       currentJob = null;
       animator.Walk();
       JobIcon.RemoveIcon();
@@ -172,7 +167,7 @@ public class BaseDwarf : MonoBehaviour {
     private void ClimbUpOrChangeDirection()
     {
         bool canClimb = surroundings.hasTileInFront && !surroundings.hasTileAboveInFront
-            && GameController.TilemapController.GetTypeOfTile(surroundings.cellInFront) != TileType.DWARF;
+            && !GameController.TilemapController.IsCellOccupiedWithDwarf(surroundings.cellInFront);
 
         if (canClimb)
         {
@@ -203,7 +198,7 @@ public class BaseDwarf : MonoBehaviour {
 
         // If can no longer climb by end of waiting time, abort
         bool canClimb = surroundings.hasTileInFront && !surroundings.hasTileAboveInFront
-            && GameController.TilemapController.GetTypeOfTile(surroundings.cellInFront) != TileType.DWARF;
+            && !GameController.TilemapController.IsCellOccupiedWithDwarf(surroundings.cellInFront);
         if (!canClimb)
             yield break;
 
@@ -238,16 +233,16 @@ public class BaseDwarf : MonoBehaviour {
         int moveDirectionInt = (int)MoveDirection;
 
         surroundings.cellInFront = new Vector3Int(CurrentCell.x + moveDirectionInt, CurrentCell.y, 0);
-        surroundings.hasTileInFront = GameController.Tilemap.HasTile(surroundings.cellInFront);
+        surroundings.hasTileInFront = GameController.TilemapController.HasTileOrDwarf(surroundings.cellInFront);
 
         surroundings.cellAboveInFront = new Vector3Int(CurrentCell.x + moveDirectionInt, CurrentCell.y + 1, 0);
-        surroundings.hasTileAboveInFront = GameController.Tilemap.HasTile(surroundings.cellAboveInFront);
+        surroundings.hasTileAboveInFront = GameController.TilemapController.HasTileOrDwarf(surroundings.cellAboveInFront);
 
         surroundings.cellBelow = new Vector3Int(CurrentCell.x, CurrentCell.y - 1, 0);
-        surroundings.hasTileBelow = GameController.Tilemap.HasTile(surroundings.cellBelow);
+        surroundings.hasTileBelow = GameController.TilemapController.HasTileOrDwarf(surroundings.cellBelow);
 
         surroundings.cellBelowInFront = new Vector3Int(CurrentCell.x + (int)MoveDirection, CurrentCell.y - 1, 0);
-        surroundings.hasTileBelowInFront = GameController.Tilemap.HasTile(surroundings.cellBelowInFront);
+        surroundings.hasTileBelowInFront = GameController.TilemapController.HasTileOrDwarf(surroundings.cellBelowInFront);
     }
 
     private void UpdateIsFalling()

@@ -82,6 +82,7 @@ public class GetBoozeJob : DwarfJob {
     {
         isClimbing = true;
         dwarf.Rigidbody.gravityScale = 0f;
+        dwarf.SnapToCurrentCell();
         dwarf.animator.ClimbRope();
     }
 
@@ -107,7 +108,6 @@ public class GetBoozeJob : DwarfJob {
 
     bool CellAboveIsClimbable()
     {
-        Debug.Log(GameController.RopeManager.IsCellClimbable(dwarf.CurrentCell + Vector3Int.up) != ClimbableRopeTile.UNCMLIMBABLE);
         return GameController.RopeManager.IsCellClimbable(dwarf.CurrentCell + Vector3Int.up) != ClimbableRopeTile.UNCMLIMBABLE;
     }
 

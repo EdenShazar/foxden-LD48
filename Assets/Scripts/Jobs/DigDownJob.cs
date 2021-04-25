@@ -11,7 +11,7 @@ public class DigDownJob : DwarfJob {
   public override float sobrietyScale { get{ return 1.0f; } }
 
   public override bool JobAction(DwarfSurroundings surroundings) {
-    if(GameController.Tilemap.HasTile(surroundings.cellBelow)) {
+    if(GameController.TilemapController.HasTile(surroundings.cellBelow)) {
       timeUntilNextDig -= Time.deltaTime;
 
       dwarf.audioPlayer.PlaySound("pickHit", dwarf.CurrentCell);

@@ -13,8 +13,8 @@ public class JobSelector : MonoBehaviour {
   private static JobSelector instance;
 
   public static DwarfJob GetSelectedJob() {
-    return jobs[selectedJob];
-  }
+        return Instantiate(jobs[selectedJob]);
+    }
 
   private void Start() {
     EnsureSingleton();

@@ -7,8 +7,7 @@ public enum TileType {
   DIRT,
   STONE,
   BOOZE,
-  DWARF
-}
+  }
 
 public static class TileDictionary {
   private static Dictionary<TileType, TileData> tiles = new Dictionary<TileType, TileData>();

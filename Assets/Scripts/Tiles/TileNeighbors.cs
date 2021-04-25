@@ -60,6 +60,11 @@ public static class TileNeighbors
 
     public static int GetTileIndex(Neighbors neighbors)
     {
-        return tileIndices[(int)neighbors];
+        int neighborsInt = (int)neighbors;
+
+        if (!tileIndices.ContainsKey(neighborsInt))
+            return tileIndices.Count - 1;
+        
+        return tileIndices[neighborsInt];
     }
 }
