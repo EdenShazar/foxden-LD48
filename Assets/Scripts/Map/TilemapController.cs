@@ -151,6 +151,8 @@ public class TilemapController : MonoBehaviour
 
     public void GenerateMap()
     {
+        tilemap.ClearAllTiles();
+
         // Left and right boundary
         GenerateBox(leftBoundary, topBoundary, leftBoundary, bottomBoundary, TileType.STONE);
         GenerateBox(rightBoundary, topBoundary, rightBoundary, bottomBoundary, TileType.STONE);
