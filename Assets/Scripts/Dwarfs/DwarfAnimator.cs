@@ -14,6 +14,7 @@ public class DwarfAnimator : MonoBehaviour
     readonly int hammer = Animator.StringToHash("hammer");
     readonly int climbRope = Animator.StringToHash("climb rope");
     readonly int pullUpRope = Animator.StringToHash("pull up rope");
+    readonly int puff = Animator.StringToHash("puff");
 
     int previousAnimationHash;
 
@@ -45,6 +46,7 @@ public class DwarfAnimator : MonoBehaviour
     public void Hammer() => Play(hammer);
     public void ClimbRope() => Play(climbRope);
     public void PullUpRope() => Play(pullUpRope);
+    public void Puff() => Play(puff);
 
     void Play(int animationHash)
     {

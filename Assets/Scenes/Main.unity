@@ -8753,7 +8753,6 @@ MonoBehaviour:
   dirt: {fileID: 11400000, guid: 90f868b3e2e972346a771c7791117a19, type: 2}
   stone: {fileID: 11400000, guid: 96ce1801ed7b02d459de7fe69fa5199c, type: 2}
   booze: {fileID: 11400000, guid: beb12f637c1e4de41b26c07eece2ff32, type: 2}
-  dwarf: {fileID: 11400000, guid: f775c4bd41bd4c146bf7db4a9163a035, type: 2}
 --- !u!114 &1194810254
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10367,7 +10366,7 @@ GameObject:
   - component: {fileID: 1621894745}
   - component: {fileID: 1621894744}
   - component: {fileID: 1621894743}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Wagon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10384,7 +10383,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.32029676, y: 1.9630427}

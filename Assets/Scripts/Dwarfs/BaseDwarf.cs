@@ -20,6 +20,7 @@ public enum Direction { LEFT = -1, RIGHT = 1 }
 public class BaseDwarf : MonoBehaviour {
 
     const float climbLedgeRopeAnimationTime = 1f;
+    const float puffAnimationTime = 0.75f;
 
     [SerializeField]
     private float speed;
@@ -172,7 +173,19 @@ public class BaseDwarf : MonoBehaviour {
     }
 
     public void RemoveDwarf() {
-      Destroy(gameObject);
+      StartCoroutine(PuffAndRemoveDwarf());
+    }
+
+    IEnumerator PuffAndRemoveDwarf()
+    {
+        animator.Puff();
+        JobIcon.RemoveIcon();
+        currentSpeed = 0f;
+        currentJob = null;
+
+        yield return new WaitForSeconds(puffAnimationTime);
+
+        Destroy(gameObject);
     }
 
     public void SnapToCurrentCell()
