@@ -57,6 +57,7 @@ public class TilemapController : MonoBehaviour
             return;
 
         tilemap.SetTile(new Vector3Int(x, y, 0), null);
+        UpdateAdjacentTiles(x, y);
 
         TileDestroyed?.Invoke(x, y, tileTypes[x - leftBoundary, y - bottomBoundary]);
 
@@ -73,6 +74,17 @@ public class TilemapController : MonoBehaviour
         for (int x = leftBoundary; x <= rightBoundary; x++)
             for (int y = bottomBoundary; y <= topBoundary; y++)
                 UpdateTile(x, y);
+    }
+
+    public void UpdateAdjacentTiles(int x, int y)
+    {
+        for (int i = -1; i <= 1; i++)
+            for (int j = -1; j <= 1; j++)
+            {
+                if (i == 0 && j == 0)
+                    continue;
+                UpdateTile(x + i, y + j);
+            }
     }
 
     public void UpdateTile(int x, int y)
