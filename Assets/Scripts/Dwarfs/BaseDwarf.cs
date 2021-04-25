@@ -82,7 +82,10 @@ public class BaseDwarf : MonoBehaviour {
       }
       gameObject.transform.Translate(Vector3.right * (int)MoveDirection * currentSpeed * Time.deltaTime);
     }
-  }
+
+    if (GameController.workingDwarvesHoveredOver.Contains(this))
+        GameController.workingDwarvesHoveredOver.Remove(this);
+    }
 
     public void OnMouseDown() {
         DwarfJob jobToAssign = JobSelector.GetSelectedJob();
@@ -101,7 +104,19 @@ public class BaseDwarf : MonoBehaviour {
         }
     }
 
-  public void StopJob() {
+    public void OnMouseOver()
+    {
+        if (currentJob == JobType.NONE)
+        {
+            if (GameController.workingDwarvesHoveredOver.Contains(this))
+                GameController.workingDwarvesHoveredOver.Remove(this);
+        }
+        else if (!GameController.workingDwarvesHoveredOver.Contains(this))
+            GameController.workingDwarvesHoveredOver.Add(this);
+
+    }
+
+    public void StopJob() {
     if (!canStopJob())
         return;
 

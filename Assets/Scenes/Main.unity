@@ -8585,6 +8585,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tilemap: {fileID: 362073318}
   dwarf: {fileID: 266849699188637687, guid: 89be9daf3a732784589eafb1abf84652, type: 3}
+  regularCursor: {fileID: 2800000, guid: 73e755f08259a764ba42021e605318f1, type: 3}
+  clickCursor: {fileID: 2800000, guid: 71cf053c6c1ebe649a85e69e64336dba, type: 3}
+  stopCursor: {fileID: 2800000, guid: 8571cf7b9767d1d4f88a018fc47503ba, type: 3}
 --- !u!114 &1194810256
 MonoBehaviour:
   m_ObjectHideFlags: 0
