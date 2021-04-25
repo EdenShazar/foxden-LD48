@@ -11,7 +11,7 @@ public class DigSideJob : DwarfJob {
   public override float sobrietyScale { get { return 1.0f; } }
 
   public override bool JobAction(DwarfSurroundings surroundings) {
-    if(surroundings.hasTileInFront) {
+    if(surroundings.hasTileInFront && surroundings.cellDistanceToTileInFront <= Constants.horizontalInteractionDistance) {
       if(GameController.TilemapController.GetTypeOfTile(surroundings.cellInFront) == TileType.STONE) {
         dwarf.StopJob();
         return false;

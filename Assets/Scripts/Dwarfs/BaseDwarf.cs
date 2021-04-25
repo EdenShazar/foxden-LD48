@@ -12,6 +12,7 @@ public struct DwarfSurroundings {
   public bool hasTileAboveInFront;
   public bool hasTileBelow;
   public bool hasTileBelowInFront;
+  public float cellDistanceToTileInFront;
 }
 
 public enum Direction { LEFT = -1, RIGHT = 1 }
@@ -30,6 +31,7 @@ public class BaseDwarf : MonoBehaviour {
     private SpriteRenderer dwarfSprite;
     private DwarfJob currentJob = null;
     new private Transform light;
+    new private Collider2D collider;
 
     [HideInInspector] public DwarfAnimator animator;
     [HideInInspector] public AudioPlayer audioPlayer;
@@ -57,6 +59,7 @@ public class BaseDwarf : MonoBehaviour {
     animator = GetComponent<DwarfAnimator>();
     light = GetComponentInChildren<Light2D>().transform;
     audioPlayer = GetComponent<AudioPlayer>();
+    collider = GetComponent<Collider2D>();
   }
 
   private void Start() {
@@ -92,7 +95,7 @@ public class BaseDwarf : MonoBehaviour {
 
             if (doDefaultMovement)
             {
-                if (surroundings.hasTileInFront)
+                if (surroundings.hasTileInFront && surroundings.cellDistanceToTileInFront <= Constants.horizontalInteractionDistance)
                     ClimbUpOrChangeDirection();
 
                 gameObject.transform.Translate(Vector3.right * (int)MoveDirection * currentSpeed * Time.deltaTime);
@@ -109,7 +112,7 @@ public class BaseDwarf : MonoBehaviour {
         if (currentJob != null) {
             // Can't override current job; ordered to stop previous job first
             StopJob();
-        } else if (currentJob.GetJobType() == jobToAssign.GetJobType()) {
+        } else if (currentJob != null && currentJob.GetJobType() == jobToAssign.GetJobType()) {
             // Can't reassign the same job again
             return;
         } else {
@@ -242,6 +245,14 @@ public class BaseDwarf : MonoBehaviour {
 
         surroundings.cellBelowInFront = new Vector3Int(CurrentCell.x + (int)MoveDirection, CurrentCell.y - 1, 0);
         surroundings.hasTileBelowInFront = GameController.TilemapController.HasTileOrDwarf(surroundings.cellBelowInFront);
+
+        if (!surroundings.hasTileInFront)
+            surroundings.cellDistanceToTileInFront = 1f;
+        else
+        {
+            float cellEdgeX = MoveDirection == Direction.LEFT ? collider.bounds.min.x : collider.bounds.max.x;
+            surroundings.cellDistanceToTileInFront = Math.Abs(GameController.Tilemap.GetCellCenterWorld(surroundings.cellInFront).x - cellEdgeX) / GameController.Tilemap.cellSize.x - 0.5f;
+        }
     }
 
     private void UpdateIsFalling()
