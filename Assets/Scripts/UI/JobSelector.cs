@@ -66,7 +66,7 @@ public class JobSelector : MonoBehaviour {
       ScriptableObject.CreateInstance<DigSideJob>(),
       ScriptableObject.CreateInstance<StopSignJob>(),
       ScriptableObject.CreateInstance<RopeJob>(),
-      ScriptableObject.CreateInstance<DigDownJob>()
+      ScriptableObject.CreateInstance<GetBoozeJob>()
     };
   }
 }

@@ -16,6 +16,7 @@ public class GameController : MonoBehaviour {
     new private Camera camera;
 
     // Static getters for easy access to commonly used objects
+    public static GameController Instance { get => instance; }
     public static Tilemap Tilemap { get => instance.tilemap; }
     public static TilemapController TilemapController { get => instance.tilemapController; }
     public static RopeManager RopeManager{ get => instance.ropeManager; }
@@ -62,3 +63,4 @@ public class GameController : MonoBehaviour {
       }
   }
 }
+    

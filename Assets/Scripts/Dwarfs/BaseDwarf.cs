@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering.Universal;
 
@@ -23,10 +24,10 @@ public class BaseDwarf : MonoBehaviour {
     private SpriteRenderer dwarfSprite;
     private JobType currentJob = JobType.NONE;
     new private Transform light;
-    new private Rigidbody2D rigidbody;
 
     [HideInInspector] public DwarfAnimator animator;
 
+    [HideInInspector] public Rigidbody2D Rigidbody { get; private set; }
     [HideInInspector] public Direction MoveDirection { get; private set; } = Direction.RIGHT;
     [HideInInspector] public bool IsFalling { get; private set; }
 
@@ -40,6 +41,7 @@ public class BaseDwarf : MonoBehaviour {
 
   delegate bool JobAction(DwarfSurroundings surroundings);
   private JobAction doJobAction = null;
+  private Func<bool> canStopJob;
 
   private void Awake() {
     Physics2D.queriesStartInColliders = false;
@@ -53,7 +55,7 @@ public class BaseDwarf : MonoBehaviour {
     timeElapsedBeforeSpriteFlip = 0;
     currentSpeed = speed;
     dwarfSprite = GetComponent<SpriteRenderer>();
-    rigidbody = GetComponent<Rigidbody2D>();
+    Rigidbody = GetComponent<Rigidbody2D>();
     surroundings = new DwarfSurroundings();
     animator.Initialize(this);
   }
@@ -90,10 +92,14 @@ public class BaseDwarf : MonoBehaviour {
             // Assign new job
             currentJob = jobToAssign.InitializeJobAction(this, CurrentCell);
             doJobAction = jobToAssign.JobAction;
+            canStopJob = jobToAssign.CanStopJob;
         }
     }
 
   public void StopJob() {
+    if (!canStopJob())
+        return;
+
     if (currentJob == JobType.STOP) {
         if (GameController.TilemapController.GetTypeOfTile(CurrentCell) == TileType.DWARF)
             GameController.TilemapController.RemoveTile(CurrentCell);
@@ -101,6 +107,7 @@ public class BaseDwarf : MonoBehaviour {
 
     currentJob = JobType.NONE;
     animator.Walk();
+    currentSpeed = speed;
   }
 
     public void SnapToCurrentCell()
@@ -108,7 +115,12 @@ public class BaseDwarf : MonoBehaviour {
         transform.position = GameController.Tilemap.layoutGrid.CellToWorld(CurrentCell) + Vector3.right * 0.5f;
     }
 
-  private void ClimbUpOrChangeDirection() {
+    public void SnapToRelativeCell(Vector3Int cellMovement)
+    {
+        transform.position = GameController.Tilemap.layoutGrid.CellToWorld(CurrentCell + cellMovement) + Vector3.right * 0.5f;
+    }
+
+    private void ClimbUpOrChangeDirection() {
     bool canClimb;
     Vector3Int cellAboveFront = surroundings.cellAboveInFront;
     Vector3Int cellInFront = surroundings.cellInFront;
@@ -143,7 +155,7 @@ public class BaseDwarf : MonoBehaviour {
     }
   }
 
-  void FlipDirection() {
+  public void FlipDirection() {
     MoveDirection = (Direction)((int)MoveDirection * -1);
     dwarfSprite.flipX = MoveDirection == Direction.LEFT;
     light.localPosition = new Vector3(-light.localPosition.x, light.localPosition.y, 0f);
@@ -181,6 +193,6 @@ public class BaseDwarf : MonoBehaviour {
 
     private void UpdateIsFalling()
     {
-        IsFalling = rigidbody.velocity.y <= -0.01f && surroundings.hasTileBelow;
+        IsFalling = Rigidbody.velocity.y <= -0.01f && surroundings.hasTileBelow;
     }
 }

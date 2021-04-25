@@ -6,11 +6,12 @@ public enum JobType {
   DIG_ACROSS,
   STOP,
   ROPE,
-  BOOZE
+  GET_BOOZE
 }
 
 public abstract class DwarfJob : ScriptableObject  {
   public abstract bool JobAction(DwarfSurroundings surroundings);
   public abstract JobType InitializeJobAction(BaseDwarf incDwarf, Vector3Int currentCell);
   public abstract JobType GetJobType();
+  public virtual bool CanStopJob() => true;
 }
