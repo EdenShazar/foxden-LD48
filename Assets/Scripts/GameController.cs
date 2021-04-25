@@ -11,22 +11,26 @@ public class GameController : MonoBehaviour {
     private BaseDwarf dwarf;
     private TileManager tileManager;
     private TilemapController tilemapController;
+    private RopeManager ropeManager;
     private Dictionary<TileBase, TileData> tileToTileData;
     new private Camera camera;
 
     // Static getters for easy access to commonly used objects
     public static Tilemap Tilemap { get => instance.tilemap; }
     public static TilemapController TilemapController { get => instance.tilemapController; }
+    public static RopeManager RopeManager{ get => instance.ropeManager; }
 
   private void Awake() {
     EnsureSingleton();
 
-    tileManager = gameObject.GetComponent<TileManager>();
-    tilemapController = gameObject.GetComponent<TilemapController>();
+    tileManager = GetComponent<TileManager>();
+    tilemapController = GetComponent<TilemapController>();
+    ropeManager = FindObjectOfType<RopeManager>();
     camera = Camera.main;
 
     tileManager.InitializeTileDictionary();
     tilemapController.Initialize();
+    ropeManager.Initialize();
     tilemapController.GenerateMap();
 
     Application.targetFrameRate = 60;

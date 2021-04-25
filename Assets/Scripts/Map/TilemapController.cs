@@ -4,6 +4,8 @@ using UnityEngine.Tilemaps;
 
 public class TilemapController : MonoBehaviour
 {
+    
+
     [SerializeField] private int leftBoundary = -5;
     [SerializeField] private int rightBoundary = 5;
     [SerializeField] private int topBoundary = 2;
@@ -61,6 +63,16 @@ public class TilemapController : MonoBehaviour
 
     public TileType GetTypeOfTile(Vector3Int location) {
       return GetTypeOfTile(location.x, location.y);
+    }
+
+    public bool IsCellOutOfBounds(Vector3Int cell)
+    {
+        BoundsInt bounds = tilemap.cellBounds;
+
+        if (cell.x < bounds.xMin || cell.x > bounds.xMax || cell.y < bounds.yMin || cell.y > bounds.yMax)
+            return true;
+
+        return false;
     }
 
     public void RemoveTile(int x, int y)

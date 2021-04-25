@@ -5,35 +5,37 @@ public struct DwarfSurroundings {
   public Vector3Int cellInFront;
   public Vector3Int cellAboveInFront;
   public Vector3Int cellBelow;
+  public Vector3Int cellBelowInFront;
   public bool hasTileInFront;
   public bool hasTileBelow;
+  public bool hasTileBelowInFront;
 }
 
+public enum Direction { LEFT = -1, RIGHT = 1 }
 
 public class BaseDwarf : MonoBehaviour {
 
-  enum Direction { LEFT = -1, RIGHT = 1 }
 
-  [SerializeField]
-  private float speed;
-  private Direction moveDirection = Direction.RIGHT;
-  private float timeElapsedBeforeClimb;
-  private float timeElapsedBeforeSpriteFlip;
-  private SpriteRenderer dwarfSprite;
-  private JobType currentJob = JobType.NONE;
-  new private Transform light;
-  new private Rigidbody2D rigidbody;
-  
-  [HideInInspector] public DwarfAnimator animator;
+    [SerializeField]
+    private float speed;
+    private float timeElapsedBeforeClimb;
+    private float timeElapsedBeforeSpriteFlip;
+    private SpriteRenderer dwarfSprite;
+    private JobType currentJob = JobType.NONE;
+    new private Transform light;
+    new private Rigidbody2D rigidbody;
 
-  public bool IsFalling { get; private set; }
+    [HideInInspector] public DwarfAnimator animator;
 
-  public float distanceForHorizontalCollision;
-  public float currentSpeed;
-  public float timeToClimb;
-  public float timeToFlip;
+    [HideInInspector] public Direction MoveDirection { get; private set; } = Direction.RIGHT;
+    [HideInInspector] public bool IsFalling { get; private set; }
 
-  private Vector3Int currentCell;
+    public float distanceForHorizontalCollision;
+    public float currentSpeed;
+    public float timeToClimb;
+    public float timeToFlip;
+
+  public Vector3Int CurrentCell { get; private set; }
   private DwarfSurroundings surroundings;
 
   delegate bool JobAction(DwarfSurroundings surroundings);
@@ -57,9 +59,9 @@ public class BaseDwarf : MonoBehaviour {
   }
 
   private void Update() {
-    currentCell = GameController.Tilemap.layoutGrid.WorldToCell(transform.position);
-    float dist = Mathf.Abs(GameController.Tilemap.GetCellCenterWorld(currentCell).x - transform.position.x);
-    UpdateSurroundings(currentCell);
+    CurrentCell = GameController.Tilemap.layoutGrid.WorldToCell(transform.position);
+    float dist = Mathf.Abs(GameController.Tilemap.GetCellCenterWorld(CurrentCell).x - transform.position.x);
+    UpdateSurroundings(CurrentCell);
     UpdateIsFalling();
 
     bool doDefaultMovement = true;
@@ -71,14 +73,14 @@ public class BaseDwarf : MonoBehaviour {
           && GameController.TilemapController.GetTypeOfTile(surroundings.cellInFront) != TileType.NONE) {
         ClimbUpOrChangeDirection();
       }
-      gameObject.transform.Translate(Vector3.right * (int)moveDirection * currentSpeed * Time.deltaTime);
+      gameObject.transform.Translate(Vector3.right * (int)MoveDirection * currentSpeed * Time.deltaTime);
     }
   }
 
   public void OnMouseDown() {
     DwarfJob jobToAssign = JobSelector.GetSelectedJob();
     if (currentJob != jobToAssign.GetJobType()) {
-      currentJob = jobToAssign.InitializeJobAction(this, currentCell);
+      currentJob = jobToAssign.InitializeJobAction(this, CurrentCell);
       doJobAction = jobToAssign.JobAction;
     } else {
       StopJob();
@@ -89,6 +91,11 @@ public class BaseDwarf : MonoBehaviour {
     currentJob = JobType.NONE;
     animator.Walk();
   }
+
+    public void SnapToCurrentCell()
+    {
+        transform.position = GameController.Tilemap.layoutGrid.CellToWorld(CurrentCell) + Vector3.right * 0.5f;
+    }
 
   private void ClimbUpOrChangeDirection() {
     bool canClimb = false;
@@ -121,15 +128,15 @@ public class BaseDwarf : MonoBehaviour {
   }
 
   void FlipDirection() {
-    moveDirection = (Direction)((int)moveDirection * -1);
-    dwarfSprite.flipX = moveDirection == Direction.LEFT;
+    MoveDirection = (Direction)((int)MoveDirection * -1);
+    dwarfSprite.flipX = MoveDirection == Direction.LEFT;
     light.localPosition = new Vector3(-light.localPosition.x, light.localPosition.y, 0f);
     light.localRotation = Quaternion.Euler(0f, 0f, -light.rotation.eulerAngles.z);
   }
 
   private void UpdateSurroundings(Vector3Int currentCell) {
     bool horizontalCollision;
-    if(moveDirection == Direction.RIGHT) {
+    if(MoveDirection == Direction.RIGHT) {
        horizontalCollision = GameController.Tilemap.GetCellCenterWorld(currentCell).x 
          - transform.position.x < -distanceForHorizontalCollision;
     }else {
@@ -137,7 +144,7 @@ public class BaseDwarf : MonoBehaviour {
          - transform.position.x > distanceForHorizontalCollision;
     }
     if(horizontalCollision) {
-      if (moveDirection == Direction.LEFT) {
+      if (MoveDirection == Direction.LEFT) {
         surroundings.cellInFront = new Vector3Int(currentCell.x - 1, currentCell.y, 0);
         surroundings.cellAboveInFront = new Vector3Int(currentCell.x - 1, currentCell.y + 1, 0);
       } else {
@@ -151,6 +158,9 @@ public class BaseDwarf : MonoBehaviour {
     surroundings.hasTileInFront = GameController.Tilemap.HasTile(surroundings.cellInFront);
     surroundings.cellBelow = new Vector3Int(currentCell.x, currentCell.y - 1, 0);
     surroundings.hasTileBelow = GameController.Tilemap.HasTile(surroundings.cellBelow);
+
+    surroundings.cellBelowInFront = new Vector3Int(currentCell.x + (int)MoveDirection, currentCell.y - 1, 0);
+    surroundings.hasTileBelowInFront = GameController.Tilemap.HasTile(surroundings.cellBelowInFront);
     }
 
     private void UpdateIsFalling()

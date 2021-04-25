@@ -22,7 +22,7 @@ public class DigDownJob : DwarfJob {
   public override JobType InitializeJobAction(BaseDwarf incDwarf, Vector3Int currentCell) {
     timeUntilNextDig = timeToDig;
     dwarf = incDwarf;
-    dwarf.transform.position = GameController.Tilemap.layoutGrid.CellToWorld(currentCell) + new Vector3(0.5f, 0.5f, 0.0f);
+    dwarf.SnapToCurrentCell();
     dwarf.animator.Dig();
     return type;
   }
