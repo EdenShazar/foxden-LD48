@@ -63,7 +63,10 @@ public class RopeManager : MonoBehaviour
 
     public ClimbableRopeTile IsCellClimbable(Vector3Int cell)
     {
-        RopeTile ropeTile = ropeTiles[cell.x, cell.y];
+        int x = cell.x - GameController.TilemapController.LeftBoundaryCell;
+        int y = cell.y - GameController.TilemapController.BottomBoundaryCell;
+
+        RopeTile ropeTile = ropeTiles[x, y];
 
         if (ropeTile == RopeTile.LEFT_MIDDLE || ropeTile == RopeTile.LEFT_END)
             return ClimbableRopeTile.LEFT;
@@ -75,38 +78,41 @@ public class RopeManager : MonoBehaviour
 
     void SetRopeTile(Vector3Int cell, RopeTile ropeTile)
     {
-        ropeTiles[cell.x, cell.y] = ropeTile;
+        int x = cell.x - GameController.TilemapController.LeftBoundaryCell;
+        int y = cell.y - GameController.TilemapController.BottomBoundaryCell;
+
+        ropeTiles[x, y] = ropeTile;
 
         // Clear rope that might already be there
-        if (ropeObjects[cell.x, cell.y] != null)
+        if (ropeObjects[x, y] != null)
         {
-            Destroy(ropeObjects[cell.x, cell.y]);
-            ropeObjects[cell.x, cell.y] = null;
+            Destroy(ropeObjects[x, y]);
+            ropeObjects[x, y] = null;
         }
 
         Vector3 pivotPosition = GameController.Tilemap.layoutGrid.CellToWorld(cell) + Vector3.right * 0.5f; ;
         switch (ropeTile)
         {
             case RopeTile.LEFT_ANCHOR:
-                ropeObjects[cell.x, cell.y] = Instantiate(anchorPrefab, pivotPosition, Quaternion.identity, transform);
-                ropeObjects[cell.x, cell.y].GetComponent<SpriteRenderer>().flipX = true;
+                ropeObjects[x, y] = Instantiate(anchorPrefab, pivotPosition, Quaternion.identity, transform);
+                ropeObjects[x, y].GetComponent<SpriteRenderer>().flipX = true;
                 break;
             case RopeTile.RIGHT_ANCHOR:
-                ropeObjects[cell.x, cell.y] = Instantiate(anchorPrefab, pivotPosition, Quaternion.identity, transform);
+                ropeObjects[x, y] = Instantiate(anchorPrefab, pivotPosition, Quaternion.identity, transform);
                 break;
             case RopeTile.LEFT_MIDDLE:
-                ropeObjects[cell.x, cell.y] = Instantiate(middlePrefab, pivotPosition, Quaternion.identity, transform);
+                ropeObjects[x, y] = Instantiate(middlePrefab, pivotPosition, Quaternion.identity, transform);
                 break;
             case RopeTile.RIGHT_MIDDLE:
-                ropeObjects[cell.x, cell.y] = Instantiate(middlePrefab, pivotPosition, Quaternion.identity, transform);
-                ropeObjects[cell.x, cell.y].GetComponent<SpriteRenderer>().flipX = true;
+                ropeObjects[x, y] = Instantiate(middlePrefab, pivotPosition, Quaternion.identity, transform);
+                ropeObjects[x, y].GetComponent<SpriteRenderer>().flipX = true;
                 break;
             case RopeTile.LEFT_END:
-                ropeObjects[cell.x, cell.y] = Instantiate(endPrefab, pivotPosition, Quaternion.identity, transform);
+                ropeObjects[x, y] = Instantiate(endPrefab, pivotPosition, Quaternion.identity, transform);
                 break;
             case RopeTile.RIGHT_END:
-                ropeObjects[cell.x, cell.y] = Instantiate(endPrefab, pivotPosition, Quaternion.identity, transform);
-                ropeObjects[cell.x, cell.y].GetComponent<SpriteRenderer>().flipX = true;
+                ropeObjects[x, y] = Instantiate(endPrefab, pivotPosition, Quaternion.identity, transform);
+                ropeObjects[x, y].GetComponent<SpriteRenderer>().flipX = true;
                 break;
         }
     }
@@ -137,7 +143,10 @@ public class RopeManager : MonoBehaviour
 
     bool HasRopeSection(Vector3Int cell)
     {
-        RopeTile ropeTile = ropeTiles[cell.x, cell.y];
+        int x = cell.x - GameController.TilemapController.LeftBoundaryCell;
+        int y = cell.y - GameController.TilemapController.BottomBoundaryCell;
+
+        RopeTile ropeTile = ropeTiles[x, y];
 
         if (ropeTile != RopeTile.NONE && ropeTile != RopeTile.LEFT_ANCHOR && ropeTile != RopeTile.RIGHT_ANCHOR)
             return true;

@@ -47,6 +47,12 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Nonworking dwarves
+    uniqueID: 2201246883
+    locked: 0
+  - name: Working dwarves
+    uniqueID: 2525292455
+    locked: 0
   - name: UI
     uniqueID: 3278661527
     locked: 0

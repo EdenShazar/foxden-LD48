@@ -27,6 +27,7 @@ public class DigDownJob : DwarfJob {
     dwarf = incDwarf;
     dwarf.SnapToCurrentCell();
     dwarf.animator.Dig();
+    dwarf.JobIcon.SetDiggingIcon();
     return type;
   }
 

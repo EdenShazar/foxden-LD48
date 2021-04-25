@@ -14,9 +14,12 @@ public class DigSideJob : DwarfJob {
         dwarf.StopJob();
         return false;
       }
+      dwarf.animator.Mine();
       timeUntilNextDig -= Time.deltaTime;
       if(timeUntilNextDig <= 0.0f) {
         GameController.TilemapController.RemoveTile(surroundings.cellInFront);
+        dwarf.ResetSpeed();
+        dwarf.animator.Walk();
         timeUntilNextDig = timeToDig;
       }
       return false;
@@ -27,6 +30,7 @@ public class DigSideJob : DwarfJob {
   public override JobType InitializeJobAction(BaseDwarf incDwarf, Vector3Int currentCell) {
     timeUntilNextDig = timeToDig;
     dwarf = incDwarf;
+    dwarf.JobIcon.SetMiningIcon();
     return type;
   }
 

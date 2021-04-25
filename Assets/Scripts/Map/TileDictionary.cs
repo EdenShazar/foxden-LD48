@@ -6,7 +6,7 @@ public enum TileType {
   NONE,
   DIRT,
   STONE,
-  GOLD,
+  BOOZE,
   DWARF
 }
 
