@@ -78,7 +78,6 @@ public class BaseDwarf : MonoBehaviour {
         } else {
           currentDrunkAmount -= Time.deltaTime;
         }
-        Debug.Log(currentDrunkAmount);
         if(currentDrunkAmount < 0.0f) {
           RemoveDwarf();
         }
