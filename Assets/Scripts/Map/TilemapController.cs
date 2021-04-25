@@ -119,6 +119,16 @@ public class TilemapController : MonoBehaviour
         if (x < leftBoundary || x > rightBoundary || y < bottomBoundary || y > topBoundary)
             return;
 
+        int score;
+        switch (GetTypeOfTile(x, y)) {
+        case TileType.BOOZE:
+          score = 1;
+          break;
+        default:
+          score = 0;
+          break;
+        }
+        GameController.AddToScore(score);
         tilemap.SetTile(new Vector3Int(x, y, 0), null);
         UpdateAdjacentTiles(x, y);
 
