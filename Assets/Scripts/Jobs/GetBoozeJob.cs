@@ -69,7 +69,7 @@ public class GetBoozeJob : DwarfJob {
     /// <summary>Start a new climb if possible, return whether or not to revert to default action.</summary>
     bool CheckForNewClimb()
     {
-        if (!GameController.RopeManager.IsCellClimbable(dwarf.CurrentCell, out Direction ropeDirection))
+        if (!GameController.RopeManager.IsCellClimbable(dwarf.CurrentCell, out Direction ropeDirection, preferredDirection: dwarf.MoveDirection))
             return true;
 
         if (ropeDirection != dwarf.MoveDirection)
