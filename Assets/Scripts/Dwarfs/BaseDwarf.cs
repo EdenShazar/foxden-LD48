@@ -13,6 +13,7 @@ public struct DwarfSurroundings {
   public bool hasTileBelow;
   public bool hasTileBelowInFront;
   public float cellDistanceToTileInFront;
+  public float cellDistanceToTileBelow;
 }
 
 public enum Direction { LEFT = -1, RIGHT = 1 }
@@ -306,10 +307,35 @@ public class BaseDwarf : MonoBehaviour {
             float cellEdgeX = MoveDirection == Direction.LEFT ? collider.bounds.min.x : collider.bounds.max.x;
             surroundings.cellDistanceToTileInFront = Math.Abs(GameController.Tilemap.GetCellCenterWorld(surroundings.cellInFront).x - cellEdgeX) / GameController.Tilemap.cellSize.x - 0.5f;
         }
+
+        if (!surroundings.hasTileBelow)
+            surroundings.cellDistanceToTileBelow = 1f;
+        else
+            surroundings.cellDistanceToTileBelow = (collider.bounds.min.y - GameController.Tilemap.GetCellCenterWorld(surroundings.cellBelow).y) / GameController.Tilemap.cellSize.y - 0.5f;
     }
 
     private void UpdateIsFalling()
     {
-        IsFalling = Rigidbody.velocity.y <= -0.01 && !surroundings.hasTileBelow;
+        if (Mathf.Abs(Rigidbody.velocity.y) <= Constants.fallingSpeedThreshold)
+        {
+            IsFalling = false;
+            return;
+        }
+
+        if (!surroundings.hasTileBelow)
+        {
+            // No tile immediately below, so far enough from ground
+            IsFalling = true;
+            return;
+        }    
+
+        if (surroundings.cellDistanceToTileBelow > 0f)
+        {
+            // Tile exists immediately below, but not close enough yet
+            IsFalling = true;
+            return;
+        }
+
+        IsFalling = false;
     }
 }

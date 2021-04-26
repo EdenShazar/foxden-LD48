@@ -8,4 +8,5 @@ public static class Constants
     public static readonly int wagonLayer = LayerMask.NameToLayer("Wagon");
 
     public static readonly float horizontalInteractionDistance = 0.05f;
+    public static readonly float fallingSpeedThreshold = 0.3f;
 }
