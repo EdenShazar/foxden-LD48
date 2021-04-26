@@ -11,30 +11,33 @@ public class StopSignJob : DwarfJob
 
     public override bool JobAction(DwarfSurroundings surroundings)
     {
-        return false;
+        dwarf.SnapToCurrentCell();
+
+        Debug.Log(dwarf.CurrentCell);
+
+        if (!GameController.TilemapController.IsCellOccupiedWithDwarf(dwarf.CurrentCell)) {
+            GameController.TilemapController.OccupyCellWithDwarf(dwarf.CurrentCell);
+        }
+        
+        //add animation for dwarf
+        dwarf.animator.StopSign();
+
+        return true;
     }
 
     public override void InitializeJobAction(BaseDwarf incDwarf, Vector3Int currentCell)
     {
-        if (GameController.Score < Constants.stopSignCost)
-        {
-            dwarf.StopJob();
-            return;
-        }
-
         dwarf = incDwarf;
-        dwarf.SnapToCurrentCell();
-        
-        GameController.TilemapController.OccupyCellWithDwarf(dwarf.CurrentCell);
-        GameController.AddToScore(-Constants.stopSignCost);
-
-        //add animation for dwarf
-        dwarf.animator.StopSign();
         dwarf.JobIcon.SetStopSignIcon();
+        if(GameController.Score >= Constants.stopSignCost) {
+            GameController.AddToScore(-Constants.stopSignCost);
+        }
+        
     }
 
     public override void FinalizeJobAction()
     {
+        Debug.Log(dwarf.CurrentCell);
         GameController.TilemapController.UnoccupyCellWithDwarf(dwarf.CurrentCell);
     }
 
