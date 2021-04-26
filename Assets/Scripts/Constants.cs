@@ -19,5 +19,5 @@ public static class Constants
     public static readonly int digCost = 1;
     public static readonly int stopSignCost = 4;
     public static readonly int ropeCost = 5;
-    public static readonly int kegCost = 1;
+    public static readonly int kegCost = 50;
 }
