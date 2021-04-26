@@ -191,6 +191,8 @@ public class BaseDwarf : MonoBehaviour {
       if (!canStopJob())
         return;
 
+      currentJob.FinalizeJobAction();
+
       currentJob = null;
       animator.Walk();
       JobIcon.RemoveIcon();
