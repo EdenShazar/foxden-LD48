@@ -15,7 +15,7 @@ public class DigDownJob : DwarfJob {
     if(GameController.TilemapController.HasTile(surroundings.cellBelow)) {
       timeUntilNextDig -= Time.deltaTime;
 
-      dwarf.audioPlayer.PlaySound("pickHit", dwarf.CurrentCell);
+      dwarf.audioPlayer.PlaySound("dig", dwarf.CurrentCell);
 
       if(timeUntilNextDig <= 0.0f) {
         GameController.TilemapController.RemoveTile(surroundings.cellBelow);

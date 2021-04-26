@@ -157,6 +157,8 @@ public class GetBoozeJob : DwarfJob {
         IsDrinking = true;
         dwarf.animator.Drink();
 
+        dwarf.audioPlayer.PlaySound("drink", dwarf.CurrentCell);
+
         yield return new WaitForSeconds(drinkAnimationTime);
 
         if (!GameController.DwarfManager.OnBreak)

@@ -10257,6 +10257,8 @@ MonoBehaviour:
   pickHit: {fileID: 8300000, guid: 1fad48bddbfd39242978a176ce5adaac, type: 3}
   mainTheme: {fileID: 8300000, guid: b5fe8e1a8f7763d46b1c437a0389a45b, type: 3}
   drink: {fileID: 8300000, guid: 15605ba080a047b4c9b2eb5e33ccd268, type: 3}
+  dig: {fileID: 8300000, guid: f059839ce4315e14685d426793c1f04e, type: 3}
+  hammerRope: {fileID: 8300000, guid: a996614c75be4a9409db021240bd50af, type: 3}
 --- !u!114 &1194810255
 MonoBehaviour:
   m_ObjectHideFlags: 0

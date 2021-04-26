@@ -7,6 +7,8 @@ public class AudioManager : MonoBehaviour
     public AudioClip pickHit;
     public AudioClip mainTheme;
     public AudioClip drink;
+    public AudioClip dig;
+    public AudioClip hammerRope;
     public Dictionary<string, AudioClip> audioClips;
     public Dictionary<string, float> audioClipTimings;
 
@@ -14,11 +16,15 @@ public class AudioManager : MonoBehaviour
         audioClipTimings = new Dictionary<string, float>();
         Dictionary<Vector3Int, float> audioHitLocationAndTime = new Dictionary<Vector3Int, float>();
         audioClipTimings["pickHit"] = 0f;
+        audioClipTimings["dig"] = 0f;
+        audioClipTimings["hammerRope"] = 0f;
 
         audioClips = new Dictionary<string, AudioClip>();
         audioClips.Add("pickHit", pickHit);
         audioClips.Add("mainTheme", mainTheme);
         audioClips.Add("drink", drink);
+        audioClips.Add("dig", dig);
+        audioClips.Add("hammerRope", hammerRope);
 
         GameObject soundGameObject = new GameObject("Sound");
         AudioSource mainThemeSource = soundGameObject.AddComponent<AudioSource>();

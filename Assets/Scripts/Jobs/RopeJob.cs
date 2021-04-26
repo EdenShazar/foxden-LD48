@@ -20,6 +20,8 @@ public class RopeJob : DwarfJob
             dwarf.SnapToCurrentCell();
             dwarf.animator.Hammer();
 
+            dwarf.audioPlayer.PlaySound("hammerRope", dwarf.CurrentCell);
+
             timeUntilNextRope -= Time.deltaTime;
             if (timeUntilNextRope <= 0.0f)
             {
@@ -32,7 +34,7 @@ public class RopeJob : DwarfJob
                 if (!GameController.RopeManager.TryLayRopeTile(dwarf.CurrentCell, dwarf.MoveDirection))
                     dwarf.StopJob();
 
-                dwarf.audioPlayer.PlaySound("drink", dwarf.CurrentCell);
+                
 
                 timeUntilNextRope = timeToLayRope;
             }

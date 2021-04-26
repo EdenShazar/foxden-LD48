@@ -18,6 +18,9 @@ public class DigSideJob : DwarfJob {
         return false;
       }
       dwarf.animator.Mine();
+
+      dwarf.audioPlayer.PlaySound("pickHit", dwarf.CurrentCell);
+
       timeUntilNextDig -= Time.deltaTime;
       if(timeUntilNextDig <= 0.0f) {
         GameController.TilemapController.RemoveTile(surroundings.cellInFront);
