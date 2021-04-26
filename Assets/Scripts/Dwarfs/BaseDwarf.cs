@@ -228,10 +228,6 @@ public class BaseDwarf : MonoBehaviour {
         timeElapsedBeforeDirectionFlip += Time.deltaTime;
         currentSpeed = 0;
 
-        // Reset timer if returned to default movement mid-wait
-        if (doDefaultMovement)
-            timeElapsedBeforeDirectionFlip = 0f;
-
         if (timeElapsedBeforeDirectionFlip >= timeToFlipDirection)
         {
             FlipDirection();
