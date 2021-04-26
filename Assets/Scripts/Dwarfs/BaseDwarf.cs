@@ -114,11 +114,16 @@ public class BaseDwarf : MonoBehaviour {
 
         if (currentJob == null)
         {
+            // Update sorting
             dwarfSprite.sortingLayerID = Constants.nonworkingDwarvesLayer;
             transform.position = new Vector3(transform.position.x, transform.position.y, currentDrunkAmount * 0.01f);
+
+            if (!surroundings.hasTileInFront)
+                ResetSpeed();
         }
         else
         {
+            // Update sorting
             dwarfSprite.sortingLayerID = Constants.workingDwarvesLayer;
             transform.position = new Vector3(transform.position.x, transform.position.y, -5f + currentDrunkAmount * 0.01f);
         }
