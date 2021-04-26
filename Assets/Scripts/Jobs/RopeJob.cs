@@ -34,12 +34,7 @@ public class RopeJob : DwarfJob
                         return true;
                     }
 
-                    if (!GameController.RopeManager.TryAnchorNewRope(dwarf.CurrentCell, dwarf.MoveDirection, out rope))
-                    {
-                        dwarf.StopJob();
-                        return true;
-                    }
-
+                    GameController.RopeManager.TryAnchorNewRope(dwarf.CurrentCell, dwarf.MoveDirection, out rope);
                     GameController.AddToScore(-Constants.ropeCost);
 
                     hasPlacedAnchor = true;
