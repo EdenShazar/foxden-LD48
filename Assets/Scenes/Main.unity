@@ -1473,7 +1473,6 @@ GameObject:
   - component: {fileID: 327816686}
   - component: {fileID: 327816689}
   - component: {fileID: 327816688}
-  - component: {fileID: 327816687}
   m_Layer: 0
   m_Name: Job number 4
   m_TagString: Untagged
@@ -1495,18 +1494,6 @@ Transform:
   m_Father: {fileID: 1365160900}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &327816687
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 327816685}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0522cab5d543f414ea4dd5a35a2a49da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!102 &327816688
 TextMesh:
   serializedVersion: 3
@@ -8849,7 +8836,6 @@ GameObject:
   - component: {fileID: 1055257434}
   - component: {fileID: 1055257437}
   - component: {fileID: 1055257436}
-  - component: {fileID: 1055257435}
   m_Layer: 0
   m_Name: Job number 1
   m_TagString: Untagged
@@ -8871,18 +8857,6 @@ Transform:
   m_Father: {fileID: 1365160900}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1055257435
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1055257433}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0522cab5d543f414ea4dd5a35a2a49da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!102 &1055257436
 TextMesh:
   serializedVersion: 3
@@ -10138,7 +10112,6 @@ GameObject:
   - component: {fileID: 1413890813}
   - component: {fileID: 1413890816}
   - component: {fileID: 1413890815}
-  - component: {fileID: 1413890814}
   m_Layer: 0
   m_Name: Job number 2
   m_TagString: Untagged
@@ -10160,18 +10133,6 @@ Transform:
   m_Father: {fileID: 1365160900}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1413890814
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1413890812}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0522cab5d543f414ea4dd5a35a2a49da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!102 &1413890815
 TextMesh:
   serializedVersion: 3
@@ -11000,7 +10961,6 @@ GameObject:
   - component: {fileID: 1759739498}
   - component: {fileID: 1759739501}
   - component: {fileID: 1759739500}
-  - component: {fileID: 1759739499}
   m_Layer: 0
   m_Name: Job number 5
   m_TagString: Untagged
@@ -11022,18 +10982,6 @@ Transform:
   m_Father: {fileID: 1365160900}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1759739499
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1759739497}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0522cab5d543f414ea4dd5a35a2a49da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!102 &1759739500
 TextMesh:
   serializedVersion: 3
@@ -11204,7 +11152,6 @@ GameObject:
   - component: {fileID: 1808087037}
   - component: {fileID: 1808087040}
   - component: {fileID: 1808087039}
-  - component: {fileID: 1808087038}
   m_Layer: 0
   m_Name: Job number 3
   m_TagString: Untagged
@@ -11226,18 +11173,6 @@ Transform:
   m_Father: {fileID: 1365160900}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1808087038
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1808087036}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0522cab5d543f414ea4dd5a35a2a49da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!102 &1808087039
 TextMesh:
   serializedVersion: 3

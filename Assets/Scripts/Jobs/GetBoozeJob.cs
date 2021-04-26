@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class GetBoozeJob : DwarfJob {
   const float pullUpRopeAnimationTime = 1f;
+  const float drinkAnimationTime = 4f;
   const float climbSpeed = 1f;
 
   BaseDwarf dwarf;
@@ -10,6 +11,7 @@ public class GetBoozeJob : DwarfJob {
 
   bool isClimbing = false;
   bool isPullingUpRope = false;
+  bool isDrinking = false;
 
   public override float sobrietyScale {get {return 0.1f;} }
 
@@ -17,12 +19,12 @@ public class GetBoozeJob : DwarfJob {
     {
         bool revertToDefaultAction;
 
+        if (isDrinking)
+            return false;
+
         if (dwarf.isAtWagon)
         {
-            dwarf.ResetDrunk();
-            dwarf.FlipDirection();
-            dwarf.isAtWagon = false;
-            dwarf.StopJob();
+            GameController.Instance.StartCoroutine(Drink());
             return false;
         }
 
@@ -138,6 +140,22 @@ public class GetBoozeJob : DwarfJob {
 
         dwarf.SnapToRelativeCell(Vector3Int.up + Vector3Int.right * (int)dwarf.MoveDirection);
         dwarf.Rigidbody.gravityScale = 1f;
+    }
+
+    IEnumerator Drink()
+    {
+        // Ensure coroutine isn't running more than once
+        if (isDrinking)
+            yield break;
+
+        isDrinking = true;
+        dwarf.animator.Drink();
+
+        yield return new WaitForSeconds(drinkAnimationTime);
+
+        dwarf.ResetDrunk();
+        dwarf.FlipDirection();
+        dwarf.isAtWagon = false;
         dwarf.StopJob();
     }
 }
