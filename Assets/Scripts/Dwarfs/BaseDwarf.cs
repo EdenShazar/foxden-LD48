@@ -34,6 +34,8 @@ public class BaseDwarf : MonoBehaviour {
     new private Transform light;
     new private Collider2D collider;
 
+    private bool doDefaultMovement = true;
+
     [HideInInspector] public DwarfAnimator animator;
     [HideInInspector] public AudioPlayer audioPlayer;
 
@@ -92,7 +94,7 @@ public class BaseDwarf : MonoBehaviour {
 
         if (!IsFalling)
         {
-            bool doDefaultMovement = true;
+            doDefaultMovement = true;
             if (currentJob != null)
                 doDefaultMovement = doJobAction(surroundings);
 
@@ -226,6 +228,10 @@ public class BaseDwarf : MonoBehaviour {
         timeElapsedBeforeDirectionFlip += Time.deltaTime;
         currentSpeed = 0;
 
+        // Reset timer if returned to default movement mid-wait
+        if (doDefaultMovement)
+            timeElapsedBeforeDirectionFlip = 0f;
+
         if (timeElapsedBeforeDirectionFlip >= timeToFlipDirection)
         {
             FlipDirection();
@@ -244,6 +250,10 @@ public class BaseDwarf : MonoBehaviour {
         isClimbingLedge = true;
 
         yield return new WaitForSeconds(timeToClimb);
+
+        // If returned to default movement mid-wait, abort
+        if (!doDefaultMovement)
+            yield break;
 
         // If can no longer climb by end of waiting time, abort
         bool canClimb = surroundings.hasTileInFront && !surroundings.hasTileAboveInFront
