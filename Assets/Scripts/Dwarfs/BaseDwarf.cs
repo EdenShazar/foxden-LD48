@@ -193,7 +193,6 @@ public class BaseDwarf : MonoBehaviour {
                 currentJob.InitializeJobAction(this, CurrentCell);
                 doJobAction = jobToAssign.JobAction;
                 canStopJob = jobToAssign.CanStopJob;
-                GameController.AddToScore(-1 * currentJob.JobCost);
                 dwarfSprite.sortingLayerID = Constants.workingDwarvesLayer;
             }
         }

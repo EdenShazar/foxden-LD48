@@ -16,7 +16,6 @@ public class GetBoozeJob : DwarfJob {
   private float sobrietyScale = 0.1f;
 
   public override float SobrietyScale {get {return sobrietyScale;} }
-  public override int JobCost {get {return 0;} }
 
     public override bool JobAction(DwarfSurroundings surroundings)
     {

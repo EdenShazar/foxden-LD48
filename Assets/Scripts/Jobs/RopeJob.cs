@@ -10,7 +10,6 @@ public class RopeJob : DwarfJob
     bool hasPlacedAnchor = false;
 
   public override float SobrietyScale { get { return 0.0f; } }
-  public override int JobCost {get {return 1;} }
 
   public override bool JobAction(DwarfSurroundings surroundings)
     {
@@ -27,7 +26,15 @@ public class RopeJob : DwarfJob
             {
                 if (!hasPlacedAnchor)
                 {
+                    if (GameController.Score < Constants.ropeCost)
+                    {
+                        dwarf.StopJob();
+                        return true;
+                    }
+
                     GameController.RopeManager.PlaceAnchor(dwarf.CurrentCell, dwarf.MoveDirection);
+                    GameController.AddToScore(-Constants.ropeCost);
+
                     hasPlacedAnchor = true;
                 }
 
