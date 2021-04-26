@@ -69,26 +69,13 @@ public class GetBoozeJob : DwarfJob {
     /// <summary>Start a new climb if possible, return whether or not to revert to default action.</summary>
     bool CheckForNewClimb()
     {
-        Vector3Int currentCell = dwarf.CurrentCell;
-        ClimbableRopeTile ropeTile = GameController.RopeManager.IsCellClimbable(currentCell);
-
-        if (ropeTile == ClimbableRopeTile.UNCMLIMBABLE)
+        if (!GameController.RopeManager.IsCellClimbable(dwarf.CurrentCell, out Direction ropeDirection))
             return true;
 
-        if (dwarf.MoveDirection == Direction.LEFT)
-        {
-            if (ropeTile == ClimbableRopeTile.RIGHT)
-                dwarf.FlipDirection();
+        if (ropeDirection != dwarf.MoveDirection)
+            dwarf.FlipDirection();
 
-            StartClimbing();
-        }
-        else
-        {
-            if (ropeTile == ClimbableRopeTile.LEFT)
-                dwarf.FlipDirection();
-
-            StartClimbing();
-        }
+        StartClimbing();
 
         return false;
     }
@@ -103,11 +90,9 @@ public class GetBoozeJob : DwarfJob {
 
     void ContinueClimbing()
     {
-        // If current cell has rope on wrong side, flip dwarf
-        Vector3Int currentCell = dwarf.CurrentCell;
-        ClimbableRopeTile ropeTile = GameController.RopeManager.IsCellClimbable(currentCell);
-        if ((ropeTile == ClimbableRopeTile.LEFT && dwarf.MoveDirection == Direction.RIGHT)
-            || (ropeTile == ClimbableRopeTile.RIGHT && dwarf.MoveDirection == Direction.LEFT))
+        GameController.RopeManager.IsCellClimbable(dwarf.CurrentCell, out Direction ropeDirection);
+        
+        if (ropeDirection != dwarf.MoveDirection)
             dwarf.FlipDirection();
 
 
@@ -123,7 +108,7 @@ public class GetBoozeJob : DwarfJob {
 
     bool CellAboveIsClimbable()
     {
-        return GameController.RopeManager.IsCellClimbable(dwarf.CurrentCell + Vector3Int.up) != ClimbableRopeTile.UNCMLIMBABLE;
+        return GameController.RopeManager.IsCellClimbable(dwarf.CurrentCell + Vector3Int.up, out _);
     }
 
     IEnumerator EndClimb()

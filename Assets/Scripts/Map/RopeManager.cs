@@ -1,209 +1,144 @@
-using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public enum ClimbableRopeTile { UNCMLIMBABLE, LEFT, RIGHT }
 
-[Serializable]
 public class RopeManager : MonoBehaviour
 {
-    enum RopeTile { NONE, LEFT_ANCHOR, RIGHT_ANCHOR, LEFT_MIDDLE, RIGHT_MIDDLE, LEFT_END, RIGHT_END }
-
     [SerializeField] GameObject anchorPrefab;
     [SerializeField] GameObject middlePrefab;
     [SerializeField] GameObject endPrefab;
 
-    RopeTile[,] ropeTiles;
-    GameObject[,] ropeObjects;
+    List<Rope> ropes = new List<Rope>();
 
     public void Initialize()
     {
-        int mapWidth = GameController.TilemapController.WidthCell;
-        int mapHeight = GameController.TilemapController.HeightCell;
+        Rope.InitializePrefabReferences(anchorPrefab, middlePrefab, endPrefab);
 
-        ropeTiles = new RopeTile[mapWidth, mapHeight];
-        ropeObjects = new GameObject[mapWidth, mapHeight];
-        for (int x = 0; x < mapWidth; x++)
-            for (int y = 0; y < mapHeight; y++)
-            {
-                ropeTiles[x, y] = RopeTile.NONE;
-                ropeObjects[x, y] = null;
-            }
-
-        GameController.TilemapController.TileDestroyed += RemoveAnchor;
+        GameController.TilemapController.TileDestroyed += RemoveRope;
     }
 
-    /// <summary>Lay down rope or extend it if possible, and returns whether or not succeeded.</summary>
-    public bool TryLayRopeTile(Vector3Int anchorCell, Direction lookingDirection)
+    public bool HasRopeOnDirection(Vector3Int anchorCell, Direction anchorDirection, out Rope rope)
     {
-        Vector3Int firstRopeCell = anchorCell + Vector3Int.down + Vector3Int.right * (int)lookingDirection;
+        foreach (Rope currentRope in ropes)
+            if (currentRope.HasAnchorOnDirection(anchorCell, anchorDirection))
+            {
+                rope = currentRope;
+                return true;
+            }
 
-        if (!FindNextRopeCell(firstRopeCell, out Vector3Int cellToAddRope))
+        rope = null;
+        return false;
+    }
+
+    public bool HasRopeOnCell(Vector3Int anchorCell, out Rope leftRope, out Rope rightRope)
+    {
+        leftRope = null;
+        rightRope = null;
+        bool hasRope = false;
+
+        foreach (Rope currentRope in ropes)
         {
-            if (lookingDirection == Direction.LEFT)
-                SetRopeTile(cellToAddRope, RopeTile.RIGHT_END);
-            else
-                SetRopeTile(cellToAddRope, RopeTile.LEFT_END);
+            if (currentRope.HasAnchorOnDirection(anchorCell, Direction.LEFT))
+            {
+                leftRope = currentRope;
+                hasRope = true;
+            }
+            else if (currentRope.HasAnchorOnDirection(anchorCell, Direction.RIGHT))
+            {
+                rightRope = currentRope;
+                hasRope = true;
+            }
+        }
 
+        return hasRope;
+    }
+
+    public bool HasAnchorOnDirection(Vector3Int cell, Direction direction)
+    {
+        foreach (Rope rope in ropes)
+            if (rope.HasAnchorOnDirection(cell, direction))
+                return true;
+
+        return false;
+    }
+
+    public bool HasAnchorOnCell(Vector3Int cell)
+    {
+        foreach (Rope rope in ropes)
+            if (rope.HasAnchorOnCell(cell))
+                return true;
+
+        return false;
+    }
+
+    public bool HasRopeOnDirection(Vector3Int cell, Direction direction)
+    {
+        foreach (Rope rope in ropes)
+            if (rope.IsCellClimbableOnDirection(cell, direction))
+                return true;
+
+        return false;
+    }
+
+    public bool TryAnchorNewRope(Vector3Int anchorCell, Direction anchorDirection, out Rope rope)
+    {
+        if (HasRopeOnDirection(anchorCell, anchorDirection, out Rope existingRope))
+        {
+            rope = existingRope;
             return false;
         }
 
-        if (lookingDirection == Direction.LEFT)
-            SetRopeTile(cellToAddRope, RopeTile.RIGHT_MIDDLE);
-        else
-            SetRopeTile(cellToAddRope, RopeTile.LEFT_MIDDLE);
+        rope = new Rope(anchorCell, anchorDirection);
+        ropes.Add(rope);
 
         return true;
     }
 
-    public void PlaceAnchor(Vector3Int anchorCell, Direction lookingDirection)
+    public bool TryExtend(Rope rope)
     {
-        if (lookingDirection == Direction.LEFT)
-            SetRopeTile(anchorCell, RopeTile.LEFT_ANCHOR);
-        else
-            SetRopeTile(anchorCell, RopeTile.RIGHT_ANCHOR);
+        return rope.TryExtend();
     }
 
-    public ClimbableRopeTile IsCellClimbable(Vector3Int cell)
+
+    public bool IsCellClimbable(Vector3Int cell, out Direction direction)
     {
-        int x = cell.x - GameController.TilemapController.LeftBoundaryCell;
-        int y = cell.y - GameController.TilemapController.BottomBoundaryCell;
+        //int x = cell.x - GameController.TilemapController.LeftBoundaryCell;
+        //int y = cell.y - GameController.TilemapController.BottomBoundaryCell;
 
-        RopeTile ropeTile = ropeTiles[x, y];
+        // Default value
+        direction = Direction.RIGHT;
 
-        if (ropeTile == RopeTile.LEFT_MIDDLE || ropeTile == RopeTile.LEFT_END)
-            return ClimbableRopeTile.LEFT;
-        if (ropeTile == RopeTile.RIGHT_MIDDLE || ropeTile == RopeTile.RIGHT_END)
-            return ClimbableRopeTile.RIGHT;
-
-        return ClimbableRopeTile.UNCMLIMBABLE;
-    }
-
-    void SetRopeTile(Vector3Int cell, RopeTile ropeTile)
-    {
-        int x = cell.x - GameController.TilemapController.LeftBoundaryCell;
-        int y = cell.y - GameController.TilemapController.BottomBoundaryCell;
-
-        ropeTiles[x, y] = ropeTile;
-
-        // Clear rope that might already be there
-        if (ropeObjects[x, y] != null)
+        foreach (Rope rope in ropes)
         {
-            Destroy(ropeObjects[x, y]);
-            ropeObjects[x, y] = null;
-        }
-
-        Vector3 pivotPosition = GameController.Tilemap.layoutGrid.CellToWorld(cell) + Vector3.right * 0.5f; ;
-        switch (ropeTile)
-        {
-            case RopeTile.LEFT_ANCHOR:
-                ropeObjects[x, y] = Instantiate(anchorPrefab, pivotPosition, Quaternion.identity, transform);
-                ropeObjects[x, y].GetComponent<SpriteRenderer>().flipX = true;
-                break;
-            case RopeTile.RIGHT_ANCHOR:
-                ropeObjects[x, y] = Instantiate(anchorPrefab, pivotPosition, Quaternion.identity, transform);
-                break;
-            case RopeTile.LEFT_MIDDLE:
-                ropeObjects[x, y] = Instantiate(middlePrefab, pivotPosition, Quaternion.identity, transform);
-                break;
-            case RopeTile.RIGHT_MIDDLE:
-                ropeObjects[x, y] = Instantiate(middlePrefab, pivotPosition, Quaternion.identity, transform);
-                ropeObjects[x, y].GetComponent<SpriteRenderer>().flipX = true;
-                break;
-            case RopeTile.LEFT_END:
-                ropeObjects[x, y] = Instantiate(endPrefab, pivotPosition, Quaternion.identity, transform);
-                break;
-            case RopeTile.RIGHT_END:
-                ropeObjects[x, y] = Instantiate(endPrefab, pivotPosition, Quaternion.identity, transform);
-                ropeObjects[x, y].GetComponent<SpriteRenderer>().flipX = true;
-                break;
-        }
-    }
-
-    /// <summary>Return whether or not a next valid rope cell exists. If true, <paramref name="nextRopeCell"/> is that cell, if false, it's the last roped cell.</summary>
-    bool FindNextRopeCell(Vector3Int initialCell, out Vector3Int nextRopeCell)
-    {
-        Vector3Int cell = initialCell;
-
-        while (true)
-        {
-            // Hit ground
-            if (GameController.TilemapController.HasTile(cell) || GameController.TilemapController.IsCellOutOfBounds(cell))
+            if (rope.IsCellClimbableOnDirection(cell, Direction.LEFT))
             {
-                nextRopeCell = cell + Vector3Int.up;
-                return false;
-            }
-
-            if (HasRopeSection(cell))
-                cell.y -= 1;
-            else
-            {
-                nextRopeCell = cell;
+                direction = Direction.LEFT;
                 return true;
             }
+
+            if (rope.IsCellClimbableOnDirection(cell, Direction.RIGHT))
+                return true;
         }
-    }
-
-    bool HasRopeSection(Vector3Int cell)
-    {
-        int x = cell.x - GameController.TilemapController.LeftBoundaryCell;
-        int y = cell.y - GameController.TilemapController.BottomBoundaryCell;
-
-        RopeTile ropeTile = ropeTiles[x, y];
-
-        if (ropeTile != RopeTile.NONE && ropeTile != RopeTile.LEFT_ANCHOR && ropeTile != RopeTile.RIGHT_ANCHOR)
-            return true;
 
         return false;
     }
 
-    bool HasRopeAnchor(Vector3Int cell)
+    void RemoveRope(Vector3Int anchorCell, TileType _)
     {
-        int x = cell.x - GameController.TilemapController.LeftBoundaryCell;
-        int y = cell.y - GameController.TilemapController.BottomBoundaryCell;
-
-        RopeTile ropeTile = ropeTiles[x, y];
-
-        if (ropeTile == RopeTile.LEFT_ANCHOR || ropeTile == RopeTile.RIGHT_ANCHOR)
-            return true;
-
-        return false;
-    }
-
-    void RemoveRope(Vector3Int anchorCell)
-    {
-        int x = anchorCell.x - GameController.TilemapController.LeftBoundaryCell;
-        int y = anchorCell.y - GameController.TilemapController.BottomBoundaryCell;
-
-        RopeTile anchorTile = ropeTiles[x, y];
-
-        Vector3Int currentCell;
-        if (anchorTile == RopeTile.LEFT_ANCHOR)
-            currentCell = anchorCell + Vector3Int.left + Vector3Int.down;
-        else if (anchorTile == RopeTile.RIGHT_ANCHOR)
-            currentCell = anchorCell + Vector3Int.right + Vector3Int.down;
-        else
-            return;
-
-        ropeTiles[x, y] = RopeTile.NONE;
-        Destroy(ropeObjects[x, y]);
-        
-        while (HasRopeSection(currentCell))
+        if (HasRopeOnCell(anchorCell, out Rope leftRope, out Rope rightRope))
         {
-            x = currentCell.x - GameController.TilemapController.LeftBoundaryCell;
-            y = currentCell.y - GameController.TilemapController.BottomBoundaryCell;
+            if (leftRope != null)
+            {
+                leftRope.RemoveRope();
+                ropes.Remove(leftRope);
+            }
 
-            ropeTiles[x, y] = RopeTile.NONE;
-            Destroy(ropeObjects[x, y]);
-
-            currentCell += Vector3Int.down;
+            if (rightRope != null)
+            {
+                rightRope.RemoveRope();
+                ropes.Remove(rightRope);
+            }
         }
-    }
-
-    void RemoveAnchor(int x, int y, TileType tileType)
-    {
-        Vector3Int cellAbove = new Vector3Int(x, y + 1, 0);
-
-        if (HasRopeAnchor(cellAbove))
-            RemoveRope(cellAbove);
     }
 }

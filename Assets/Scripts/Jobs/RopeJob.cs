@@ -9,6 +9,8 @@ public class RopeJob : DwarfJob
 
     bool hasPlacedAnchor = false;
 
+    Rope rope;
+
   public override float SobrietyScale { get { return 1.0f; } }
 
   public override bool JobAction(DwarfSurroundings surroundings)
@@ -32,16 +34,25 @@ public class RopeJob : DwarfJob
                         return true;
                     }
 
-                    GameController.RopeManager.PlaceAnchor(dwarf.CurrentCell, dwarf.MoveDirection);
+                    if (!GameController.RopeManager.TryAnchorNewRope(dwarf.CurrentCell, dwarf.MoveDirection, out rope))
+                    {
+                        dwarf.StopJob();
+                        return true;
+                    }
+
                     GameController.AddToScore(-Constants.ropeCost);
 
                     hasPlacedAnchor = true;
                 }
+                else
+                {
+                    if (!GameController.RopeManager.TryExtend(rope))
+                    {
+                        dwarf.StopJob();
+                        return true;
+                    }
 
-                if (!GameController.RopeManager.TryLayRopeTile(dwarf.CurrentCell, dwarf.MoveDirection))
-                    dwarf.StopJob();
-
-                
+                }
 
                 timeUntilNextRope = timeToLayRope;
             }

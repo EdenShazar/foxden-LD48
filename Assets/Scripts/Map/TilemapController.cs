@@ -17,7 +17,7 @@ public class TilemapController : MonoBehaviour
     TileType[,] tileTypes;
     Dictionary<Vector3Int, int> cellsOccupiedWithDwarvesCount = new Dictionary<Vector3Int, int>();
 
-    public event Action<int, int, TileType> TileDestroyed;
+    public event Action<Vector3Int, TileType> TileDestroyed;
 
     public int LeftBoundaryCell { get => leftBoundary; }
     public int RightBoundaryCell { get => rightBoundary; }
@@ -135,11 +135,12 @@ public class TilemapController : MonoBehaviour
           break;
         }
         GameController.AddToScore(score);
-        ScorePopup(score, new Vector3Int(x, y, 0));
-        tilemap.SetTile(new Vector3Int(x, y, 0), null);
+        Vector3Int cell = new Vector3Int(x, y, 0);
+        ScorePopup(score, cell);
+        tilemap.SetTile(cell, null);
         UpdateAdjacentTiles(x, y);
 
-        TileDestroyed?.Invoke(x, y, tileTypes[x - leftBoundary, y - bottomBoundary]);
+        TileDestroyed?.Invoke(cell, tileTypes[x - leftBoundary, y - bottomBoundary]);
 
         tileTypes[x - leftBoundary, y - bottomBoundary] = TileType.NONE;
     }
