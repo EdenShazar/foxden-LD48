@@ -17,6 +17,7 @@ public class GameController : MonoBehaviour {
     private AudioManager audioManager;
     private DwarfSpawner dwarfSpawner;
     private DwarfManager dwarfManager;
+    private EndScreenController endScreenController;
     private Dictionary<TileBase, TileData> tileToTileData;
     new private Camera camera;
     private int score;
@@ -30,7 +31,10 @@ public class GameController : MonoBehaviour {
     public static AudioManager AudioManager { get => instance.audioManager; } 
     public static DwarfSpawner DwarfSpawner { get => instance.dwarfSpawner; } 
     public static DwarfManager DwarfManager { get => instance.dwarfManager; } 
+    public static EndScreenController EndScreenController { get => instance.endScreenController; } 
     public static int Score { get => instance.score; } 
+    
+    public static bool GameEnded { get; private set; } 
 
     public static List<BaseDwarf> workingDwarvesHoveredOver { get; private set; } = new List<BaseDwarf>();
 
@@ -44,6 +48,7 @@ public class GameController : MonoBehaviour {
         audioManager = FindObjectOfType<AudioManager>();
         dwarfSpawner = FindObjectOfType<DwarfSpawner>();
         dwarfManager = FindObjectOfType<DwarfManager>();
+        endScreenController = FindObjectOfType<EndScreenController>();
         camera = Camera.main;
 
         tileManager.InitializeTileDictionary();
@@ -60,6 +65,8 @@ public class GameController : MonoBehaviour {
         dwarfSpawner.TrySpawnDwarves(10);
     
         tilemapController.UpdateAllTiles();
+
+        endScreenController.Hide();
 
         dwarfManager.NoDwarvesLeft += GameOverFail;
         dwarfManager.AllDwarvesSafe += GameOverSuccess;
@@ -109,13 +116,17 @@ public class GameController : MonoBehaviour {
 
     public static void GameOverSuccess()
     {
-        Debug.Log("Game won! :)");
+        GameEnded = true;
+
+        EndScreenController.ShowWin();
         Time.timeScale = 1f;
     }
 
     public static void GameOverFail()
     {
-        Debug.Log("Game lost! :(");
+        GameEnded = true;
+
+        EndScreenController.ShowLoss();
         Time.timeScale = 1f;
     }
 

@@ -14,7 +14,7 @@ public class DwarfManager : MonoBehaviour
 
     private void Update()
     {
-        if (OnBreak && AreAllDwarvesDrinking())
+        if (OnBreak && AreAllDwarvesDrinking() && !GameController.GameEnded)
             AllDwarvesSafe?.Invoke();
     }
 
@@ -33,7 +33,7 @@ public class DwarfManager : MonoBehaviour
 
         dwarves.Remove(dwarf);
 
-        if (dwarves.Count <= 0)
+        if (dwarves.Count <= 0 && !GameController.GameEnded)
             NoDwarvesLeft?.Invoke();
     }
 
