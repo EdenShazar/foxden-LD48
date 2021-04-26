@@ -24,7 +24,7 @@ public class GetBoozeJob : DwarfJob {
         if (IsDrinking)
             return false;
 
-        if (dwarf.isAtWagon)
+        if (dwarf.isAtWagon || (dwarf.isAtKeg && dwarf.currentKeg.TryUseKeg()))
         {
             GameController.Instance.StartCoroutine(Drink());
             return false;
@@ -164,9 +164,12 @@ public class GetBoozeJob : DwarfJob {
         if (!GameController.DwarfManager.OnBreak)
         {
             dwarf.ResetDrunk();
-            dwarf.FlipDirection();
             dwarf.isAtWagon = false;
+            dwarf.isAtKeg = false;
             dwarf.StopJob();
+            
+            if (!dwarf.isAtKeg)
+                dwarf.FlipDirection();
         }
         
         // Final break

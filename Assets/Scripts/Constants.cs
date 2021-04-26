@@ -6,6 +6,9 @@ public static class Constants
     public static readonly int workingDwarvesLayer = SortingLayer.NameToID("Working dwarves");
 
     public static readonly int wagonLayer = LayerMask.NameToLayer("Wagon");
+    
+    public static readonly string wagonTag = "Wagon";
+    public static readonly string KegTag = "Keg";
 
     public static readonly float horizontalInteractionDistance = 0.05f;
     public static readonly float fallingSpeedThreshold = 0.3f;
@@ -14,6 +17,7 @@ public static class Constants
     public static readonly Color maxSobrietyWarningColor = new Color(0.945f, 0.341f, 0.341f);
 
     public static readonly int digCost = 1;
-    public static readonly int stopSignCost = 1;
-    public static readonly int ropeCost = 1;
+    public static readonly int stopSignCost = 4;
+    public static readonly int ropeCost = 5;
+    public static readonly int kegCost = 1;
 }

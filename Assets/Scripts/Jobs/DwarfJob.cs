@@ -6,7 +6,8 @@ public enum JobType {
   DIG_ACROSS,
   STOP,
   ROPE,
-  GET_BOOZE
+  GET_BOOZE,
+  SET_KEG
 }
 
 public abstract class DwarfJob : ScriptableObject  {

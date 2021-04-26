@@ -1,11 +1,10 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
 public class JobSelector : MonoBehaviour {
     private const float jobButtonWidth = 0.32f;
-    private const float jobButtonLeftLimit = -0.64f;
+    private const float jobButtonLeftLimit = -0.80f;
   
     [SerializeField] private SpriteRenderer border;
     [SerializeField] private GameObject costParent;
@@ -15,11 +14,15 @@ public class JobSelector : MonoBehaviour {
     [SerializeField] private Sprite tileIcon;
     [SerializeField] private Sprite stopSignIcon;
     [SerializeField] private Sprite ropeIcon;
+    [SerializeField] private Sprite kegIcon;
+    [SerializeField] private GameObject kegPrefab;
       
     private static List<DwarfJob> jobs;
     private static int selectedJob;
     private int newSelectedJob;
     private static JobSelector instance;
+
+    public static GameObject KegPrefab { get => instance.kegPrefab; }
 
   public static DwarfJob GetSelectedJob() {
         return jobs[selectedJob] == null ? null : Instantiate(jobs[selectedJob]);
@@ -54,8 +57,11 @@ public class JobSelector : MonoBehaviour {
     if(Input.GetKeyDown(KeyCode.Alpha5)) {
       newSelectedJob = 4;
     }
+    if (Input.GetKeyDown(KeyCode.Alpha6)) {
+      newSelectedJob = 5;
+    }
     if (Input.GetKeyDown(KeyCode.Escape)) {
-        newSelectedJob = 5;
+      newSelectedJob = 6;
     }
         if (newSelectedJob != selectedJob) {
       UpdateSelectedJob();
@@ -68,7 +74,7 @@ public class JobSelector : MonoBehaviour {
         border.transform.localPosition = new Vector3(jobButtonLeftLimit + jobButtonWidth * selectedJob, 0.0f, 0.0f);
         
         // No job selected
-        if (selectedJob == 5)
+        if (selectedJob == 6)
         {
             costParent.gameObject.SetActive(false);
 
@@ -101,11 +107,15 @@ public class JobSelector : MonoBehaviour {
                     costText.text = Constants.ropeCost.ToString();
                     costIcon.sprite = ropeIcon;
                     break;
+                case 5:
+                    costText.text = Constants.kegCost.ToString();
+                    costIcon.sprite = kegIcon;
+                    break;
             }
         }
 
         // Set transparent when no job selected
-        border.color = new Color(1f, 1f, 1f, selectedJob == 5 ? 0f : 1f);
+        border.color = new Color(1f, 1f, 1f, selectedJob == 6 ? 0f : 1f);
     }
 
   private void EnsureSingleton() {
@@ -125,6 +135,7 @@ public class JobSelector : MonoBehaviour {
       ScriptableObject.CreateInstance<StopSignJob>(),
       ScriptableObject.CreateInstance<RopeJob>(),
       ScriptableObject.CreateInstance<GetBoozeJob>(),
+      ScriptableObject.CreateInstance<SetKegJob>(),
       null
     };
   }

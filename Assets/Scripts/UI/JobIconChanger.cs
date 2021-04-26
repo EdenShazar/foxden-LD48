@@ -7,6 +7,7 @@ public class JobIconChanger : MonoBehaviour
     [SerializeField] Sprite stopSignSprite;
     [SerializeField] Sprite ropeSprite;
     [SerializeField] Sprite getBoozeSprite;
+    [SerializeField] Sprite setKegSprite;
 
     SpriteRenderer spriteRenderer;
 
@@ -21,4 +22,5 @@ public class JobIconChanger : MonoBehaviour
     public void SetStopSignIcon() => spriteRenderer.sprite = stopSignSprite;
     public void SetRopeIcon() => spriteRenderer.sprite = ropeSprite;
     public void SetGetBoozeIcon() => spriteRenderer.sprite = getBoozeSprite;
+    public void SetSetKegSprite() => spriteRenderer.sprite = setKegSprite;
 }

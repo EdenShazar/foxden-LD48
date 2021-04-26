@@ -48,6 +48,8 @@ public class BaseDwarf : MonoBehaviour {
     [HideInInspector] public DwarfJob CurrentJob { get => currentJob; }
 
     [HideInInspector] public bool isAtWagon;
+    [HideInInspector] public bool isAtKeg;
+    [HideInInspector] public KegController currentKeg;
 
     public float distanceForHorizontalCollision;
     public float currentSpeed;
@@ -94,6 +96,7 @@ public class BaseDwarf : MonoBehaviour {
     private void Update()
     {
         CurrentCell = GameController.Tilemap.layoutGrid.WorldToCell(transform.position);
+        CurrentCell = new Vector3Int(CurrentCell.x, CurrentCell.y, 0);
 
         if (currentJob != null) {
           currentDrunkAmount -= Time.deltaTime * currentJob.SobrietyScale;
@@ -162,7 +165,18 @@ public class BaseDwarf : MonoBehaviour {
         if (collider.gameObject.layer != Constants.wagonLayer)
             return;
 
-        isAtWagon = true;
+        if (collider.CompareTag(Constants.wagonTag))
+        {
+            isAtWagon = true;
+            isAtKeg = false;
+            currentKeg = null;
+        }
+        else if (collider.CompareTag(Constants.KegTag))
+        {
+            isAtWagon = false;
+            isAtKeg = true;
+            currentKeg = collider.GetComponent<KegController>();
+        }
     }
 
     void OnTriggerExit2D(Collider2D collider)
@@ -171,6 +185,8 @@ public class BaseDwarf : MonoBehaviour {
             return;
 
         isAtWagon = false;
+        isAtKeg = false;
+        currentKeg = null;
     }
 
     public void OnMouseDown() {

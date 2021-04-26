@@ -107,6 +107,8 @@ MonoBehaviour:
   animator: {fileID: 0}
   audioPlayer: {fileID: 0}
   isAtWagon: 0
+  isAtKeg: 0
+  currentKeg: {fileID: 0}
   distanceForHorizontalCollision: 0.1
   currentSpeed: 0
   timeToClimb: 1
@@ -303,6 +305,7 @@ MonoBehaviour:
   stopSignSprite: {fileID: -4860090781130129595, guid: 57ec0a8565d0b024f86cfc2a442d8e0c, type: 3}
   ropeSprite: {fileID: -6135312627191825224, guid: 57ec0a8565d0b024f86cfc2a442d8e0c, type: 3}
   getBoozeSprite: {fileID: -8934450681232683969, guid: 57ec0a8565d0b024f86cfc2a442d8e0c, type: 3}
+  setKegSprite: {fileID: 21300000, guid: 48ea7050a77bebe4482e42a1b25c9f0f, type: 3}
 --- !u!95 &1298455695507930297
 Animator:
   serializedVersion: 3
