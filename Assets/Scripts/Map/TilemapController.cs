@@ -84,11 +84,13 @@ public class TilemapController : MonoBehaviour
 
     public bool HasTile(Vector3Int cell)
     {
+        cell.z = 0;
         return tilemap.HasTile(cell);
     }
 
     public bool HasTileOrDwarf(Vector3Int cell)
     {
+        cell.z = 0;
         return tilemap.HasTile(cell) || IsCellOccupiedWithDwarf(cell);
     }
 

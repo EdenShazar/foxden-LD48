@@ -28,6 +28,8 @@ public class RopeManager : MonoBehaviour
                 ropeTiles[x, y] = RopeTile.NONE;
                 ropeObjects[x, y] = null;
             }
+
+        GameController.TilemapController.TileDestroyed += RemoveAnchor;
     }
 
     /// <summary>Lay down rope or extend it if possible, and returns whether or not succeeded.</summary>
@@ -152,5 +154,56 @@ public class RopeManager : MonoBehaviour
             return true;
 
         return false;
+    }
+
+    bool HasRopeAnchor(Vector3Int cell)
+    {
+        int x = cell.x - GameController.TilemapController.LeftBoundaryCell;
+        int y = cell.y - GameController.TilemapController.BottomBoundaryCell;
+
+        RopeTile ropeTile = ropeTiles[x, y];
+
+        if (ropeTile == RopeTile.LEFT_ANCHOR || ropeTile == RopeTile.RIGHT_ANCHOR)
+            return true;
+
+        return false;
+    }
+
+    void RemoveRope(Vector3Int anchorCell)
+    {
+        int x = anchorCell.x - GameController.TilemapController.LeftBoundaryCell;
+        int y = anchorCell.y - GameController.TilemapController.BottomBoundaryCell;
+
+        RopeTile anchorTile = ropeTiles[x, y];
+
+        Vector3Int currentCell;
+        if (anchorTile == RopeTile.LEFT_ANCHOR)
+            currentCell = anchorCell + Vector3Int.left + Vector3Int.down;
+        else if (anchorTile == RopeTile.RIGHT_ANCHOR)
+            currentCell = anchorCell + Vector3Int.right + Vector3Int.down;
+        else
+            return;
+
+        ropeTiles[x, y] = RopeTile.NONE;
+        Destroy(ropeObjects[x, y]);
+        
+        while (HasRopeSection(currentCell))
+        {
+            x = currentCell.x - GameController.TilemapController.LeftBoundaryCell;
+            y = currentCell.y - GameController.TilemapController.BottomBoundaryCell;
+
+            ropeTiles[x, y] = RopeTile.NONE;
+            Destroy(ropeObjects[x, y]);
+
+            currentCell += Vector3Int.down;
+        }
+    }
+
+    void RemoveAnchor(int x, int y, TileType tileType)
+    {
+        Vector3Int cellAbove = new Vector3Int(x, y + 1, 0);
+
+        if (HasRopeAnchor(cellAbove))
+            RemoveRope(cellAbove);
     }
 }
