@@ -48,7 +48,7 @@ public class GameController : MonoBehaviour {
   }
 
   private void Start() {
-    score = 0;
+    score = 10;
     
     Instantiate(dwarf);
 

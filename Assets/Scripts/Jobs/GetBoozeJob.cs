@@ -12,6 +12,7 @@ public class GetBoozeJob : DwarfJob {
   bool isPullingUpRope = false;
 
   public override float sobrietyScale {get {return 0.1f;} }
+  public override int jobCost {get {return 0;} }
 
     public override bool JobAction(DwarfSurroundings surroundings)
     {
