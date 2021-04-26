@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -65,7 +66,7 @@ public class GameController : MonoBehaviour {
     void Start()
     {
         score = 200;
-        dwarfSpawner.TrySpawnDwarves(10);
+        StartCoroutine(SpawnDwarvesDelayed(delay: 3.5f, numberOfDwarves: 10));
     
         tilemapController.UpdateAllTiles();
 
@@ -120,6 +121,13 @@ public class GameController : MonoBehaviour {
             Time.timeScale = dwarfManager.OnBreak ? 4f : 1f;
             pauseMenu.SetActive(false);
         }
+    }
+
+    IEnumerator SpawnDwarvesDelayed(float delay, int numberOfDwarves)
+    {
+        yield return new WaitForSeconds(delay);
+
+        dwarfSpawner.TrySpawnDwarves(numberOfDwarves);
     }
 
     public void SetCursor(CursorMode cursorMode)

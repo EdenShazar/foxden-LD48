@@ -50,6 +50,7 @@ public class CameraController : MonoBehaviour
             bottomBound = Mathf.Min(camera.transform.position.y, -10f);
 
         float clampedCameraY = Mathf.Clamp(camera.transform.position.y, bottomBound, topBound);
-        camera.transform.Translate(Vector3.up * (clampedCameraY - camera.transform.position.y));
+
+        camera.transform.position = Vector3.Lerp(camera.transform.position, new Vector3(camera.transform.position.x, clampedCameraY, camera.transform.position.z), Time.deltaTime * 5f);
     }
 }
