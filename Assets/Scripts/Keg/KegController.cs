@@ -16,6 +16,12 @@ public class KegController : MonoBehaviour
         usesText.text = usesLeft.ToString();
     }
 
+    void Update()
+    {
+        while (!GameController.TilemapController.HasTile(GameController.Tilemap.WorldToCell(transform.position + Vector3.down * 0.5f)))
+            transform.Translate(Vector3.down);
+    }
+
     public bool TryUseKeg()
     {
         if (usesLeft <= 0)
