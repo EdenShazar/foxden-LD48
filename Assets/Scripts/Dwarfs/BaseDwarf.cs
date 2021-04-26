@@ -20,7 +20,7 @@ public enum Direction { LEFT = -1, RIGHT = 1 }
 
 public class BaseDwarf : MonoBehaviour {
 
-    const float climbLedgeRopeAnimationTime = 1f;
+    const float climbLedgeAnimationTime = 1f;
     const float puffAnimationTime = 0.75f;
 
     [SerializeField]
@@ -34,6 +34,7 @@ public class BaseDwarf : MonoBehaviour {
     private DwarfJob currentJob = null;
     new private Transform light;
     new private Collider2D collider;
+    private Direction lightDirection = Direction.RIGHT;
 
     private bool doDefaultMovement = true;
 
@@ -126,6 +127,15 @@ public class BaseDwarf : MonoBehaviour {
             // Update sorting
             dwarfSprite.sortingLayerID = Constants.workingDwarvesLayer;
             transform.position = new Vector3(transform.position.x, transform.position.y, -5f + currentDrunkAmount * 0.01f);
+        }
+
+
+        if (MoveDirection != lightDirection)
+        {
+            light.localPosition = new Vector3(-light.localPosition.x, light.localPosition.y, 0f);
+            light.localRotation = Quaternion.Euler(0f, 0f, -light.rotation.eulerAngles.z);
+
+            lightDirection = (Direction)((int)lightDirection * -1f);
         }
     }
 
@@ -227,7 +237,7 @@ public class BaseDwarf : MonoBehaviour {
 
         if (canClimb)
         {
-            StartCoroutine(ClimbLege());
+            StartCoroutine(ClimbLedge());
             return;
         }
 
@@ -243,13 +253,14 @@ public class BaseDwarf : MonoBehaviour {
         }
     }
 
-    IEnumerator ClimbLege()
+    IEnumerator ClimbLedge()
     {
         // Ensure coroutine isn't running more than once
         if (isClimbingLedge)
             yield break;
 
         isClimbingLedge = true;
+        currentSpeed = 0f;
 
         yield return new WaitForSeconds(timeToClimb);
 
@@ -268,7 +279,7 @@ public class BaseDwarf : MonoBehaviour {
         SnapToCurrentCell();
         animator.ClimbLedge();
 
-        yield return new WaitForSeconds(climbLedgeRopeAnimationTime);
+        yield return new WaitForSeconds(climbLedgeAnimationTime);
 
         isClimbingLedge = false;
         Rigidbody.gravityScale = 1f;
@@ -280,8 +291,6 @@ public class BaseDwarf : MonoBehaviour {
   public void FlipDirection() {
     MoveDirection = (Direction)((int)MoveDirection * -1);
     dwarfSprite.flipX = MoveDirection == Direction.LEFT;
-    light.localPosition = new Vector3(-light.localPosition.x, light.localPosition.y, 0f);
-    light.localRotation = Quaternion.Euler(0f, 0f, -light.rotation.eulerAngles.z);
   }
 
     public void ResetSpeed()
