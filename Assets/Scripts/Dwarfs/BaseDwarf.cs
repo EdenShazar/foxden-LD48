@@ -9,9 +9,13 @@ public struct DwarfSurroundings {
   public Vector3Int cellBelow;
   public Vector3Int cellBelowInFront;
   public bool hasTileInFront;
+  public bool hasTileOrDwarfInFront;
   public bool hasTileAboveInFront;
+  public bool hasTileOrDwarfAboveInFront;
   public bool hasTileBelow;
+  public bool hasTileOrDwarfBelow;
   public bool hasTileBelowInFront;
+  public bool hasTileOrDwarfBelowInFront;
   public float cellDistanceToTileInFront;
   public float cellDistanceToTileBelow;
 }
@@ -285,7 +289,7 @@ public class BaseDwarf : MonoBehaviour {
 
     private void ClimbUpOrChangeDirection()
     {
-        bool canClimb = surroundings.hasTileInFront && !surroundings.hasTileAboveInFront
+        bool canClimb = surroundings.hasTileInFront && !surroundings.hasTileOrDwarfAboveInFront
             && !GameController.TilemapController.IsCellOccupiedWithDwarf(surroundings.cellInFront);
 
         if (canClimb)
@@ -325,7 +329,7 @@ public class BaseDwarf : MonoBehaviour {
         }
 
         // If can no longer climb by end of waiting time, abort
-        bool canClimb = surroundings.hasTileInFront && !surroundings.hasTileAboveInFront
+        bool canClimb = surroundings.hasTileInFront && !surroundings.hasTileOrDwarfAboveInFront
             && !GameController.TilemapController.IsCellOccupiedWithDwarf(surroundings.cellInFront);
         if (!canClimb)
         {
@@ -362,16 +366,20 @@ public class BaseDwarf : MonoBehaviour {
         int moveDirectionInt = (int)MoveDirection;
 
         surroundings.cellInFront = new Vector3Int(CurrentCell.x + moveDirectionInt, CurrentCell.y, 0);
-        surroundings.hasTileInFront = GameController.TilemapController.HasTileOrDwarf(surroundings.cellInFront);
+        surroundings.hasTileInFront = GameController.TilemapController.HasTile(surroundings.cellInFront);
+        surroundings.hasTileOrDwarfInFront = GameController.TilemapController.HasTileOrDwarf(surroundings.cellInFront);
 
         surroundings.cellAboveInFront = new Vector3Int(CurrentCell.x + moveDirectionInt, CurrentCell.y + 1, 0);
-        surroundings.hasTileAboveInFront = GameController.TilemapController.HasTileOrDwarf(surroundings.cellAboveInFront);
+        surroundings.hasTileAboveInFront = GameController.TilemapController.HasTile(surroundings.cellAboveInFront);
+        surroundings.hasTileOrDwarfAboveInFront = GameController.TilemapController.HasTileOrDwarf(surroundings.cellAboveInFront);
 
         surroundings.cellBelow = new Vector3Int(CurrentCell.x, CurrentCell.y - 1, 0);
-        surroundings.hasTileBelow = GameController.TilemapController.HasTileOrDwarf(surroundings.cellBelow);
+        surroundings.hasTileBelow = GameController.TilemapController.HasTile(surroundings.cellBelow);
+        surroundings.hasTileOrDwarfBelow = GameController.TilemapController.HasTileOrDwarf(surroundings.cellBelow);
 
         surroundings.cellBelowInFront = new Vector3Int(CurrentCell.x + (int)MoveDirection, CurrentCell.y - 1, 0);
-        surroundings.hasTileBelowInFront = GameController.TilemapController.HasTileOrDwarf(surroundings.cellBelowInFront);
+        surroundings.hasTileBelowInFront = GameController.TilemapController.HasTile(surroundings.cellBelowInFront);
+        surroundings.hasTileOrDwarfBelowInFront = GameController.TilemapController.HasTileOrDwarf(surroundings.cellBelowInFront);
 
         if (!surroundings.hasTileInFront)
             surroundings.cellDistanceToTileInFront = 1f;
