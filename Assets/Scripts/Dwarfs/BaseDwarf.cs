@@ -121,7 +121,7 @@ public class BaseDwarf : MonoBehaviour {
 
             if (doDefaultMovement)
             {
-                if (surroundings.hasTileInFront && surroundings.cellDistanceToTileInFront <= Constants.horizontalInteractionDistance
+                if (surroundings.hasTileOrDwarfInFront && surroundings.cellDistanceToTileInFront <= Constants.horizontalInteractionDistance
                     || isAtWagon)
                     ClimbUpOrChangeDirection();
 
@@ -138,7 +138,7 @@ public class BaseDwarf : MonoBehaviour {
             dwarfSprite.sortingLayerID = Constants.nonworkingDwarvesLayer;
             transform.position = new Vector3(transform.position.x, transform.position.y, currentDrunkAmount * 0.01f);
 
-            if (!surroundings.hasTileInFront)
+            if (!surroundings.hasTileOrDwarfInFront)
                 ResetSpeed();
         }
         else
@@ -381,21 +381,16 @@ public class BaseDwarf : MonoBehaviour {
         surroundings.hasTileBelowInFront = GameController.TilemapController.HasTile(surroundings.cellBelowInFront);
         surroundings.hasTileOrDwarfBelowInFront = GameController.TilemapController.HasTileOrDwarf(surroundings.cellBelowInFront);
 
-        if (!surroundings.hasTileInFront)
-            surroundings.cellDistanceToTileInFront = 1f;
+        float cellEdgeX;
+        if (MoveDirection == Direction.LEFT)
+        {
+            cellEdgeX = collider.bounds.min.x;
+            surroundings.cellDistanceToTileInFront = (cellEdgeX - GameController.Tilemap.GetCellCenterWorld(surroundings.cellInFront).x) / GameController.Tilemap.cellSize.x - 0.5f;
+        }
         else
         {
-            float cellEdgeX;
-            if (MoveDirection == Direction.LEFT)
-            {
-                cellEdgeX = collider.bounds.min.x;
-                surroundings.cellDistanceToTileInFront = (cellEdgeX - GameController.Tilemap.GetCellCenterWorld(surroundings.cellInFront).x) / GameController.Tilemap.cellSize.x - 0.5f;
-            }
-            else
-            {
-                cellEdgeX = collider.bounds.max.x;
-                surroundings.cellDistanceToTileInFront = (GameController.Tilemap.GetCellCenterWorld(surroundings.cellInFront).x - cellEdgeX) / GameController.Tilemap.cellSize.x - 0.5f;
-            }
+            cellEdgeX = collider.bounds.max.x;
+            surroundings.cellDistanceToTileInFront = (GameController.Tilemap.GetCellCenterWorld(surroundings.cellInFront).x - cellEdgeX) / GameController.Tilemap.cellSize.x - 0.5f;
         }
 
         if (!surroundings.hasTileBelow)
