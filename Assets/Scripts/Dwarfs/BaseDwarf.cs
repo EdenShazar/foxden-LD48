@@ -101,7 +101,7 @@ public class BaseDwarf : MonoBehaviour {
         if (currentJob != null) {
           currentDrunkAmount -= Time.deltaTime * currentJob.SobrietyScale;
         } else {
-          currentDrunkAmount -= Time.deltaTime;
+          currentDrunkAmount -= Time.deltaTime * 0.3f;
         }
         if(currentDrunkAmount < 0.0f) {
           RemoveDwarf();

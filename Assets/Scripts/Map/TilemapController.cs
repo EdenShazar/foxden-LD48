@@ -128,7 +128,7 @@ public class TilemapController : MonoBehaviour
         int score;
         switch (GetTypeOfTile(x, y)) {
         case TileType.BOOZE:
-          score = 1;
+          score = 10;
           break;
         default:
           score = 0;
