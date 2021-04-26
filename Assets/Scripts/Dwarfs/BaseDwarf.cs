@@ -20,6 +20,7 @@ public enum Direction { LEFT = -1, RIGHT = 1 }
 public class BaseDwarf : MonoBehaviour {
 
     const float climbLedgeRopeAnimationTime = 1f;
+    const float puffAnimationTime = 0.75f;
 
     [SerializeField]
     private float speed;
@@ -40,6 +41,8 @@ public class BaseDwarf : MonoBehaviour {
     [HideInInspector] public JobIconChanger JobIcon { get; private set; }
     [HideInInspector] public Direction MoveDirection { get; private set; } = Direction.RIGHT;
     [HideInInspector] public bool IsFalling { get; private set; }
+
+    [HideInInspector] public bool isAtWagon;
 
     public float distanceForHorizontalCollision;
     public float currentSpeed;
@@ -95,7 +98,8 @@ public class BaseDwarf : MonoBehaviour {
 
             if (doDefaultMovement)
             {
-                if (surroundings.hasTileInFront && surroundings.cellDistanceToTileInFront <= Constants.horizontalInteractionDistance)
+                if (surroundings.hasTileInFront && surroundings.cellDistanceToTileInFront <= Constants.horizontalInteractionDistance
+                    || isAtWagon)
                     ClimbUpOrChangeDirection();
 
                 gameObject.transform.Translate(Vector3.right * (int)MoveDirection * currentSpeed * Time.deltaTime);
@@ -104,6 +108,33 @@ public class BaseDwarf : MonoBehaviour {
 
         if (GameController.workingDwarvesHoveredOver.Contains(this))
             GameController.workingDwarvesHoveredOver.Remove(this);
+
+        if (currentJob == null)
+        {
+            dwarfSprite.sortingLayerID = Constants.nonworkingDwarvesLayer;
+            transform.position = new Vector3(transform.position.x, transform.position.y, currentDrunkAmount * 0.01f);
+        }
+        else
+        {
+            dwarfSprite.sortingLayerID = Constants.workingDwarvesLayer;
+            transform.position = new Vector3(transform.position.x, transform.position.y, -5f + currentDrunkAmount * 0.01f);
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D collider)
+    {
+        if (collider.gameObject.layer != Constants.wagonLayer)
+            return;
+
+        isAtWagon = true;
+    }
+
+    void OnTriggerExit2D(Collider2D collider)
+    {
+        if (collider.gameObject.layer != Constants.wagonLayer)
+            return;
+
+        isAtWagon = false;
     }
 
     public void OnMouseDown() {
@@ -145,7 +176,6 @@ public class BaseDwarf : MonoBehaviour {
       currentJob = null;
       animator.Walk();
       JobIcon.RemoveIcon();
-      dwarfSprite.sortingLayerID = Constants.nonworkingDwarvesLayer;
       currentSpeed = speed;
     }
 
@@ -154,7 +184,19 @@ public class BaseDwarf : MonoBehaviour {
     }
 
     public void RemoveDwarf() {
-      Destroy(gameObject);
+      StartCoroutine(PuffAndRemoveDwarf());
+    }
+
+    IEnumerator PuffAndRemoveDwarf()
+    {
+        animator.Puff();
+        JobIcon.RemoveIcon();
+        currentSpeed = 0f;
+        currentJob = null;
+
+        yield return new WaitForSeconds(puffAnimationTime);
+
+        Destroy(gameObject);
     }
 
     public void SnapToCurrentCell()
@@ -186,6 +228,7 @@ public class BaseDwarf : MonoBehaviour {
             FlipDirection();
             ResetSpeed();
             timeElapsedBeforeDirectionFlip = 0f;
+            isAtWagon = false;
         }
     }
 
