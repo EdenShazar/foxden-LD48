@@ -13,8 +13,6 @@ public class StopSignJob : DwarfJob
     {
         dwarf.SnapToCurrentCell();
 
-        Debug.Log(dwarf.CurrentCell);
-
         if (!GameController.TilemapController.IsCellOccupiedWithDwarf(dwarf.CurrentCell)) {
             GameController.TilemapController.OccupyCellWithDwarf(dwarf.CurrentCell);
         }
@@ -37,7 +35,6 @@ public class StopSignJob : DwarfJob
 
     public override void FinalizeJobAction()
     {
-        Debug.Log(dwarf.CurrentCell);
         GameController.TilemapController.UnoccupyCellWithDwarf(dwarf.CurrentCell);
     }
 
