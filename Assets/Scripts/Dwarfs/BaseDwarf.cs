@@ -195,6 +195,7 @@ public class BaseDwarf : MonoBehaviour {
       animator.Walk();
       JobIcon.RemoveIcon();
       currentSpeed = speed;
+      doDefaultMovement = true;
     }
 
     public void ResetDrunk() {
@@ -266,13 +267,19 @@ public class BaseDwarf : MonoBehaviour {
 
         // If returned to default movement mid-wait, abort
         if (!doDefaultMovement)
+        {
+            isClimbingLedge = false;
             yield break;
+        }
 
         // If can no longer climb by end of waiting time, abort
         bool canClimb = surroundings.hasTileInFront && !surroundings.hasTileAboveInFront
             && !GameController.TilemapController.IsCellOccupiedWithDwarf(surroundings.cellInFront);
         if (!canClimb)
+        {
+            isClimbingLedge = false;
             yield break;
+        }
 
         Rigidbody.gravityScale = 0f;
 
@@ -318,8 +325,17 @@ public class BaseDwarf : MonoBehaviour {
             surroundings.cellDistanceToTileInFront = 1f;
         else
         {
-            float cellEdgeX = MoveDirection == Direction.LEFT ? collider.bounds.min.x : collider.bounds.max.x;
-            surroundings.cellDistanceToTileInFront = Math.Abs(GameController.Tilemap.GetCellCenterWorld(surroundings.cellInFront).x - cellEdgeX) / GameController.Tilemap.cellSize.x - 0.5f;
+            float cellEdgeX;
+            if (MoveDirection == Direction.LEFT)
+            {
+                cellEdgeX = collider.bounds.min.x;
+                surroundings.cellDistanceToTileInFront = (cellEdgeX - GameController.Tilemap.GetCellCenterWorld(surroundings.cellInFront).x) / GameController.Tilemap.cellSize.x - 0.5f;
+            }
+            else
+            {
+                cellEdgeX = collider.bounds.max.x;
+                surroundings.cellDistanceToTileInFront = (GameController.Tilemap.GetCellCenterWorld(surroundings.cellInFront).x - cellEdgeX) / GameController.Tilemap.cellSize.x - 0.5f;
+            }
         }
 
         if (!surroundings.hasTileBelow)
