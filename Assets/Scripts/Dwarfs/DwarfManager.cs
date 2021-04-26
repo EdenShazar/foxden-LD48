@@ -1,10 +1,17 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class DwarfManager : MonoBehaviour
 {
+    [SerializeField] TextMeshPro livingDwarfCountText;
+    [SerializeField] TextMeshPro deadDwarfCountText;
+
     readonly List<BaseDwarf> dwarves = new List<BaseDwarf>();
+
+    int livingDwarfCount = 0;
+    int deadDwarfCount = 0;
 
     public int DwarfCount { get => dwarves.Count; }
     public bool OnBreak { get; private set; } = false;
@@ -14,6 +21,9 @@ public class DwarfManager : MonoBehaviour
 
     private void Update()
     {
+        livingDwarfCountText.text = livingDwarfCount.ToString();
+        deadDwarfCountText.text = deadDwarfCount.ToString();
+
         if (OnBreak && AreAllDwarvesDrinking() && !GameController.GameEnded)
             AllDwarvesSafe?.Invoke();
     }
@@ -24,6 +34,8 @@ public class DwarfManager : MonoBehaviour
             return;
 
         dwarves.Add(dwarf);
+
+        livingDwarfCount = dwarves.Count;
     }
 
     public void UnregisterDwarf(BaseDwarf dwarf)
@@ -32,6 +44,9 @@ public class DwarfManager : MonoBehaviour
             return;
 
         dwarves.Remove(dwarf);
+
+        livingDwarfCount = dwarves.Count;
+        deadDwarfCount++;
 
         if (dwarves.Count <= 0 && !GameController.GameEnded)
             NoDwarvesLeft?.Invoke();
