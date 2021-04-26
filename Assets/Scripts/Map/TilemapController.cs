@@ -2,15 +2,15 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using TMPro;
 
 public class TilemapController : MonoBehaviour
 {
-    
-
     [SerializeField] private int leftBoundary = -5;
     [SerializeField] private int rightBoundary = 5;
     [SerializeField] private int topBoundary = 2;
     [SerializeField] private int bottomBoundary = -50;
+    [SerializeField] private GameObject scorePopupPrefab;
 
     Tilemap tilemap;
 
@@ -135,6 +135,7 @@ public class TilemapController : MonoBehaviour
           break;
         }
         GameController.AddToScore(score);
+        ScorePopup(score, new Vector3Int(x, y, 0));
         tilemap.SetTile(new Vector3Int(x, y, 0), null);
         UpdateAdjacentTiles(x, y);
 
@@ -271,5 +272,14 @@ public class TilemapController : MonoBehaviour
       } else {
         return rare;
     }
+    }
+
+    void ScorePopup(int score, Vector3Int cell)
+    {
+        if (score == 0f)
+            return;
+
+        GameObject newPopup = Instantiate(scorePopupPrefab, tilemap.GetCellCenterWorld(cell), Quaternion.identity);
+        newPopup.GetComponentInChildren<TextMeshPro>().text = score.ToString() + "!";
     }
 }
