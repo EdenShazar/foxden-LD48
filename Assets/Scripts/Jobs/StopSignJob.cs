@@ -14,8 +14,6 @@ public class StopSignJob : DwarfJob
     {
         dwarf.SnapToCurrentCell();
 
-        Debug.Log("CURRENT CELL:" + dwarf.CurrentCell);
-        Debug.Log("CELL PLANTED FEET:" + cellPlantedFeet);
         if (dwarf.CurrentCell != cellPlantedFeet) {
             GameController.TilemapController.UnoccupyCellWithDwarf(cellPlantedFeet);
             cellPlantedFeet = dwarf.CurrentCell;
