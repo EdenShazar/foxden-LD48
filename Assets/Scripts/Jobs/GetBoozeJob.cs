@@ -52,6 +52,7 @@ public class GetBoozeJob : DwarfJob {
     {
         sobrietyScale = 0.1f;
         dwarf = incDwarf;
+        dwarf.ResetSpeed();
         dwarf.JobIcon.SetGetBoozeIcon();
     }
 
