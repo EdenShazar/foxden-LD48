@@ -8,7 +8,6 @@ public class GameController : MonoBehaviour {
     static GameController instance;
 
     [SerializeField] private Tilemap tilemap;
-    [SerializeField] private BaseDwarf dwarf;
     [SerializeField] private Texture2D regularCursor;
     [SerializeField] private Texture2D clickCursor;
     [SerializeField] private Texture2D stopCursor;
@@ -16,6 +15,7 @@ public class GameController : MonoBehaviour {
     private TilemapController tilemapController;
     private RopeManager ropeManager;
     private AudioManager audioManager;
+    private DwarfSpawner dwarfSpawner;
     private Dictionary<TileBase, TileData> tileToTileData;
     new private Camera camera;
     private int score;
@@ -27,39 +27,40 @@ public class GameController : MonoBehaviour {
     public static TilemapController TilemapController { get => instance.tilemapController; }
     public static RopeManager RopeManager { get => instance.ropeManager; }
     public static AudioManager AudioManager { get => instance.audioManager; } 
+    public static DwarfSpawner DwarfSpawner { get => instance.dwarfSpawner; } 
+    public static int Score { get => instance.score; } 
 
     public static List<BaseDwarf> workingDwarvesHoveredOver { get; private set; } = new List<BaseDwarf>();
 
-    private void Awake() {
-    EnsureSingleton();
+    private void Awake()
+    {
+        EnsureSingleton();
 
-    tileManager = GetComponent<TileManager>();
-    tilemapController = GetComponent<TilemapController>();
-    ropeManager = FindObjectOfType<RopeManager>();
-    audioManager = FindObjectOfType<AudioManager>();
-    camera = Camera.main;
+        tileManager = GetComponent<TileManager>();
+        tilemapController = GetComponent<TilemapController>();
+        ropeManager = FindObjectOfType<RopeManager>();
+        audioManager = FindObjectOfType<AudioManager>();
+        dwarfSpawner = FindObjectOfType<DwarfSpawner>();
+        camera = Camera.main;
 
-    tileManager.InitializeTileDictionary();
-    tilemapController.Initialize();
-    ropeManager.Initialize();
-    tilemapController.GenerateMap();
+        tileManager.InitializeTileDictionary();
+        tilemapController.Initialize();
+        ropeManager.Initialize();
+        tilemapController.GenerateMap();
 
-    Application.targetFrameRate = 60;
-  }
+        Application.targetFrameRate = 60;
+    }
 
-  private void Start() {
-    score = 10;
+    void Start()
+    {
+        score = 200;
+        dwarfSpawner.TrySpawnDwarves(10);
     
-    Instantiate(dwarf);
-
-    tilemapController.UpdateAllTiles();
-  }
+        tilemapController.UpdateAllTiles();
+    }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-            Instantiate(dwarf);
-
         if (Input.GetMouseButton(0))
         {
             if (currentCursorMode != CursorMode.STOP)

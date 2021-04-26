@@ -69,15 +69,19 @@ public class BaseDwarf : MonoBehaviour {
     collider = GetComponent<Collider2D>();
   }
 
-  private void Start() {
-    currentSpeed = speed;
-    dwarfSprite = GetComponent<SpriteRenderer>();
-    Rigidbody = GetComponent<Rigidbody2D>();
-    JobIcon = GetComponentInChildren<JobIconChanger>();
-    surroundings = new DwarfSurroundings();
-    animator.Initialize(this);
-    dwarfSprite.sortingLayerID = Constants.nonworkingDwarvesLayer;
-  }
+    private void Start()
+    {
+        currentSpeed = speed;
+        dwarfSprite = GetComponent<SpriteRenderer>();
+        Rigidbody = GetComponent<Rigidbody2D>();
+        JobIcon = GetComponentInChildren<JobIconChanger>();
+        surroundings = new DwarfSurroundings();
+        animator.Initialize(this);
+        dwarfSprite.sortingLayerID = Constants.nonworkingDwarvesLayer;
+
+        if (Rigidbody.velocity.x <= 0f)
+            FlipDirection();
+    }
 
     private void Update()
     {
