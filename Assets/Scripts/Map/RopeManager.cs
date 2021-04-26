@@ -101,13 +101,10 @@ public class RopeManager : MonoBehaviour
     }
 
 
-    public bool IsCellClimbable(Vector3Int cell, out Direction direction)
+    public bool IsCellClimbable(Vector3Int cell, out Direction direction, Direction preferredDirection = Direction.RIGHT)
     {
-        //int x = cell.x - GameController.TilemapController.LeftBoundaryCell;
-        //int y = cell.y - GameController.TilemapController.BottomBoundaryCell;
-
         // Default value
-        direction = Direction.RIGHT;
+        direction = preferredDirection;
 
         foreach (Rope rope in ropes)
         {

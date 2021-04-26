@@ -90,11 +90,10 @@ public class GetBoozeJob : DwarfJob {
 
     void ContinueClimbing()
     {
-        GameController.RopeManager.IsCellClimbable(dwarf.CurrentCell, out Direction ropeDirection);
+        GameController.RopeManager.IsCellClimbable(dwarf.CurrentCell, out Direction ropeDirection, preferredDirection: dwarf.MoveDirection);
         
         if (ropeDirection != dwarf.MoveDirection)
             dwarf.FlipDirection();
-
 
         if (CellAboveIsClimbable())
         {
