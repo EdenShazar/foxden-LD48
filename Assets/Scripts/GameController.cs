@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
 
 public enum CursorMode { REGULAR, CLICK, STOP }
@@ -72,8 +73,24 @@ public class GameController : MonoBehaviour {
         dwarfManager.AllDwarvesSafe += GameOverSuccess;
     }
 
+    private void OnDestroy()
+    {
+        score = 200;
+        GameEnded = false;
+
+        dwarfManager.NoDwarvesLeft -= GameOverFail;
+        dwarfManager.AllDwarvesSafe -= GameOverSuccess;
+    }
+
     private void Update()
     {
+        if (GameEnded)
+        {
+            if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(0)
+                || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Return))
+                ReloadGame();
+        }
+
         if (Input.GetMouseButton(0))
         {
             if (currentCursorMode != CursorMode.STOP)
@@ -128,6 +145,11 @@ public class GameController : MonoBehaviour {
 
         EndScreenController.ShowLoss();
         Time.timeScale = 1f;
+    }
+
+    public static void ReloadGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     void EnsureSingleton()

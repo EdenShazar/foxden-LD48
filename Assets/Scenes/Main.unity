@@ -10727,9 +10727,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   background: {fileID: 1128899056}
-  winText: {fileID: 1478233426}
-  loseText: {fileID: 659878813}
-  scoreText: {fileID: 1857370428}
+  titleText: {fileID: 465672086}
+  winText: {fileID: 1478233425}
+  loseText: {fileID: 659878812}
+  scoreText: {fileID: 1857370427}
   scoreIcon: {fileID: 534816395}
 --- !u!1 &1194810251
 GameObject:
@@ -12432,7 +12433,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1478233423}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1

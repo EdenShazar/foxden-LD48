@@ -4,6 +4,7 @@ using TMPro;
 public class EndScreenController : MonoBehaviour
 {
     [SerializeField] SpriteRenderer background;
+    [SerializeField] TextMeshPro titleText;
     [SerializeField] TextMeshPro winText;
     [SerializeField] TextMeshPro loseText;
     [SerializeField] TextMeshPro scoreText;
@@ -12,6 +13,7 @@ public class EndScreenController : MonoBehaviour
     public void Hide()
     {
         background.color = Constants.clearColor;
+        titleText.color = Constants.clearColor;
         winText.color = Constants.clearColor;
         loseText.color = Constants.clearColor;
         scoreText.color = Constants.clearColor;
@@ -21,6 +23,7 @@ public class EndScreenController : MonoBehaviour
     public void ShowWin()
     {
         background.color = Color.white;
+        titleText.color = Color.white;
         winText.color = Color.white;
         scoreText.color = Color.white;
         scoreIcon.color = Color.white;
@@ -33,6 +36,7 @@ public class EndScreenController : MonoBehaviour
     public void ShowLoss()
     {
         background.color = Color.white;
+        titleText.color = Color.white;
         loseText.color = Color.white;
 
         winText.color = Constants.clearColor;
