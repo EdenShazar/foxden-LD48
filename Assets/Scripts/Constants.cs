@@ -14,6 +14,6 @@ public static class Constants
     public static readonly Color maxSobrietyWarningColor = new Color(0.945f, 0.341f, 0.341f);
 
     public static readonly int digCost = 1;
-    public static readonly int stopSignCost = 1;
-    public static readonly int ropeCost = 1;
+    public static readonly int stopSignCost = 4;
+    public static readonly int ropeCost = 5;
 }

@@ -9,7 +9,7 @@ public class RopeJob : DwarfJob
 
     bool hasPlacedAnchor = false;
 
-  public override float SobrietyScale { get { return 0.0f; } }
+  public override float SobrietyScale { get { return 1.0f; } }
 
   public override bool JobAction(DwarfSurroundings surroundings)
     {
