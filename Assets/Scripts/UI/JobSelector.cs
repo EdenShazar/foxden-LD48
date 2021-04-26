@@ -6,14 +6,14 @@ public class JobSelector : MonoBehaviour {
   private const float jobButtonWidth = 0.32f;
   private const float jobButtonLeftLimit = -0.64f;
   [SerializeField]
-  private GameObject border;
+  private SpriteRenderer border;
   private static List<DwarfJob> jobs;
   private static int selectedJob;
   private int newSelectedJob;
   private static JobSelector instance;
 
   public static DwarfJob GetSelectedJob() {
-        return Instantiate(jobs[selectedJob]);
+        return jobs[selectedJob] == null ? null : Instantiate(jobs[selectedJob]);
     }
 
   private void Start() {
@@ -25,7 +25,7 @@ public class JobSelector : MonoBehaviour {
   }
 
   private void Update() {
-    if(Input.GetKeyDown(KeyCode.Alpha1)) {
+    if (Input.GetKeyDown(KeyCode.Alpha1)) {
       newSelectedJob = 0;
     }
     if(Input.GetKeyDown(KeyCode.Alpha2)) {
@@ -40,15 +40,22 @@ public class JobSelector : MonoBehaviour {
     if(Input.GetKeyDown(KeyCode.Alpha5)) {
       newSelectedJob = 4;
     }
-    if(newSelectedJob != selectedJob) {
+    if (Input.GetKeyDown(KeyCode.Escape)) {
+        newSelectedJob = 5;
+    }
+        if (newSelectedJob != selectedJob) {
       UpdateSelectedJob();
     }
   }
 
-  private void UpdateSelectedJob() {
-    selectedJob = newSelectedJob;
-    border.transform.localPosition = new Vector3(jobButtonLeftLimit + jobButtonWidth * selectedJob, 0.0f, 0.0f);
-  }
+    private void UpdateSelectedJob()
+    {
+        selectedJob = newSelectedJob;
+        border.transform.localPosition = new Vector3(jobButtonLeftLimit + jobButtonWidth * selectedJob, 0.0f, 0.0f);
+        
+        // Set transparent when no job selected
+        border.color = new Color(1f, 1f, 1f, selectedJob == 5 ? 0f : 1f);
+    }
 
   private void EnsureSingleton() {
     if(instance == null) {
@@ -66,7 +73,8 @@ public class JobSelector : MonoBehaviour {
       ScriptableObject.CreateInstance<DigSideJob>(),
       ScriptableObject.CreateInstance<StopSignJob>(),
       ScriptableObject.CreateInstance<RopeJob>(),
-      ScriptableObject.CreateInstance<GetBoozeJob>()
+      ScriptableObject.CreateInstance<GetBoozeJob>(),
+      null
     };
   }
 }
