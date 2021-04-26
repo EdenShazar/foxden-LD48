@@ -16,6 +16,11 @@ public class JobSelector : MonoBehaviour {
         return jobs[selectedJob] == null ? null : Instantiate(jobs[selectedJob]);
     }
 
+    public static DwarfJob GetBreakJob()
+    {
+        return Instantiate(jobs[4]);
+    }
+
   private void Start() {
     EnsureSingleton();
     InitializeJobs();

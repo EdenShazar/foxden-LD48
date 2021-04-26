@@ -5,7 +5,6 @@ public class CameraController : MonoBehaviour
     [SerializeField, Range(0f, 0.5f)] float scrollRegionWidth = 0.15f;
     [SerializeField, Min(0.01f)] float scrollSensitivity = 1f;
     [SerializeField] float topBound = 9f;
-    [SerializeField] float bottomBound = -90f;
 
     new Camera camera;
 
@@ -37,6 +36,10 @@ public class CameraController : MonoBehaviour
         scrollFactor *= scrollFactor;
 
         camera.transform.Translate(Vector3.up * scrollDirection * scrollSensitivity * scrollFactor * Time.deltaTime);
+
+        float bottomBound = GameController.DwarfManager.GetLowestDwarfHeight();
+        if (bottomBound == Mathf.NegativeInfinity)
+            bottomBound = -10f;
 
         float clampedCameraY = Mathf.Clamp(camera.transform.position.y, bottomBound, topBound);
         camera.transform.Translate(Vector3.up * (clampedCameraY - camera.transform.position.y));

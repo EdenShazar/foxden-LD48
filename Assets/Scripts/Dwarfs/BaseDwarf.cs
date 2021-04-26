@@ -45,6 +45,7 @@ public class BaseDwarf : MonoBehaviour {
     [HideInInspector] public JobIconChanger JobIcon { get; private set; }
     [HideInInspector] public Direction MoveDirection { get; private set; } = Direction.RIGHT;
     [HideInInspector] public bool IsFalling { get; private set; }
+    [HideInInspector] public DwarfJob CurrentJob { get => currentJob; }
 
     [HideInInspector] public bool isAtWagon;
 
@@ -79,8 +80,15 @@ public class BaseDwarf : MonoBehaviour {
         animator.Initialize(this);
         dwarfSprite.sortingLayerID = Constants.nonworkingDwarvesLayer;
 
+        GameController.DwarfManager.RegisterDwarf(this);
+
         if (Rigidbody.velocity.x <= 0f)
             FlipDirection();
+    }
+
+    private void OnDestroy()
+    {
+        GameController.DwarfManager.UnregisterDwarf(this);
     }
 
     private void Update()
@@ -88,7 +96,7 @@ public class BaseDwarf : MonoBehaviour {
         CurrentCell = GameController.Tilemap.layoutGrid.WorldToCell(transform.position);
 
         if (currentJob != null) {
-          currentDrunkAmount -= Time.deltaTime * currentJob.sobrietyScale;
+          currentDrunkAmount -= Time.deltaTime * currentJob.SobrietyScale;
         } else {
           currentDrunkAmount -= Time.deltaTime;
         }
@@ -175,10 +183,22 @@ public class BaseDwarf : MonoBehaviour {
                 currentJob.InitializeJobAction(this, CurrentCell);
                 doJobAction = jobToAssign.JobAction;
                 canStopJob = jobToAssign.CanStopJob;
-                GameController.AddToScore(-1 * currentJob.jobCost);
+                GameController.AddToScore(-1 * currentJob.JobCost);
                 dwarfSprite.sortingLayerID = Constants.workingDwarvesLayer;
             }
         }
+    }
+
+    public void ForceJob(DwarfJob job)
+    {
+        if (currentJob != null)
+            StopJob();
+
+        currentJob = job;
+        job.InitializeJobAction(this, CurrentCell);
+        doJobAction = job.JobAction;
+        canStopJob = job.CanStopJob;
+        dwarfSprite.sortingLayerID = Constants.workingDwarvesLayer;
     }
 
     public void OnMouseOver()

@@ -16,6 +16,7 @@ public class GameController : MonoBehaviour {
     private RopeManager ropeManager;
     private AudioManager audioManager;
     private DwarfSpawner dwarfSpawner;
+    private DwarfManager dwarfManager;
     private Dictionary<TileBase, TileData> tileToTileData;
     new private Camera camera;
     private int score;
@@ -28,6 +29,7 @@ public class GameController : MonoBehaviour {
     public static RopeManager RopeManager { get => instance.ropeManager; }
     public static AudioManager AudioManager { get => instance.audioManager; } 
     public static DwarfSpawner DwarfSpawner { get => instance.dwarfSpawner; } 
+    public static DwarfManager DwarfManager { get => instance.dwarfManager; } 
     public static int Score { get => instance.score; } 
 
     public static List<BaseDwarf> workingDwarvesHoveredOver { get; private set; } = new List<BaseDwarf>();
@@ -41,6 +43,7 @@ public class GameController : MonoBehaviour {
         ropeManager = FindObjectOfType<RopeManager>();
         audioManager = FindObjectOfType<AudioManager>();
         dwarfSpawner = FindObjectOfType<DwarfSpawner>();
+        dwarfManager = FindObjectOfType<DwarfManager>();
         camera = Camera.main;
 
         tileManager.InitializeTileDictionary();
@@ -57,6 +60,9 @@ public class GameController : MonoBehaviour {
         dwarfSpawner.TrySpawnDwarves(10);
     
         tilemapController.UpdateAllTiles();
+
+        dwarfManager.NoDwarvesLeft += GameOverFail;
+        dwarfManager.AllDwarvesSafe += GameOverSuccess;
     }
 
     private void Update()
@@ -95,7 +101,27 @@ public class GameController : MonoBehaviour {
     ScoreDisplay.UpdateScore(instance.score);
   }
 
-  void EnsureSingleton()
+    public static void CallBreak()
+    {
+        DwarfManager.CallBreak();
+        // Stop spawning
+        // Disable all input
+        Time.timeScale = 4f;
+    }
+
+    public static void GameOverSuccess()
+    {
+        Debug.Log("Game won! :)");
+        Time.timeScale = 1f;
+    }
+
+    public static void GameOverFail()
+    {
+        Debug.Log("Game lost! :(");
+        Time.timeScale = 1f;
+    }
+
+    void EnsureSingleton()
   {
       if (instance == null)
           instance = this;

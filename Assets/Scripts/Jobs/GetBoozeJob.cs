@@ -11,16 +11,18 @@ public class GetBoozeJob : DwarfJob {
 
   bool isClimbing = false;
   bool isPullingUpRope = false;
-  bool isDrinking = false;
+  public bool IsDrinking { get; private set; } = false;
 
-  public override float sobrietyScale {get {return 0.1f;} }
-  public override int jobCost {get {return 0;} }
+  private float sobrietyScale = 0.1f;
+
+  public override float SobrietyScale {get {return sobrietyScale;} }
+  public override int JobCost {get {return 0;} }
 
     public override bool JobAction(DwarfSurroundings surroundings)
     {
         bool revertToDefaultAction;
 
-        if (isDrinking)
+        if (IsDrinking)
             return false;
 
         if (dwarf.isAtWagon)
@@ -49,6 +51,7 @@ public class GetBoozeJob : DwarfJob {
 
     public override void InitializeJobAction(BaseDwarf incDwarf, Vector3Int currentCell)
     {
+        sobrietyScale = 0.1f;
         dwarf = incDwarf;
         dwarf.JobIcon.SetGetBoozeIcon();
     }
@@ -148,17 +151,23 @@ public class GetBoozeJob : DwarfJob {
     IEnumerator Drink()
     {
         // Ensure coroutine isn't running more than once
-        if (isDrinking)
+        if (IsDrinking)
             yield break;
 
-        isDrinking = true;
+        IsDrinking = true;
         dwarf.animator.Drink();
 
         yield return new WaitForSeconds(drinkAnimationTime);
 
-        dwarf.ResetDrunk();
-        dwarf.FlipDirection();
-        dwarf.isAtWagon = false;
-        dwarf.StopJob();
+        if (!GameController.DwarfManager.OnBreak)
+        {
+            dwarf.ResetDrunk();
+            dwarf.FlipDirection();
+            dwarf.isAtWagon = false;
+            dwarf.StopJob();
+        }
+        
+        // Final break
+        sobrietyScale = 0f;
     }
 }

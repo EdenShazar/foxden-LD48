@@ -9,4 +9,6 @@ public static class Constants
 
     public static readonly float horizontalInteractionDistance = 0.05f;
     public static readonly float fallingSpeedThreshold = 0.3f;
+    
+    public static readonly Color clearColor = new Color(0f, 0f, 0f, 0f);
 }

@@ -5,6 +5,7 @@ using Random = UnityEngine.Random;
 public class DwarfSpawner : MonoBehaviour
 {
     [SerializeField] GameObject dwarfPrefab;
+    [SerializeField] Transform dwarfParent;
     [SerializeField] Sprite wagonRegularSprite;
     [SerializeField] Sprite wagonHighlightSprite;
     [SerializeField] SpriteRenderer wagonSpriteRenderer;
@@ -17,7 +18,7 @@ public class DwarfSpawner : MonoBehaviour
         if (GameController.Score < dwarfCost)
             return false;
 
-        GameObject newDwarf = Instantiate(dwarfPrefab, transform.position, Quaternion.identity);
+        GameObject newDwarf = Instantiate(dwarfPrefab, transform.position, Quaternion.identity, dwarfParent);
         newDwarf.GetComponent<Rigidbody2D>().velocity = transform.up * Random.Range(minimumSpeed, maximumSpeed);
         GameController.AddToScore(-dwarfCost);
 
