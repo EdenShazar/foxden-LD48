@@ -9,6 +9,7 @@ public class DigDownJob : DwarfJob {
   private JobType type = JobType.DIG_DOWN;
 
   public override float sobrietyScale { get{ return 1.0f; } }
+  public override int jobCost {get {return 1;} }
 
   public override bool JobAction(DwarfSurroundings surroundings) {
     if(GameController.TilemapController.HasTile(surroundings.cellBelow)) {

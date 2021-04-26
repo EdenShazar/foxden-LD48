@@ -8,6 +8,7 @@ public class StopSignJob : DwarfJob
     private JobType type = JobType.STOP;
 
   public override float sobrietyScale { get { return 1.0f; } }
+  public override int jobCost {get {return 1;} }
 
   public override bool JobAction(DwarfSurroundings surroundings) {
         return false;
