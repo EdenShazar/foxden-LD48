@@ -104,7 +104,6 @@ public class GameController : MonoBehaviour {
     public static void CallBreak()
     {
         DwarfManager.CallBreak();
-        // Stop spawning
         Time.timeScale = 4f;
     }
 
