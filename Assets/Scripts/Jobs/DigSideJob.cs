@@ -9,6 +9,7 @@ public class DigSideJob : DwarfJob {
   private JobType type = JobType.DIG_ACROSS;
 
   public override float sobrietyScale { get { return 1.0f; } }
+  public override int jobCost {get {return 1;} }
 
   public override bool JobAction(DwarfSurroundings surroundings) {
     if(surroundings.hasTileInFront && surroundings.cellDistanceToTileInFront <= Constants.horizontalInteractionDistance) {
