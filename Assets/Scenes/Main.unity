@@ -10259,6 +10259,7 @@ MonoBehaviour:
   drink: {fileID: 8300000, guid: 15605ba080a047b4c9b2eb5e33ccd268, type: 3}
   dig: {fileID: 8300000, guid: f059839ce4315e14685d426793c1f04e, type: 3}
   hammerRope: {fileID: 8300000, guid: a996614c75be4a9409db021240bd50af, type: 3}
+  endBell: {fileID: 8300000, guid: 155acb89eb0671d4892ffe0b9a2ac7a1, type: 3}
 --- !u!114 &1194810255
 MonoBehaviour:
   m_ObjectHideFlags: 0

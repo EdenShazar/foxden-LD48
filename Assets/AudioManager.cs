@@ -9,6 +9,7 @@ public class AudioManager : MonoBehaviour
     public AudioClip drink;
     public AudioClip dig;
     public AudioClip hammerRope;
+    public AudioClip endBell;
     public Dictionary<string, AudioClip> audioClips;
     public Dictionary<string, float> audioClipTimings;
 
@@ -25,6 +26,7 @@ public class AudioManager : MonoBehaviour
         audioClips.Add("drink", drink);
         audioClips.Add("dig", dig);
         audioClips.Add("hammerRope", hammerRope);
+        audioClips.Add("endBell", endBell);
 
         GameObject soundGameObject = new GameObject("Sound");
         AudioSource mainThemeSource = soundGameObject.AddComponent<AudioSource>();
@@ -34,7 +36,14 @@ public class AudioManager : MonoBehaviour
         mainThemeSource.Play();
     }
 
+    public void PlaySoundOnce(string audioClipToPlay) {
+        GameObject tempAudioSource = new GameObject("Temp Audio Object");
+        AudioSource audioSource = tempAudioSource.AddComponent<AudioSource>();
 
+        audioSource.volume = 0.5f;
+        audioSource.PlayOneShot(audioClips[audioClipToPlay]);
+        Destroy(tempAudioSource, 20);
+    }
     
 }
     
