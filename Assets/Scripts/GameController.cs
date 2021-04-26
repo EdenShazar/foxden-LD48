@@ -12,6 +12,7 @@ public class GameController : MonoBehaviour {
     [SerializeField] private Texture2D regularCursor;
     [SerializeField] private Texture2D clickCursor;
     [SerializeField] private Texture2D stopCursor;
+    [SerializeField] private GameObject pauseMenu;
     private TileManager tileManager;
     private TilemapController tilemapController;
     private RopeManager ropeManager;
@@ -35,6 +36,7 @@ public class GameController : MonoBehaviour {
     public static EndScreenController EndScreenController { get => instance.endScreenController; } 
     public static int Score { get => instance.score; } 
     
+    public static bool GamePaused { get; private set; } 
     public static bool GameEnded { get; private set; } 
 
     public static List<BaseDwarf> workingDwarvesHoveredOver { get; private set; } = new List<BaseDwarf>();
@@ -87,12 +89,19 @@ public class GameController : MonoBehaviour {
         if (GameEnded)
         {
             if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(0)
-                || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Return))
+                || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Return)
+                || Input.GetKeyDown(KeyCode.P))
                 ReloadGame();
         }
 
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.P))
+            GamePaused = !GamePaused;
+
         if (Input.GetMouseButton(0))
         {
+            if (GamePaused)
+                GamePaused = false;
+
             if (currentCursorMode != CursorMode.STOP)
                 SetCursor(CursorMode.CLICK);
         }
@@ -100,6 +109,17 @@ public class GameController : MonoBehaviour {
             SetCursor(CursorMode.STOP);
         else
             SetCursor(CursorMode.REGULAR);
+
+        if (GamePaused)
+        {
+            Time.timeScale = 0f;
+            pauseMenu.SetActive(true);
+        }
+        else
+        {
+            Time.timeScale = dwarfManager.OnBreak ? 4f : 1f;
+            pauseMenu.SetActive(false);
+        }
     }
 
     public void SetCursor(CursorMode cursorMode)
