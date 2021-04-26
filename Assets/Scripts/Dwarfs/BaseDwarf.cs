@@ -141,7 +141,7 @@ public class BaseDwarf : MonoBehaviour {
             transform.position = new Vector3(transform.position.x, transform.position.y, -5f + currentDrunkAmount * 0.01f);
         }
 
-
+        // Update light position and rotation
         if (MoveDirection != lightDirection)
         {
             light.localPosition = new Vector3(-light.localPosition.x, light.localPosition.y, 0f);
@@ -149,6 +149,13 @@ public class BaseDwarf : MonoBehaviour {
 
             lightDirection = (Direction)((int)lightDirection * -1f);
         }
+
+        float normalizedDrunkAmount = currentDrunkAmount / maxDrunkAmount;
+        float sobrietyWarning = 1f - normalizedDrunkAmount * normalizedDrunkAmount;
+        float sobrietyWarningFlashingSpeed = Mathf.Lerp(0f, 5f, sobrietyWarning * 10f - 9f);
+        Debug.Log(sobrietyWarningFlashingSpeed);
+        float timeFlashingFactor = Mathf.Cos(Time.time * sobrietyWarningFlashingSpeed) * 0.25f + 0.75f;
+        dwarfSprite.color = Color.Lerp(Color.white, Constants.maxSobrietyWarningColor, (sobrietyWarning * 2f - 1f) * timeFlashingFactor);
     }
 
     void OnTriggerEnter2D(Collider2D collider)

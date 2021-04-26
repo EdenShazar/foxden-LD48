@@ -11,4 +11,5 @@ public static class Constants
     public static readonly float fallingSpeedThreshold = 0.3f;
     
     public static readonly Color clearColor = new Color(0f, 0f, 0f, 0f);
+    public static readonly Color maxSobrietyWarningColor = new Color(0.945f, 0.341f, 0.341f);
 }

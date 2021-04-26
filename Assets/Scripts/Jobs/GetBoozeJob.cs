@@ -171,5 +171,6 @@ public class GetBoozeJob : DwarfJob {
         
         // Final break
         sobrietyScale = 0f;
+        dwarf.ResetDrunk();
     }
 }
