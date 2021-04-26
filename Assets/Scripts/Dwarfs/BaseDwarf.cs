@@ -153,7 +153,6 @@ public class BaseDwarf : MonoBehaviour {
         float normalizedDrunkAmount = currentDrunkAmount / maxDrunkAmount;
         float sobrietyWarning = 1f - normalizedDrunkAmount * normalizedDrunkAmount;
         float sobrietyWarningFlashingSpeed = Mathf.Lerp(0f, 5f, sobrietyWarning * 10f - 9f);
-        Debug.Log(sobrietyWarningFlashingSpeed);
         float timeFlashingFactor = Mathf.Cos(Time.time * sobrietyWarningFlashingSpeed) * 0.25f + 0.75f;
         dwarfSprite.color = Color.Lerp(Color.white, Constants.maxSobrietyWarningColor, (sobrietyWarning * 2f - 1f) * timeFlashingFactor);
     }

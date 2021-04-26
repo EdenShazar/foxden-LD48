@@ -1,16 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class JobSelector : MonoBehaviour {
-  private const float jobButtonWidth = 0.32f;
-  private const float jobButtonLeftLimit = -0.64f;
-  [SerializeField]
-  private SpriteRenderer border;
-  private static List<DwarfJob> jobs;
-  private static int selectedJob;
-  private int newSelectedJob;
-  private static JobSelector instance;
+    private const float jobButtonWidth = 0.32f;
+    private const float jobButtonLeftLimit = -0.64f;
+  
+    [SerializeField] private SpriteRenderer border;
+    [SerializeField] private GameObject costParent;
+    [SerializeField] private TextMeshPro costText;
+    [SerializeField] private TextMeshPro freeText;
+    [SerializeField] private SpriteRenderer costIcon;
+    [SerializeField] private Sprite tileIcon;
+    [SerializeField] private Sprite stopSignIcon;
+    [SerializeField] private Sprite ropeIcon;
+      
+    private static List<DwarfJob> jobs;
+    private static int selectedJob;
+    private int newSelectedJob;
+    private static JobSelector instance;
 
   public static DwarfJob GetSelectedJob() {
         return jobs[selectedJob] == null ? null : Instantiate(jobs[selectedJob]);
@@ -58,6 +67,43 @@ public class JobSelector : MonoBehaviour {
         selectedJob = newSelectedJob;
         border.transform.localPosition = new Vector3(jobButtonLeftLimit + jobButtonWidth * selectedJob, 0.0f, 0.0f);
         
+        // No job selected
+        if (selectedJob == 5)
+        {
+            costParent.gameObject.SetActive(false);
+
+            border.color = Constants.clearColor;
+            freeText.color = Constants.clearColor;
+        }
+        else if (selectedJob == 4)
+        {
+            costParent.gameObject.SetActive(false);
+            freeText.color = Color.white;
+        }
+        else
+        {
+            costParent.gameObject.SetActive(true);
+            freeText.color = Constants.clearColor;
+
+            border.color = Color.white;
+            switch (selectedJob)
+            {
+                case 0:
+                case 1:
+                    costText.text = Constants.digCost.ToString();
+                    costIcon.sprite = tileIcon;
+                    break;
+                case 2:
+                    costText.text = Constants.stopSignCost.ToString();
+                    costIcon.sprite = stopSignIcon;
+                    break;
+                case 3:
+                    costText.text = Constants.ropeCost.ToString();
+                    costIcon.sprite = ropeIcon;
+                    break;
+            }
+        }
+
         // Set transparent when no job selected
         border.color = new Color(1f, 1f, 1f, selectedJob == 5 ? 0f : 1f);
     }
