@@ -10,7 +10,7 @@ public class ScoreDisplay : MonoBehaviour {
   }
 
   public static void UpdateScore(int newScore) {
-    instance.mesh.text = $"Booze:{newScore}";
+    instance.mesh.text = newScore.ToString();
   }
 
   private void EnsureSingleton() {
