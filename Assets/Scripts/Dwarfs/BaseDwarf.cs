@@ -192,6 +192,9 @@ public class BaseDwarf : MonoBehaviour {
         animator.Puff();
         JobIcon.RemoveIcon();
         currentSpeed = 0f;
+        
+        if (currentJob != null)
+            currentJob.FinalizeJobAction();
         currentJob = null;
 
         yield return new WaitForSeconds(puffAnimationTime);

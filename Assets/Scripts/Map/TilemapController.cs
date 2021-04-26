@@ -57,6 +57,8 @@ public class TilemapController : MonoBehaviour
 
     public void OccupyCellWithDwarf(Vector3Int cell)
     {
+        cell.z = 0;
+
         if (!cellsOccupiedWithDwarvesCount.ContainsKey(cell))
         {
             cellsOccupiedWithDwarvesCount[cell] = 0;
@@ -68,6 +70,8 @@ public class TilemapController : MonoBehaviour
 
     public void UnoccupyCellWithDwarf(Vector3Int cell)
     {
+        cell.z = 0;
+
         if (!cellsOccupiedWithDwarvesCount.ContainsKey(cell))
             return;
 
