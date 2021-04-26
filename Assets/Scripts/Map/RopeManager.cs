@@ -123,7 +123,7 @@ public class RopeManager : MonoBehaviour
 
     void RemoveRope(Vector3Int anchorCell, TileType _)
     {
-        if (HasRopeOnCell(anchorCell, out Rope leftRope, out Rope rightRope))
+        if (HasRopeOnCell(anchorCell + Vector3Int.up, out Rope leftRope, out Rope rightRope))
         {
             if (leftRope != null)
             {
