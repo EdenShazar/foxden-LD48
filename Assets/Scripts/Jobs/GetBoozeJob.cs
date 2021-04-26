@@ -141,6 +141,8 @@ public class GetBoozeJob : DwarfJob {
 
         dwarf.SnapToRelativeCell(Vector3Int.up + Vector3Int.right * (int)dwarf.MoveDirection);
         dwarf.Rigidbody.gravityScale = 1f;
+        dwarf.animator.Walk();
+        dwarf.ResetSpeed();
     }
 
     IEnumerator Drink()
