@@ -31,8 +31,8 @@ public class BaseDwarf : MonoBehaviour {
     private float speed;
     private float timeElapsedBeforeDirectionFlip = 0f;
     //0 is sober, Goes down by 1 a second base
-    private float maxDrunkAmount = 100.0f;
-    private float currentDrunkAmount = 100.0f;
+    private float maxDrunkAmount = 10;
+    private float currentDrunkAmount = 10;
     private bool isClimbingLedge;
     private SpriteRenderer dwarfSprite;
     private DwarfJob currentJob = null;
