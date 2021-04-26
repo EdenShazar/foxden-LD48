@@ -11220,7 +11220,7 @@ MonoBehaviour:
   rightBoundary: 19
   topBoundary: 5
   bottomBoundary: -100
-  scorePopupPrefab: {fileID: 0}
+  scorePopupPrefab: {fileID: 7758279992743794655, guid: feb32a601c35b5445a7cf3f1d0004453, type: 3}
 --- !u!1 &1198755461
 GameObject:
   m_ObjectHideFlags: 0
