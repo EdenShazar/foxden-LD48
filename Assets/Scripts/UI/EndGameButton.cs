@@ -21,6 +21,9 @@ public class EndGameButton : MonoBehaviour
 
     void OnMouseDown()
     {
+        if (GameController.DwarfManager.OnBreak)
+            return;
+
         GameController.CallBreak();
     }
 }

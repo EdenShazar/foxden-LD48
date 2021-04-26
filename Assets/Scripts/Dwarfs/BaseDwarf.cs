@@ -168,6 +168,9 @@ public class BaseDwarf : MonoBehaviour {
     }
 
     public void OnMouseDown() {
+        if (GameController.DwarfManager.OnBreak)
+            return;
+
         DwarfJob jobToAssign = JobSelector.GetSelectedJob();
 
         if (currentJob != null) {

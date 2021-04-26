@@ -43,11 +43,17 @@ public class DwarfSpawner : MonoBehaviour
 
     void OnMouseDown()
     {
+        if (GameController.DwarfManager.OnBreak)
+            return;
+
         TrySpawnDwarf();
     }
 
     void OnMouseOver()
     {
+        if (GameController.DwarfManager.OnBreak)
+            return;
+
         wagonSpriteRenderer.sprite = wagonHighlightSprite;
     }
 

@@ -72,7 +72,7 @@ public class GameController : MonoBehaviour {
             if (currentCursorMode != CursorMode.STOP)
                 SetCursor(CursorMode.CLICK);
         }
-        else if (workingDwarvesHoveredOver.Count > 0)
+        else if (workingDwarvesHoveredOver.Count > 0 && !dwarfManager.OnBreak)
             SetCursor(CursorMode.STOP);
         else
             SetCursor(CursorMode.REGULAR);
@@ -105,7 +105,6 @@ public class GameController : MonoBehaviour {
     {
         DwarfManager.CallBreak();
         // Stop spawning
-        // Disable all input
         Time.timeScale = 4f;
     }
 

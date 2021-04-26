@@ -39,7 +39,7 @@ public class CameraController : MonoBehaviour
 
         float bottomBound = GameController.DwarfManager.GetLowestDwarfHeight();
         if (bottomBound == Mathf.NegativeInfinity)
-            bottomBound = -10f;
+            bottomBound = Mathf.Min(camera.transform.position.y, -10f);
 
         float clampedCameraY = Mathf.Clamp(camera.transform.position.y, bottomBound, topBound);
         camera.transform.Translate(Vector3.up * (clampedCameraY - camera.transform.position.y));
