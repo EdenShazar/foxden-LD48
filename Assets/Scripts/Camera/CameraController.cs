@@ -8,15 +8,23 @@ public class CameraController : MonoBehaviour
 
     new Camera camera;
 
+    float aspectRatio;
+
     void Start()
     {
         camera = GetComponent<Camera>();
 
+        aspectRatio = camera.aspect;
         camera.orthographicSize = GameController.TilemapController.WidthWorld / camera.aspect * 0.5f;
     }
 
     void Update()
     {
+        if (camera.aspect != aspectRatio)
+            camera.orthographicSize = GameController.TilemapController.WidthWorld / camera.aspect * 0.5f; 
+        
+        aspectRatio = camera.aspect;
+
         float mouseY = Input.mousePosition.y / camera.pixelHeight;
 
         float scrollFactor;
