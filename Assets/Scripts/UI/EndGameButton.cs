@@ -24,6 +24,7 @@ public class EndGameButton : MonoBehaviour
         if (GameController.DwarfManager.OnBreak)
             return;
 
+        GameController.AudioManager.PlaySoundOnce("endBell");
         GameController.CallBreak();
     }
 }

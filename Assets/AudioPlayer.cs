@@ -68,6 +68,14 @@ public class AudioPlayer : MonoBehaviour {
                     audioClipTimings[audioClipToPlay] = Time.time;
                 }
                 break;
+            case "endBell":
+                GameObject tempEndBellAudioSource = new GameObject("Temp Audio Object");
+                AudioSource endBellAudioSource = tempEndBellAudioSource.AddComponent<AudioSource>();
+
+                endBellAudioSource.volume = 0.5f;
+                endBellAudioSource.PlayOneShot(audioManager.audioClips[audioClipToPlay]);
+                Destroy(tempEndBellAudioSource, 4);
+                break;
         }
 
      }
