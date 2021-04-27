@@ -108,14 +108,18 @@ public class RopeManager : MonoBehaviour
 
         foreach (Rope rope in ropes)
         {
-            if (rope.IsCellClimbableOnDirection(cell, Direction.LEFT))
+            if (rope.IsCellClimbableOnDirection(cell, preferredDirection))
             {
-                direction = Direction.LEFT;
+                direction = preferredDirection;
                 return true;
             }
 
-            if (rope.IsCellClimbableOnDirection(cell, Direction.RIGHT))
+            Direction otherDirection = (Direction)((int)preferredDirection * -1);
+            if (rope.IsCellClimbableOnDirection(cell, otherDirection))
+            {
+                direction = otherDirection;
                 return true;
+            }
         }
 
         return false;
