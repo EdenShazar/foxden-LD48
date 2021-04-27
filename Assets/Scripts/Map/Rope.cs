@@ -106,6 +106,6 @@ public class Rope
 
     bool HasRopeOnCell(Vector3Int cell)
     {
-        return endCell.y <= cell.y && cell.y <= startCell.y;
+        return cell.x == startCell.x && endCell.y <= cell.y && cell.y <= startCell.y;
     }
 }
