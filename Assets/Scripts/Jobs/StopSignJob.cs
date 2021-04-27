@@ -30,6 +30,9 @@ public class StopSignJob : DwarfJob
             //add animation for dwarf
             dwarf.animator.StopSign();
         }
+        else {
+            dwarf.StopJob();
+        }
 
         return true;
         
